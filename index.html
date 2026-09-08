@@ -3,40 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Pagos - Búho Electronics</title>
+    <title>Herramientas de Ventas - Búho Electronics</title>
     <!-- Importación de Tipografía Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Variables Modo Claro (por defecto) */
         :root {
             --turquesa-principal: #19D3D3;
             --turquesa-secundario: #24C7C7;
             --azul-oscuro: #1C2430;
-            --gris-claro: #EAEAEA;
-            --card-bg: #FFFFFF;
+            --bg-body: #EAEAEA;
+            --bg-card: #FFFFFF;
+            --bg-input: #FFFFFF;
+            --text-color: #1C2430;
+            --border-color: #d1d5db;
+            --preview-bg: #f0fdfd;
+            --btn-refresh-bg: #EAEAEA;
+            --btn-refresh-hover: #dcdcdc;
+            --shadow-color: rgba(28, 36, 48, 0.08);
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Variables Modo Oscuro */
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #0f172a;
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --preview-bg: #0f2b32;
+            --btn-refresh-bg: #334155;
+            --btn-refresh-hover: #475569;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --overlay-bg: rgba(0, 0, 0, 0.7);
         }
 
         body { 
             font-family: 'Poppins', sans-serif; 
-            padding: 24px 16px; 
+            padding: 24px 16px 80px 16px; 
             max-width: 460px; 
             margin: auto; 
-            background-color: var(--gris-claro);
-            color: var(--azul-oscuro);
+            background-color: var(--bg-body);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header con botón de modo oscuro */
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+        }
+
+        .btn-theme {
+            background: var(--bg-card);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: auto;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            transition: all 0.2s ease;
+        }
+
+        .btn-theme:hover {
+            transform: translateY(-1px);
         }
 
         .card { 
-            background: var(--card-bg); 
+            background: var(--bg-card); 
             padding: 28px 24px; 
             border-radius: 16px; 
-            box-shadow: 0 10px 25px -5px rgba(28, 36, 48, 0.08);
-            border: 1px solid rgba(28, 36, 48, 0.05);
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card + .card {
+            margin-top: 24px;
         }
 
         h2 { 
             margin: 0 0 20px 0; 
-            color: var(--azul-oscuro); 
+            color: var(--text-color); 
             font-size: 20px; 
             font-weight: 700;
             text-align: center; 
@@ -47,7 +104,7 @@
             font-weight: 600; 
             display: block; 
             margin-top: 16px; 
-            color: var(--azul-oscuro); 
+            color: var(--text-color); 
             font-size: 13px; 
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -58,13 +115,14 @@
             padding: 12px 14px; 
             margin-top: 6px; 
             border-radius: 8px; 
-            border: 1px solid #d1d5db; 
+            border: 1px solid var(--border-color); 
+            background-color: var(--bg-input);
+            color: var(--text-color);
             box-sizing: border-box; 
             font-family: 'Poppins', sans-serif;
             font-size: 14px; 
             outline: none;
             transition: all 0.2s ease;
-            color: var(--azul-oscuro);
         }
 
         input:focus, select:focus {
@@ -72,38 +130,44 @@
             box-shadow: 0 0 0 3px rgba(25, 211, 211, 0.25);
         }
 
-        .tasa-container { 
+        .tasa-container, .id-container { 
             display: flex; 
             gap: 10px; 
             align-items: center; 
+        }
+
+        .select-nac {
+            width: 90px;
+            flex-shrink: 0;
         }
 
         .btn-refresh { 
             width: auto; 
             margin-top: 6px; 
             padding: 12px 16px; 
-            background-color: var(--gris-claro); 
-            color: var(--azul-oscuro);
-            border: 1px solid #d1d5db;
+            background-color: var(--btn-refresh-bg); 
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
             font-size: 15px;
         }
 
         .btn-refresh:hover {
-            background-color: #dcdcdc;
+            background-color: var(--btn-refresh-hover);
         }
 
         .preview { 
-            background: #f0fdfd; 
+            background: var(--preview-bg); 
             padding: 18px; 
             border-left: 4px solid var(--turquesa-principal); 
             margin-top: 24px; 
             border-radius: 8px; 
+            transition: background-color 0.3s ease;
         }
 
         .preview strong { 
-            color: var(--azul-oscuro); 
+            color: var(--text-color); 
             font-size: 12px; 
             font-weight: 700;
             text-transform: uppercase; 
@@ -114,14 +178,14 @@
             font-size: 14px; 
             font-weight: 600; 
             margin: 10px 0 14px 0; 
-            color: var(--azul-oscuro); 
+            color: var(--text-color); 
             word-break: break-word; 
             line-height: 1.5;
         }
 
-        #btnCopy {
+        .btn-copy {
             background-color: var(--turquesa-principal); 
-            color: var(--azul-oscuro); 
+            color: #1C2430; 
             font-weight: 700; 
             border: none; 
             margin-top: 0; 
@@ -130,29 +194,131 @@
             padding: 12px;
         }
 
-        #btnCopy:hover { 
+        .btn-copy:hover { 
             background-color: var(--turquesa-secundario); 
+        }
+
+        /* ESTILOS DEL BOTÓN FLOTANTE (FAB) */
+        .fab-calculator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: auto;
+            padding: 12px 20px;
+            background-color: var(--turquesa-principal);
+            color: #1C2430;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 99;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .fab-calculator:hover {
+            transform: translateY(-2px);
+            background-color: var(--turquesa-secundario);
+        }
+
+        /* ESTILOS DEL MODAL DE CALCULADORA */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--overlay-bg);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 4px 8px;
+            width: auto;
+            margin: 0;
+            line-height: 1;
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>💳 Generador de Notas</h2>
+<!-- BOTÓN DE CAMBIO DE TEMA -->
+<div class="top-bar">
+    <button type="button" class="btn-theme" id="themeToggle" onclick="toggleTheme()">
+        🌙 Modo Oscuro
+    </button>
+</div>
 
-    <label>Tasa BCV (Bs. S):</label>
+<!-- MÓDULO 1: REDACTAR NOTAS -->
+<div class="card">
+    <h2>💳 Redactar notas</h2>
+
+    <label>Tasa BCV VES</label>
     <div class="tasa-container">
-        <input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="calcularNota()">
+        <input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="sincronizarTasa('main')">
         <button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa">🔄</button>
     </div>
 
-    <label>Monto Total ($ USD):</label>
+    <label>Monto total de la orden (En USD)</label>
     <input type="number" step="0.01" id="totalUSD" placeholder="0.00" oninput="calcularNota()">
 
     <label>Método de Pago:</label>
     <select id="paymentMethod" onchange="toggleCampos(); calcularNota();">
-        <option value="pago_movil">Pago Móvil (BCV)</option>
-        <option value="cuotas">Pago en Cuotas</option>
+        <option value="pago_movil">Pago móvil</option>
+        <option value="cuotas">Pago en Cuotas / Crédito</option>
         <option value="divisas">Divisas (Efectivo)</option>
     </select>
 
@@ -163,18 +329,232 @@
     </div>
 
     <div id="campoCuotas" style="display:none;">
-        <label>Número de cuotas restantes:</label>
-        <input type="number" id="numCuotas" value="1" oninput="calcularNota()">
+        <label>Monto de Inicial ($):</label>
+        <input type="number" step="0.01" id="montoInicial" placeholder="0.00" oninput="calcularNota()">
+
+        <label>Número de Cuotas (Máx. 5):</label>
+        <select id="numCuotas" onchange="generarCamposFechas(); calcularNota();">
+            <option value="1">1 Cuota</option>
+            <option value="2">2 Cuotas</option>
+            <option value="3">3 Cuotas</option>
+            <option value="4">4 Cuotas</option>
+            <option value="5">5 Cuotas</option>
+        </select>
+
+        <div id="contenedorFechasCuotas">
+            <!-- Campos de fecha generados según la cantidad de cuotas -->
+        </div>
     </div>
 
     <div class="preview">
         <strong>Nota generada:</strong>
         <p id="previewText">Ingresa los datos del pedido...</p>
-        <button type="button" id="btnCopy" onclick="copiarTexto()">📋 Copiar Texto</button>
+        <button type="button" class="btn-copy" id="btnCopyNota" onclick="copiarTexto('previewText', 'btnCopyNota')">📋 Copiar Texto</button>
+    </div>
+</div>
+
+<!-- MÓDULO 2: GENERADOR DE NOMBRE DE CLIENTE -->
+<div class="card">
+    <h2>👤 Generador de Cliente</h2>
+
+    <label>Nombre y Apellido:</label>
+    <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()">
+
+    <label>Nro. de Identificación:</label>
+    <div class="id-container">
+        <select id="clientNac" class="select-nac" onchange="formatearCliente()">
+            <option value="V">V</option>
+            <option value="E">E</option>
+            <option value="J">J</option>
+            <option value="G">G</option>
+        </select>
+        <input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()">
+    </div>
+
+    <div class="preview">
+        <strong>Formato de nombre</strong>
+        <p id="previewClientText">Ingresa los datos del cliente...</p>
+        <button type="button" class="btn-copy" id="btnCopyCliente" onclick="copiarTexto('previewClientText', 'btnCopyCliente')">📋 Copiar Nombre</button>
+    </div>
+</div>
+
+<!-- BOTÓN FLOTANTE (FAB) -->
+<button type="button" class="fab-calculator" onclick="abrirModalCalc()">
+     Monto del pedido en VES
+</button>
+
+<!-- MODAL DE CALCULADORA DE TASAS -->
+<div class="modal-overlay" id="modalCalc" onclick="cerrarModalConFondo(event)">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3> Monto del pedido en VES (BCV)</h3>
+            <button type="button" class="btn-close" onclick="cerrarModalCalc()">✖</button>
+        </div>
+
+        <label>Tasa BCV Aplicada (Bs/USD):</label>
+        <input type="number" step="0.01" id="modalTasaInput" placeholder="0.00" oninput="sincronizarTasa('modal')">
+
+        <label>Monto en USD ($):</label>
+        <input type="number" step="0.01" id="calcUSD" placeholder="0.00" oninput="convertirDesdeUSD()">
+
+        <label>Monto en Bolívares (Bs. S):</label>
+        <input type="number" step="0.01" id="calcVES" placeholder="0.00" oninput="convertirDesdeVES()">
+
+        <div class="preview" style="margin-top: 16px;">
+            <strong>Monto del pedido en Bolívares:</strong>
+            <p id="calcResumen" style="margin-bottom: 0;">Ingresa un monto para convertir...</p>
+        </div>
     </div>
 </div>
 
 <script>
+// --- LÓGICA DE TEMA OSCURO / CLARO ---
+function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('themeToggle');
+    const isDark = html.getAttribute('data-theme') === 'dark';
+
+    if (isDark) {
+        html.removeAttribute('data-theme');
+        btn.innerHTML = '🌙 Modo Oscuro';
+        localStorage.setItem('theme', 'light');
+    } else {
+        html.setAttribute('data-theme', 'dark');
+        btn.innerHTML = '☀️ Modo Claro';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Cargar tema guardado en localStorage
+(function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const btn = document.getElementById('themeToggle');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        btn.innerHTML = '☀️ Modo Claro';
+    }
+})();
+
+// --- CALCULADORA Y SINCRONIZACIÓN DE TASAS ---
+function sincronizarTasa(origen) {
+    const mainTasa = document.getElementById('tasaInput');
+    const modalTasa = document.getElementById('modalTasaInput');
+
+    if (origen === 'main') {
+        modalTasa.value = mainTasa.value;
+    } else if (origen === 'modal') {
+        mainTasa.value = modalTasa.value;
+    }
+
+    calcularNota();
+    convertirDesdeUSD();
+}
+
+function abrirModalCalc() {
+    const mainTasaVal = document.getElementById('tasaInput').value;
+    document.getElementById('modalTasaInput').value = mainTasaVal;
+    document.getElementById('modalCalc').classList.add('active');
+    convertirDesdeUSD();
+}
+
+function cerrarModalCalc() {
+    document.getElementById('modalCalc').classList.remove('active');
+}
+
+function cerrarModalConFondo(e) {
+    if (e.target.id === 'modalCalc') {
+        cerrarModalCalc();
+    }
+}
+
+function convertirDesdeUSD() {
+    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0;
+    const usd = parseFloat(document.getElementById('calcUSD').value);
+    const vesInput = document.getElementById('calcVES');
+    const resumen = document.getElementById('calcResumen');
+
+    if (isNaN(usd) || usd <= 0) {
+        vesInput.value = "";
+        resumen.innerText = "Ingresa un monto para convertir...";
+        return;
+    }
+
+    const totalVes = usd * tasa;
+    vesInput.value = totalVes.toFixed(2);
+    resumen.innerText = `$${usd.toFixed(2)} USD = Bs. S ${totalVes.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function convertirDesdeVES() {
+    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0;
+    const ves = parseFloat(document.getElementById('calcVES').value);
+    const usdInput = document.getElementById('calcUSD');
+    const resumen = document.getElementById('calcResumen');
+
+    if (isNaN(ves) || ves <= 0 || tasa <= 0) {
+        usdInput.value = "";
+        resumen.innerText = "Ingresa un monto para convertir...";
+        return;
+    }
+
+    const totalUsd = ves / tasa;
+    usdInput.value = totalUsd.toFixed(2);
+    resumen.innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} = $${totalUsd.toFixed(2)} USD`;
+}
+
+// --- GENERACIÓN DINÁMICA DE FECHAS PARA CUOTAS ---
+function generarCamposFechas() {
+    const num = parseInt(document.getElementById('numCuotas').value) || 1;
+    const container = document.getElementById('contenedorFechasCuotas');
+    
+    const fechasAnteriores = [];
+    const inputsExistentes = container.querySelectorAll('.fecha-cuota-input');
+    inputsExistentes.forEach(input => fechasAnteriores.push(input.value));
+
+    container.innerHTML = '';
+    const hoy = new Date();
+
+    for (let i = 1; i <= num; i++) {
+        const label = document.createElement('label');
+        label.innerText = `Fecha Cuota ${i}:`;
+        
+        const input = document.createElement('input');
+        input.type = 'date';
+        input.className = 'fecha-cuota-input';
+        input.onchange = calcularNota;
+
+        if (fechasAnteriores[i - 1]) {
+            input.value = fechasAnteriores[i - 1];
+        } else {
+            const fechaSugerida = new Date(hoy);
+            fechaSugerida.setDate(hoy.getDate() + (15 * i));
+            const yyyy = fechaSugerida.getFullYear();
+            const mm = String(fechaSugerida.getMonth() + 1).padStart(2, '0');
+            const dd = String(fechaSugerida.getDate()).padStart(2, '0');
+            input.value = `${yyyy}-${mm}-${dd}`;
+        }
+
+        container.appendChild(label);
+        container.appendChild(input);
+    }
+}
+
+function formatearFecha(fechaStr) {
+    if (!fechaStr) return "";
+    const [year, month, day] = fechaStr.split('-').map(Number);
+    const fecha = new Date(year, month - 1, day);
+
+    const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' });
+    const diaSemanaCap = diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
+    
+    const diaNum = String(fecha.getDate()).padStart(2, '0');
+    
+    const mes = fecha.toLocaleDateString('es-ES', { month: 'long' });
+    const mesCap = mes.charAt(0).toUpperCase() + mes.slice(1);
+
+    return `${diaSemanaCap} ${diaNum} ${mesCap}`;
+}
+
+// --- LÓGICA MÓDULO 1: GENERADOR DE NOTAS ---
 async function obtenerTasa() {
     const tasaInput = document.getElementById('tasaInput');
     tasaInput.placeholder = "Buscando...";
@@ -184,7 +564,7 @@ async function obtenerTasa() {
         const data = await res.json();
         if (data && data.monedas && data.monedas.usd) {
             tasaInput.value = data.monedas.usd.promedio;
-            calcularNota();
+            sincronizarTasa('main');
             return;
         }
     } catch (e) {
@@ -196,7 +576,7 @@ async function obtenerTasa() {
         const data = await res.json();
         if (data && data.promedio) {
             tasaInput.value = data.promedio;
-            calcularNota();
+            sincronizarTasa('main');
             return;
         }
     } catch (e) {
@@ -210,6 +590,10 @@ function toggleCampos() {
     const metodo = document.getElementById('paymentMethod').value;
     document.getElementById('campoDivisas').style.display = metodo === 'divisas' ? 'block' : 'none';
     document.getElementById('campoCuotas').style.display = metodo === 'cuotas' ? 'block' : 'none';
+    
+    if (metodo === 'cuotas') {
+        generarCamposFechas();
+    }
 }
 
 function calcularNota() {
@@ -224,36 +608,84 @@ function calcularNota() {
         nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaFormateada}) | Total: Bs. S ${totalBs}`;
     } 
     else if (metodo === 'cuotas') {
-        const inicial = (usd * 0.5).toFixed(2);
-        const restante = usd - inicial;
+        const inicialVal = parseFloat(document.getElementById('montoInicial').value) || 0;
         const numCuotas = parseInt(document.getElementById('numCuotas').value) || 1;
-        const montoCuota = (restante / numCuotas).toFixed(2);
+        const restanteVal = usd - inicialVal;
+        const montoPorCuota = (restanteVal > 0 ? restanteVal / numCuotas : 0).toFixed(2);
+
+        const inicialTxt = Number.isInteger(inicialVal) ? inicialVal : inicialVal.toFixed(2);
         
-        const fecha = new Date();
-        fecha.setDate(fecha.getDate() + 15);
-        const fechaTxt = `${fecha.getDate()} ${fecha.toLocaleString('es-ES', { month: 'short' }).toUpperCase()} ${fecha.getFullYear()}`;
-        
-        nota = `Pago en cuotas | Inicial $${inicial} | Resta ${numCuotas} cuota(s) de $${montoCuota} | 1era cuota (${fechaTxt})`;
+        const ordinales = ["1era", "2da", "3era", "4ta", "5ta"];
+        const inputsFechas = document.querySelectorAll('.fecha-cuota-input');
+        const detallesCuotas = [];
+
+        inputsFechas.forEach((input, index) => {
+            const fechaFormateada = formatearFecha(input.value);
+            const ordinal = ordinales[index] || `${index + 1}a`;
+            if (fechaFormateada) {
+                detallesCuotas.push(`${ordinal} (${fechaFormateada})`);
+            }
+        });
+
+        const textoCuotasPlural = numCuotas > 1 ? 'cuotas' : 'cuota';
+        const listaFechas = detallesCuotas.length > 0 ? detallesCuotas.join(', ') : 'Sin fecha';
+
+        nota = `Pago de inicial $${inicialTxt} | ${numCuotas} ${textoCuotasPlural} de $${montoPorCuota} | ${listaFechas}`;
     } 
     else if (metodo === 'divisas') {
         const billete = parseFloat(document.getElementById('billete').value) || 0;
         const vuelto = (billete - usd).toFixed(2);
-        nota = `Paga al recibir ($${billete.toFixed(2)}) en divisas | Enviar ($${vuelto}) de cambio.`;
+        nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${vuelto}) de cambio.`;
     }
 
     document.getElementById('previewText').innerText = nota;
-    return nota;
 }
 
-async function copiarTexto() {
-    const texto = document.getElementById('previewText').innerText;
-    const btn = document.getElementById('btnCopy');
+// --- LÓGICA MÓDULO 2: GENERADOR DE CLIENTE ---
+function formatearCliente() {
+    const rawName = document.getElementById('clientFullName').value;
+    const nac = document.getElementById('clientNac').value;
+    const rawId = document.getElementById('clientIdNum').value.replace(/\D/g, '');
+
+    const nameFormatted = rawName.trim().split(/\s+/)
+        .map(word => word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : '')
+        .join(' ');
+
+    let idFormatted = '';
+    if (rawId) {
+        idFormatted = parseInt(rawId, 10).toLocaleString('es-VE');
+    }
+
+    let resultado = "";
+    if (nameFormatted && idFormatted) {
+        resultado = `${nameFormatted} | ${nac}-${idFormatted}`;
+    } else if (nameFormatted) {
+        resultado = nameFormatted;
+    } else if (idFormatted) {
+        resultado = `${nac}-${idFormatted}`;
+    } else {
+        resultado = "Ingresa los datos del cliente...";
+    }
+
+    document.getElementById('previewClientText').innerText = resultado;
+}
+
+// --- FUNCIÓN GENERAL PARA COPIAR ---
+async function copiarTexto(elementId, btnId) {
+    const texto = document.getElementById(elementId).innerText;
+    const btn = document.getElementById(btnId);
+
+    if (texto === "Ingresa los datos del pedido..." || texto === "Ingresa los datos del cliente...") {
+        return;
+    }
+
     try {
         await navigator.clipboard.writeText(texto);
+        const originalText = btn.innerText;
         btn.innerText = "✅ ¡Copiado!";
         btn.style.backgroundColor = "#24C7C7";
         setTimeout(() => { 
-            btn.innerText = "📋 Copiar Texto"; 
+            btn.innerText = originalText; 
             btn.style.backgroundColor = "var(--turquesa-principal)";
         }, 2000);
     } catch (err) {
@@ -261,6 +693,7 @@ async function copiarTexto() {
     }
 }
 
+// Inicializar Tasa BCV al cargar
 obtenerTasa();
 </script>
 </body>
