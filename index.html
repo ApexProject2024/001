@@ -238,7 +238,7 @@ function calcularNota() {
     else if (metodo === 'divisas') {
         const billete = parseFloat(document.getElementById('billete').value) || 0;
         const vuelto = (billete - usd).toFixed(2);
-        nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${vuelto}) de cambio.`;
+        nota = `Paga al recibir ($${billete.toFixed(2)}) en divisas | Enviar ($${vuelto}) de cambio.`;
     }
 
     document.getElementById('previewText').innerText = nota;
