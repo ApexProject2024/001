@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creador de Pedidos - Búho Electronics</title>
+    <title>Calculadora de Pagos - Búho Electronics</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; max-width: 500px; margin: auto; background-color: #f4f7f6; }
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 480px; margin: auto; background-color: #f4f7f6; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        label { font-weight: bold; display: block; margin-top: 10px; }
-        input, select, button { width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { background-color: #2ecc71; color: white; font-weight: bold; border: none; margin-top: 15px; cursor: pointer; }
-        .preview { background: #eef9f1; padding: 10px; border-left: 4px solid #2ecc71; margin-top: 15px; font-size: 14px; }
+        h2 { margin-top: 0; color: #2c3e50; font-size: 20px; text-align: center; }
+        label { font-weight: bold; display: block; margin-top: 12px; color: #34495e; font-size: 14px; }
+        input, select, button { width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; font-size: 14px; }
+        button { background-color: #3498db; color: white; font-weight: bold; border: none; margin-top: 15px; cursor: pointer; transition: background-color 0.2s; }
+        button:hover { background-color: #2980b9; }
+        .preview { background: #eef9f1; padding: 15px; border-left: 4px solid #2ecc71; margin-top: 20px; border-radius: 4px; }
+        .preview strong { color: #27ae60; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .preview p { font-size: 15px; font-weight: 600; margin: 10px 0; color: #2c3e50; word-break: break-word; }
+        .tasa-container { display: flex; gap: 10px; align-items: center; }
+        .btn-refresh { width: auto; margin-top: 5px; padding: 10px 15px; background-color: #7f8c8d; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>🛍️ Crear Pedido (TakeApp)</h2>
-    
-    <label>Nombre del Cliente:</label>
-    <input type="text" id="clientName" placeholder="Ej: Marcos Uribe">
+    <h2>💳 Generador de Notas de Pago</h2>
 
-    <label>Teléfono (con código de país):</label>
-    <input type="text" id="clientPhone" placeholder="584129828625">
+    <label>Tasa BCV (Bs. S):</label>
+    <div class="tasa-container">
+        <input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="calcularNota()">
+        <button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa">🔄</button>
+    </div>
 
     <label>Monto Total ($ USD):</label>
     <input type="number" step="0.01" id="totalUSD" placeholder="3.50" oninput="calcularNota()">
@@ -46,26 +52,45 @@
     </div>
 
     <div class="preview">
-        <strong>Nota a enviar en la orden:</strong>
-        <p id="previewText">Cargando tasa BCV...</p>
+        <strong>Nota generada:</strong>
+        <p id="previewText">Ingresa los datos del pedido...</p>
+        <button type="button" id="btnCopy" onclick="copiarTexto()">📋 Copiar Texto</button>
     </div>
-
-    <button onclick="enviarPedido()">Enviar Pedido a TakeApp</button>
 </div>
 
 <script>
-let tasaBCV = 0;
-
-// Obtener Tasa BCV automáticamente desde API pública
 async function obtenerTasa() {
+    const tasaInput = document.getElementById('tasaInput');
+    tasaInput.placeholder = "Buscando...";
+
+    // Intento 1: API PyDolarVe
+    try {
+        const res = await fetch('https://pydolarve.org/api/v1/dollar?page=bcv');
+        const data = await res.json();
+        if (data && data.monedas && data.monedas.usd) {
+            tasaInput.value = data.monedas.usd.promedio;
+            calcularNota();
+            return;
+        }
+    } catch (e) {
+        console.warn("Falló PyDolarVe, intentando DolarApi...");
+    }
+
+    // Intento 2: DolarApi Ve
     try {
         const res = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
         const data = await res.json();
-        tasaBCV = data.promedio;
-        calcularNota();
+        if (data && data.promedio) {
+            tasaInput.value = data.promedio;
+            calcularNota();
+            return;
+        }
     } catch (e) {
-        document.getElementById('previewText').innerText = "Error al cargar la tasa BCV.";
+        console.warn("Falló DolarApi.");
     }
+
+    // Si ambas fallan, permite ingresar la tasa a mano sin bloquear la app
+    tasaInput.placeholder = "Ingresa tasa a mano";
 }
 
 function toggleCampos() {
@@ -76,6 +101,7 @@ function toggleCampos() {
 
 function calcularNota() {
     const usd = parseFloat(document.getElementById('totalUSD').value) || 0;
+    const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
     const metodo = document.getElementById('paymentMethod').value;
     let nota = "";
 
@@ -90,7 +116,6 @@ function calcularNota() {
         const numCuotas = parseInt(document.getElementById('numCuotas').value) || 1;
         const montoCuota = (restante / numCuotas).toFixed(2);
         
-        // Calcular fecha a 15 días
         const fecha = new Date();
         fecha.setDate(fecha.getDate() + 15);
         const fechaTxt = `${fecha.getDate()} ${fecha.toLocaleString('es-ES', { month: 'short' }).toUpperCase()} ${fecha.getFullYear()}`;
@@ -107,41 +132,22 @@ function calcularNota() {
     return nota;
 }
 
-async function enviarPedido() {
-    const apiKey = "TU_API_KEY_DE_TAKEAPP"; // Pegar aquí tu API Key
-    const payload = {
-        name: document.getElementById('clientName').value,
-        phone: document.getElementById('clientPhone').value,
-        totalUSD: parseFloat(document.getElementById('totalUSD').value),
-        note: calcularNota()
-    };
-
-    // Llamada a la API de TakeApp
+async function copiarTexto() {
+    const texto = document.getElementById('previewText').innerText;
+    const btn = document.getElementById('btnCopy');
     try {
-        const response = await fetch("https://api.take.app/v1/orders", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                customer: { name: payload.name, phone: payload.phone },
-                note: payload.note,
-                paymentStatus: "PENDING"
-            })
-        });
-
-        if (response.ok) {
-            alert("✅ ¡Pedido creado con éxito en TakeApp!");
-        } else {
-            alert("❌ Error al crear el pedido en TakeApp.");
-        }
+        await navigator.clipboard.writeText(texto);
+        btn.innerText = "✅ ¡Copiado!";
+        btn.style.backgroundColor = "#27ae60";
+        setTimeout(() => { 
+            btn.innerText = "📋 Copiar Texto"; 
+            btn.style.backgroundColor = "#3498db";
+        }, 2000);
     } catch (err) {
-        alert("❌ Error de conexión.");
+        alert("Error al copiar el texto.");
     }
 }
 
-// Inicializar
 obtenerTasa();
 </script>
 </body>
