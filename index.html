@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Herramientas de Ventas - Búho Electronics</title>
+    <title>Brooklyn - Herramientas de Ventas</title>
     <!-- Importación de Tipografía Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* Variables Modo Claro (por defecto) */
+        /* Variables Modo Claro */
         :root {
             --turquesa-principal: #19D3D3;
             --turquesa-secundario: #24C7C7;
@@ -28,6 +28,7 @@
             --btn-refresh-hover: #dcdcdc;
             --shadow-color: rgba(28, 36, 48, 0.08);
             --overlay-bg: rgba(0, 0, 0, 0.5);
+            --sidebar-width: 380px;
         }
 
         /* Variables Modo Oscuro */
@@ -44,20 +45,61 @@
             --overlay-bg: rgba(0, 0, 0, 0.7);
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body { 
             font-family: 'Poppins', sans-serif; 
-            padding: 24px 16px 80px 16px; 
-            max-width: 460px; 
-            margin: auto; 
+            margin: 0;
+            padding: 16px 24px 80px 24px; 
             background-color: var(--bg-body);
             color: var(--text-color);
             transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
         }
 
+        /* Barra Superior Estilo App */
         .top-bar {
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 12px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-toggle-sidebar {
+            background: var(--bg-card);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            transition: all 0.2s ease;
+        }
+
+        .btn-toggle-sidebar:hover {
+            background-color: var(--btn-refresh-hover);
+            transform: scale(1.03);
+        }
+
+        .brand-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .btn-theme {
@@ -81,23 +123,81 @@
             transform: translateY(-1px);
         }
 
+        /* Layout con Sidebar Desplegable */
+        .app-container {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* Panel Lateral (Sidebar) */
+        .sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+        }
+
+        /* Estado Plegado/Oculto */
+        .sidebar.collapsed {
+            margin-left: calc(-1 * var(--sidebar-width) - 24px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Área de Contenido Principal */
+        .main-content {
+            flex-grow: 1;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .welcome-card {
+            background: var(--bg-card);
+            padding: 80px 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        .welcome-card h1 {
+            font-size: 38px;
+            font-weight: 800;
+            margin: 0;
+            color: var(--text-color);
+            line-height: 1.2;
+        }
+
+        .welcome-card p {
+            margin-top: 14px;
+            font-size: 16px;
+            opacity: 0.75;
+            max-width: 500px;
+        }
+
         .card { 
             background: var(--bg-card); 
-            padding: 28px 24px; 
+            padding: 24px; 
             border-radius: 16px; 
             box-shadow: 0 10px 25px -5px var(--shadow-color);
             border: 1px solid var(--border-color);
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        .card + .card {
-            margin-top: 24px;
-        }
-
         h2 { 
-            margin: 0 0 20px 0; 
+            margin: 0 0 18px 0; 
             color: var(--text-color); 
-            font-size: 20px; 
+            font-size: 18px; 
             font-weight: 700;
             text-align: center; 
             letter-spacing: -0.3px;
@@ -106,9 +206,9 @@
         label { 
             font-weight: 600; 
             display: block; 
-            margin-top: 16px; 
+            margin-top: 14px; 
             color: var(--text-color); 
-            font-size: 13px; 
+            font-size: 12px; 
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -121,7 +221,6 @@
             border: 1px solid var(--border-color); 
             background-color: var(--bg-input);
             color: var(--text-color);
-            box-sizing: border-box; 
             font-family: 'Poppins', sans-serif;
             font-size: 14px; 
             outline: none;
@@ -162,25 +261,25 @@
 
         .preview { 
             background: var(--preview-bg); 
-            padding: 18px; 
+            padding: 16px; 
             border-left: 4px solid var(--turquesa-principal); 
-            margin-top: 24px; 
+            margin-top: 20px; 
             border-radius: 8px; 
             transition: background-color 0.3s ease;
         }
 
         .preview strong { 
             color: var(--text-color); 
-            font-size: 12px; 
+            font-size: 11px; 
             font-weight: 700;
             text-transform: uppercase; 
             letter-spacing: 0.8px; 
         }
 
         .preview p { 
-            font-size: 14px; 
+            font-size: 13px; 
             font-weight: 600; 
-            margin: 10px 0 14px 0; 
+            margin: 8px 0 12px 0; 
             color: var(--text-color); 
             word-break: break-word; 
             line-height: 1.5;
@@ -253,7 +352,6 @@
             align-items: center;
             justify-content: center;
             padding: 16px;
-            box-sizing: border-box;
             z-index: 1000;
             opacity: 0;
             pointer-events: none;
@@ -324,7 +422,6 @@
             top: 0;
             width: 450px;
             padding: 32px;
-            box-sizing: border-box;
             background: linear-gradient(135deg, #E6E1F7 0%, #E0F5F6 50%, #D8F2F6 100%);
             font-family: 'Poppins', sans-serif;
             border-radius: 24px;
@@ -347,8 +444,9 @@
         }
 
         .shot-header img {
-            max-width: 180px;
-            height: auto;
+            max-width: 200px;
+            max-height: 90px;
+            object-fit: contain;
         }
 
         .shot-title {
@@ -366,10 +464,6 @@
             color: #1C2430;
             line-height: 1.1;
             margin-bottom: 4px;
-        }
-
-        .shot-amount-ves span {
-            color: #19D3D3;
         }
 
         .shot-subtitle {
@@ -417,91 +511,125 @@
             color: #94A3B8;
             font-weight: 500;
         }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 100%;
+            }
+
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar.collapsed {
+                margin-left: 0;
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="top-bar">
+    <div class="header-left">
+        <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" onclick="toggleSidebar()" title="Desplegar/Ocultar menú">☰</button>
+        <div class="brand-title">Brooklyn</div>
+    </div>
     <button type="button" class="btn-theme" id="themeToggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
 </div>
 
-<!-- MÓDULO 1: REDACTAR NOTAS -->
-<div class="card">
-    <h2>💳 Redactar notas</h2>
+<div class="app-container">
+    <!-- PANEL LATERAL DESPLEGABLE (SIDEBAR) -->
+    <aside class="sidebar collapsed" id="sidebar">
+        <!-- MÓDULO 1: REDACTAR NOTAS -->
+        <div class="card">
+            <h2>💳 Redactar notas</h2>
 
-    <label>Tasa BCV VES</label>
-    <div class="tasa-container">
-        <input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="sincronizarTasa('main')">
-        <button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa">🔄</button>
-    </div>
+            <label>Tasa BCV VES</label>
+            <div class="tasa-container">
+                <input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="sincronizarTasa('main')">
+                <button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa">🔄</button>
+            </div>
 
-    <label>Monto total de la orden (En USD)</label>
-    <input type="number" step="0.01" id="totalUSD" placeholder="0.00" oninput="calcularNota()">
+            <label>Monto total de la orden (En USD)</label>
+            <input type="number" step="0.01" id="totalUSD" placeholder="0.00" oninput="calcularNota()">
 
-    <label>Método de Pago:</label>
-    <select id="paymentMethod" onchange="toggleCampos(); calcularNota();">
-        <option value="pago_movil">Pago móvil</option>
-        <option value="cuotas">Pago en Cuotas / Crédito</option>
-        <option value="divisas">Divisas (Efectivo)</option>
-    </select>
+            <label>Método de Pago:</label>
+            <select id="paymentMethod" onchange="toggleCampos(); calcularNota();">
+                <option value="pago_movil">Pago móvil</option>
+                <option value="cuotas">Pago en Cuotas / Crédito</option>
+                <option value="divisas">Divisas (Efectivo)</option>
+            </select>
 
-    <div id="campoDivisas" style="display:none;">
-        <label>¿Con cuánto cancela el cliente ($)?</label>
-        <input type="number" id="billete" placeholder="0.00" oninput="calcularNota()">
-    </div>
+            <div id="campoDivisas" style="display:none;">
+                <label>¿Con cuánto cancela el cliente ($)?</label>
+                <input type="number" id="billete" placeholder="0.00" oninput="calcularNota()">
+            </div>
 
-    <div id="campoCuotas" style="display:none;">
-        <label>Monto de Inicial ($):</label>
-        <input type="number" step="0.01" id="montoInicial" placeholder="0.00" oninput="calcularNota()">
+            <div id="campoCuotas" style="display:none;">
+                <label>Monto de Inicial ($):</label>
+                <input type="number" step="0.01" id="montoInicial" placeholder="0.00" oninput="calcularNota()">
 
-        <label>Número de Cuotas (Máx. 5):</label>
-        <select id="numCuotas" onchange="generarCamposFechas(); calcularNota();">
-            <option value="1">1 Cuota</option>
-            <option value="2">2 Cuotas</option>
-            <option value="3">3 Cuotas</option>
-            <option value="4">4 Cuotas</option>
-            <option value="5">5 Cuotas</option>
-        </select>
+                <label>Número de Cuotas (Máx. 5):</label>
+                <select id="numCuotas" onchange="generarCamposFechas(); calcularNota();">
+                    <option value="1">1 Cuota</option>
+                    <option value="2">2 Cuotas</option>
+                    <option value="3">3 Cuotas</option>
+                    <option value="4">4 Cuotas</option>
+                    <option value="5">5 Cuotas</option>
+                </select>
 
-        <div id="contenedorFechasCuotas"></div>
-    </div>
+                <div id="contenedorFechasCuotas"></div>
+            </div>
 
-    <div class="preview">
-        <strong>Nota generada:</strong>
-        <p id="previewText">Ingresa los datos del pedido...</p>
-        <button type="button" class="btn-copy" id="btnCopyNota" onclick="copiarTexto('previewText', 'btnCopyNota')">📋 Copiar Texto</button>
-    </div>
-</div>
+            <div class="preview">
+                <strong>Nota generada:</strong>
+                <p id="previewText">Ingresa los datos del pedido...</p>
+                <button type="button" class="btn-copy" id="btnCopyNota" onclick="copiarTexto('previewText', 'btnCopyNota')">📋 Copiar Texto</button>
+            </div>
+        </div>
 
-<!-- MÓDULO 2: GENERADOR DE NOMBRE DE CLIENTE -->
-<div class="card">
-    <h2>👤 Generador de Cliente</h2>
+        <!-- MÓDULO 2: GENERADOR DE NOMBRE DE CLIENTE -->
+        <div class="card">
+            <h2>👤 Generador de Cliente</h2>
 
-    <label>Nombre y Apellido:</label>
-    <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()">
+            <label>Nombre y Apellido:</label>
+            <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()">
 
-    <label>Nro. de Identificación:</label>
-    <div class="id-container">
-        <select id="clientNac" class="select-nac" onchange="formatearCliente()">
-            <option value="V">V</option>
-            <option value="E">E</option>
-            <option value="J">J</option>
-            <option value="G">G</option>
-        </select>
-        <input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()">
-    </div>
+            <label>Nro. de Identificación:</label>
+            <div class="id-container">
+                <select id="clientNac" class="select-nac" onchange="formatearCliente()">
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                    <option value="J">J</option>
+                    <option value="G">G</option>
+                </select>
+                <input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()">
+            </div>
 
-    <div class="preview">
-        <strong>Formato de nombre</strong>
-        <p id="previewClientText">Ingresa los datos del cliente...</p>
-        <button type="button" class="btn-copy" id="btnCopyCliente" onclick="copiarTexto('previewClientText', 'btnCopyCliente')">📋 Copiar Nombre</button>
-        <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button>
-    </div>
+            <div class="preview">
+                <strong>Formato de nombre</strong>
+                <p id="previewClientText">Ingresa los datos del cliente...</p>
+                <button type="button" class="btn-copy" id="btnCopyCliente" onclick="copiarTexto('previewClientText', 'btnCopyCliente')">📋 Copiar Nombre</button>
+                <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="main-content">
+        <div class="welcome-card">
+            <h1>Hola, bienvenido a Brooklyn</h1>
+            <p>Utiliza el botón del menú para desplegar u ocultar tus herramientas de ventas.</p>
+        </div>
+    </main>
 </div>
 
 <!-- BOTÓN FLOTANTE (FAB) -->
 <button type="button" class="fab-calculator" onclick="abrirModalCalc()">
-    Monto del pedido en VES
+    Abrir calculadora
+
 </button>
 
 <!-- MODAL DE CALCULADORA DE TASAS -->
@@ -531,11 +659,12 @@
     </div>
 </div>
 
-<!-- PLANTILLA OCULTA PARA CAPTURA -->
+<!-- PLANTILLA OCULTA PARA CAPTURA DE PANTALLA -->
 <div id="captureCard">
     <div class="shot-box">
         <div class="shot-header">
-            <img src="logo-buho.png" alt="Búho Electronics" id="shotLogo">
+            <!-- LOGO ALOJADO EN IMGUR -->
+            <img src="https://i.imgur.com/6iqT3wE.png" alt="Brooklyn Logo" id="shotLogo" crossorigin="anonymous">
         </div>
         
         <div class="shot-title">Monto Total del Pedido</div>
@@ -558,6 +687,12 @@
 </div>
 
 <script>
+// --- CONTROL DE PANEL LATERAL (SIDEBAR DESPLEGABLE) ---
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+}
+
 // --- LÓGICA DE TEMA OSCURO / CLARO ---
 function toggleTheme() {
     const html = document.documentElement;
@@ -829,10 +964,8 @@ async function pegarDatosCliente() {
 
     if (!texto || !texto.trim()) return;
 
-    // Limpia etiquetas comunes de mensajes
     let textClean = texto.replace(/(?:nombre y apellido|nombres|apellidos|nombre|cédula|cedula|c\.i\.?|ci|rif|dni|identificación|identificacion|cliente)[:\-]?/gi, ' ');
 
-    // Busca coincidencia de ID con o sin nacionalidad (Ej: V-12.345.678, V12345678, J 12345678, etc)
     const matchId = textClean.match(/([VEJGvejg])[\s\.\-]*(\d[\d\.\s]{5,10}\d|\d{6,9})/);
 
     let nac = "V";
@@ -844,7 +977,6 @@ async function pegarDatosCliente() {
         idNum = matchId[2].replace(/\D/g, '');
         namePart = textClean.replace(matchId[0], ' ');
     } else {
-        // Si solo se encuentran números sin prefijo de nacionalidad
         const matchOnlyDigits = textClean.match(/(\d[\d\.\s]{5,10}\d|\d{6,9})/);
         if (matchOnlyDigits) {
             idNum = matchOnlyDigits[1].replace(/\D/g, '');
@@ -852,7 +984,6 @@ async function pegarDatosCliente() {
         }
     }
 
-    // Extrae y limpia el nombre
     let nameFormatted = namePart
         .replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ' ')
         .replace(/\s+/g, ' ')
@@ -950,7 +1081,7 @@ async function generarYCopiarImagen() {
 
 function descargarImagenFallback(canvas) {
     const link = document.createElement('a');
-    link.download = `Cotizacion-Buho-${Date.now()}.png`;
+    link.download = `Cotizacion-Brooklyn-${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
 }
