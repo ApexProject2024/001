@@ -345,6 +345,56 @@
             background-color: var(--btn-refresh-hover);
         }
 
+        /* Módulo de Tasas y Brechas Cambiarias */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .market-item {
+            background: var(--preview-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .market-item.full-width {
+            grid-column: span 2;
+        }
+
+        .market-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+        .market-value {
+            font-size: 14px;
+            font-weight: 800;
+            margin-top: 4px;
+            color: var(--text-color);
+        }
+
+        .badge-gap {
+            color: var(--turquesa-principal);
+            background: rgba(25, 211, 211, 0.12);
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .market-time {
+            font-size: 10px;
+            opacity: 0.6;
+            text-align: center;
+            margin-top: 10px;
+        }
+
         /* FAB Calculator */
         .fab-calculator {
             position: fixed;
@@ -663,6 +713,40 @@
                 <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button>
             </div>
         </div>
+
+        <!-- MÓDULO 3: MONITOR DE TASAS Y BRECHAS -->
+        <div class="card">
+            <h2>📊 Tasas y Brechas Cambiarias</h2>
+
+            <div class="market-grid">
+                <div class="market-item">
+                    <div class="market-label">Dólar BCV</div>
+                    <div class="market-value" id="mBcvUsd">Cargando...</div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-label">Euro BCV</div>
+                    <div class="market-value" id="mBcvEur">Cargando...</div>
+                </div>
+
+                <div class="market-item full-width">
+                    <div class="market-label">USDT Binance (Promedio)</div>
+                    <div class="market-value" id="mUsdt">Cargando...</div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-label">Brecha USDT/BCV</div>
+                    <div class="market-value badge-gap" id="mBrechaUsdt">--%</div>
+                </div>
+
+                <div class="market-item">
+                    <div class="market-label">Brecha EUR/USD</div>
+                    <div class="market-value badge-gap" id="mBrechaEur">--%</div>
+                </div>
+            </div>
+
+            <div class="market-time" id="mTime">Sincronizando mercado...</div>
+        </div>
     </aside>
 
     <!-- ÁREA PRINCIPAL -->
@@ -933,7 +1017,7 @@ function formatearFecha(fechaStr) {
     return `${diaSemanaCap} ${diaNum} ${mesCap}`;
 }
 
-// --- GENERADOR DE NOTAS ---
+// --- GENERADOR DE NOTAS Y OBTENCIÓN DE TASAS ---
 async function obtenerTasa() {
     const tasaInput = document.getElementById('tasaInput');
     tasaInput.placeholder = "Buscando...";
@@ -947,10 +1031,26 @@ async function obtenerTasa() {
         if (res.ok) {
             const data = await res.json();
             
-            // Extrae la tasa del dólar BCV (bcv_usd) del JSON
             if (data && data.bcv_usd) {
+                // Actualiza el campo interactivo del cotizador
                 tasaInput.value = parseFloat(data.bcv_usd).toFixed(2);
                 sincronizarTasa('main');
+                
+                // Actualiza el módulo informativo
+                if (document.getElementById('mBcvUsd')) {
+                    document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
+                    document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
+                    document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
+                    
+                    document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`;
+                    document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`;
+
+                    if (data.timestamp) {
+                        const fecha = new Date(data.timestamp);
+                        const horaFormateada = fecha.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+                        document.getElementById('mTime').innerText = `Actualizado a las ${horaFormateada}`;
+                    }
+                }
                 return;
             }
         }
