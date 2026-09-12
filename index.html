@@ -937,29 +937,25 @@ function formatearFecha(fechaStr) {
 async function obtenerTasa() {
     const tasaInput = document.getElementById('tasaInput');
     tasaInput.placeholder = "Buscando...";
+    const timeParam = Date.now();
 
     try {
-        const res = await fetch('https://pydolarve.org/api/v1/dollar?page=bcv');
-        const data = await res.json();
-        if (data && data.monedas && data.monedas.usd) {
-            tasaInput.value = data.monedas.usd.promedio;
-            sincronizarTasa('main');
-            return;
+        const res = await fetch(`https://www.brecha-cambiaria.com/api/latest?_=${timeParam}`, { 
+            cache: 'no-store' 
+        });
+        
+        if (res.ok) {
+            const data = await res.json();
+            
+            // Extrae la tasa del dólar BCV (bcv_usd) del JSON
+            if (data && data.bcv_usd) {
+                tasaInput.value = parseFloat(data.bcv_usd).toFixed(2);
+                sincronizarTasa('main');
+                return;
+            }
         }
     } catch (e) {
-        console.warn("Falló PyDolarVe, intentando API secundaria...");
-    }
-
-    try {
-        const res = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
-        const data = await res.json();
-        if (data && data.promedio) {
-            tasaInput.value = data.promedio;
-            sincronizarTasa('main');
-            return;
-        }
-    } catch (e) {
-        console.warn("Falló DolarApi.");
+        console.warn("No se pudo conectar con la API de brecha-cambiaria", e);
     }
 
     tasaInput.placeholder = "Ingresa tasa a mano";
