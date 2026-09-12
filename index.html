@@ -12,6 +12,9 @@
     <!-- Librería html2canvas para la generación de la imagen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+    <!-- SDK Oficial de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         /* Variables Modo Claro */
         :root {
@@ -58,6 +61,36 @@
             transition: background-color 0.3s ease, color 0.3s ease;
             min-height: 100vh;
         }
+
+        /* Pantalla de Login / Bloqueo */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-body);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            padding: 32px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        .login-card h2 { margin-bottom: 6px; }
+        .login-card p { font-size: 13px; opacity: 0.8; margin-bottom: 12px; }
+        .login-error { color: #ef4444 !important; font-weight: 600; margin-top: 10px; font-size: 12px; }
 
         /* Barra Superior Estilo App */
         .top-bar {
@@ -531,12 +564,27 @@
 </head>
 <body>
 
+<!-- PANTALLA DE LOGIN SUPABASE -->
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+        <h2>🔐 Acceso a Brooklyn</h2>
+        <p>Ingresa tus credenciales para continuar</p>
+        <input type="email" id="loginEmail" placeholder="Correo electrónico">
+        <input type="password" id="loginPassword" placeholder="Contraseña" onkeydown="if(event.key === 'Enter') validarAcceso()">
+        <button type="button" class="btn-copy" style="margin-top: 12px;" onclick="validarAcceso()">Ingresar</button>
+        <p id="loginError" class="login-error"></p>
+    </div>
+</div>
+
 <div class="top-bar">
     <div class="header-left">
         <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" onclick="toggleSidebar()" title="Desplegar/Ocultar menú">☰</button>
         <div class="brand-title">Brooklyn</div>
     </div>
-    <button type="button" class="btn-theme" id="themeToggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+    <div style="display: flex; gap: 8px;">
+        <button type="button" class="btn-theme" id="btnLogout" onclick="cerrarSesion()" style="display:none;">🚪 Salir</button>
+        <button type="button" class="btn-theme" id="themeToggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+    </div>
 </div>
 
 <div class="app-container">
@@ -629,7 +677,6 @@
 <!-- BOTÓN FLOTANTE (FAB) -->
 <button type="button" class="fab-calculator" onclick="abrirModalCalc()">
     Abrir calculadora
-
 </button>
 
 <!-- MODAL DE CALCULADORA DE TASAS -->
@@ -687,6 +734,54 @@
 </div>
 
 <script>
+// --- AUTENTICACIÓN CON SUPABASE ---
+const SUPABASE_URL = "https://okguzqyujdnubhllnamo.supabase.co"; 
+const SUPABASE_ANON_KEY = "sb_publishable_K6URdRchmZt3TqpWcO5fng_DHNhmOlr";
+
+const { createClient } = window.supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function validarAcceso() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const error = document.getElementById('loginError');
+
+    if (!email || !password) {
+        error.innerText = "Por favor ingresa correo y contraseña.";
+        return;
+    }
+
+    error.innerText = "Verificando...";
+
+    const { data, error: authError } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+
+    if (authError) {
+        error.innerText = "❌ Credenciales incorrectas";
+    } else {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('btnLogout').style.display = 'inline-flex';
+        error.innerText = "";
+    }
+}
+
+async function comprobarSesion() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('btnLogout').style.display = 'inline-flex';
+    }
+}
+
+async function cerrarSesion() {
+    await supabaseClient.auth.signOut();
+    location.reload();
+}
+
+comprobarSesion();
+
 // --- CONTROL DE PANEL LATERAL (SIDEBAR DESPLEGABLE) ---
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
