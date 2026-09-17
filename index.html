@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brooklyn - Panel de Control</title>
+    <title>Brooklyn - Búho Electronics</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
             --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
             --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
             --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --sidebar-width: 250px;
+            --sidebar-width: 260px;
         }
 
         [data-theme="dark"] {
@@ -96,21 +96,44 @@
 
         .sidebar-brand {
             padding: 20px 18px;
-            display: flex; align-items: center; gap: 12px;
+            display: flex; align-items: center; gap: 14px;
             border-bottom: 1px solid var(--border-color);
         }
 
+        /* Contenedor del logo ampliado */
         .brand-logo {
-            width: 38px; height: 38px;
-            background: var(--turquesa);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; color: #1C2430; font-size: 18px;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Ocultar por defecto la versión oscura en modo claro */
+        .brand-logo .logo-dark { 
+            display: none; 
+        }
+
+        /* Intercambio al activar el tema oscuro en el HTML o contenedor padre */
+        [data-theme="dark"] .brand-logo .logo-light { 
+            display: none; 
+        }
+
+        [data-theme="dark"] .brand-logo .logo-dark { 
+            display: block; 
         }
 
         .brand-info { display: flex; flex-direction: column; }
         .brand-name { font-weight: 800; font-size: 15px; line-height: 1.2; }
-        .brand-sub { font-size: 11px; color: var(--text-muted); }
 
         .sidebar-menu {
             padding: 16px 12px; list-style: none; margin: 0;
@@ -331,9 +354,7 @@
         .data-table th { background: var(--bg-input); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         .data-table tr:hover { background-color: var(--border-color); }
 
-        /* ========================================================
-           ESTILOS MODAL "AÑADIR ARTÍCULO" (Estilo Referencia Imagen)
-           ======================================================== */
+        /* ESTILOS MODAL */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -495,8 +516,8 @@
             font-weight: 600;
         }
 
-        /* Estilo para los Radio Cards de Envío */
-        .shipping-option-card {
+        /* Radio Cards de Envío y Pago */
+        .shipping-option-card, .payment-option-card {
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 14px 16px;
@@ -508,26 +529,26 @@
             background: var(--bg-card);
             transition: all 0.2s ease;
         }
-        .shipping-option-card:hover {
+        .shipping-option-card:hover, .payment-option-card:hover {
             border-color: var(--turquesa);
         }
-        .shipping-option-card input[type="radio"] {
+        .shipping-option-card input[type="radio"], .payment-option-card input[type="radio"] {
             margin-top: 3px;
             width: auto;
             accent-color: var(--turquesa);
             cursor: pointer;
         }
-        .shipping-option-info {
+        .shipping-option-info, .payment-option-info {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
-        .shipping-option-title {
+        .shipping-option-title, .payment-option-title {
             font-weight: 700;
             font-size: 13.5px;
             color: var(--text-main);
         }
-        .shipping-option-desc {
+        .shipping-option-desc, .payment-option-desc {
             font-size: 12px;
             color: var(--text-muted);
             line-height: 1.4;
@@ -579,10 +600,12 @@
     <!-- SIDEBAR DE NAVEGACIÓN -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <div class="brand-logo" id="brandLogoLetter">B</div>
+            <div class="brand-logo" aria-label="Logo">
+                <img class="logo-light" src="https://i.imgur.com/1O4HWEq.png" alt="Logo Claro">
+                <img class="logo-dark" src="https://i.imgur.com/PO0XZ0g.png" alt="Logo Oscuro">
+            </div>
             <div class="brand-info">
-                <span class="brand-name" id="brandNameAlias">Brooklyn</span>
-                <span class="brand-sub">Panel Business</span>
+                <span class="brand-name" id="brandNameAlias">Brooklyn - Búho Electronics</span>
             </div>
         </div>
 
@@ -593,12 +616,6 @@
             </li>
 
             <li class="menu-category">Herramientas</li>
-            <li class="nav-item" data-module="mod-notas" onclick="seleccionarModulo('mod-notas')">
-                <span class="nav-icon">💳</span> Redactar Notas
-            </li>
-            <li class="nav-item" data-module="mod-cliente" onclick="seleccionarModulo('mod-cliente')">
-                <span class="nav-icon">👤</span> Generador Cliente
-            </li>
             <li class="nav-item" data-module="mod-calc" onclick="seleccionarModulo('mod-calc')">
                 <span class="nav-icon">🧮</span> Calculadora
             </li>
@@ -606,11 +623,6 @@
             <li class="menu-category">Finanzas & Mercado</li>
             <li class="nav-item" data-module="mod-tasas" onclick="seleccionarModulo('mod-tasas')">
                 <span class="nav-icon">📊</span> Tasas y Brechas
-            </li>
-
-            <li class="menu-category">Administración</li>
-            <li class="nav-item" data-module="mod-db" onclick="seleccionarModulo('mod-db')">
-                <span class="nav-icon">📁</span> Base de Datos
             </li>
         </ul>
     </aside>
@@ -669,7 +681,7 @@
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Cliente</h3>
-                            <button type="button" class="checkout-section-action" onclick="seleccionarModulo('mod-cliente')">Iniciar sesión</button>
+                            <button type="button" class="checkout-section-action" onclick="abrirModalGeneradorCliente()">Generar Nombre</button>
                         </div>
                         
                         <label>Nombre <span style="color:#ef4444;">*</span></label>
@@ -791,6 +803,53 @@
                         </div>
                     </div>
 
+                    <!-- Tarjeta Método de Pago -->
+                    <div class="checkout-card-section">
+                        <div class="checkout-section-header">
+                            <h3 class="checkout-section-title">Método de Pago <span style="color:#ef4444;">*</span></h3>
+                        </div>
+                        
+                        <label class="payment-option-card" onclick="document.getElementById('radioPagoMovil').click();">
+                            <input type="radio" name="metodoPagoRadio" id="radioPagoMovil" value="pago_movil" checked onchange="alCambiarMetodoPago()">
+                            <div class="payment-option-info">
+                                <span class="payment-option-title">Pago móvil</span>
+                                <span class="payment-option-desc">Monto exacto a transferir: <strong id="previewPagoMovilVes" style="color:var(--turquesa-dark);">Bs. 0,00</strong></span>
+                            </div>
+                        </label>
+
+                        <label class="payment-option-card" onclick="document.getElementById('radioEfectivoUSD').click();">
+                            <input type="radio" name="metodoPagoRadio" id="radioEfectivoUSD" value="efectivo_usd" onchange="alCambiarMetodoPago()">
+                            <div class="payment-option-info">
+                                <span class="payment-option-title">Efectivo USD</span>
+                                <span class="payment-option-desc">Pago físico en divisas en efectivo al momento de la entrega.</span>
+                            </div>
+                        </label>
+
+                        <label class="payment-option-card" onclick="document.getElementById('radioBinance').click();">
+                            <input type="radio" name="metodoPagoRadio" id="radioBinance" value="binance" onchange="alCambiarMetodoPago()">
+                            <div class="payment-option-info">
+                                <span class="payment-option-title">Binance</span>
+                                <span class="payment-option-desc">Transferencia en Criptomonedas / USDT vía Binance Pay.</span>
+                            </div>
+                        </label>
+
+                        <label class="payment-option-card" onclick="document.getElementById('radioZelle').click();">
+                            <input type="radio" name="metodoPagoRadio" id="radioZelle" value="zelle" onchange="alCambiarMetodoPago()">
+                            <div class="payment-option-info">
+                                <span class="payment-option-title">Zelle</span>
+                                <span class="payment-option-desc">Transferencia bancaria en USD.</span>
+                            </div>
+                        </label>
+
+                        <label class="payment-option-card" onclick="document.getElementById('radioZinli').click();">
+                            <input type="radio" name="metodoPagoRadio" id="radioZinli" value="zinli" onchange="alCambiarMetodoPago()">
+                            <div class="payment-option-info">
+                                <span class="payment-option-title">Zinli</span>
+                                <span class="payment-option-desc">Envío directo de USD vía Zinli Wallet.</span>
+                            </div>
+                        </label>
+                    </div>
+
                     <!-- Tarjeta Observación -->
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
@@ -874,35 +933,7 @@
                 </div>
             </div>
 
-            <!-- MÓDULO 2: GENERADOR DE CLIENTE -->
-            <div class="module-pane" id="mod-cliente">
-                <div class="card">
-                    <h2>👤 Generador de Cliente</h2>
-                    
-                    <label>Nombre y Apellido:</label>
-                    <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()">
-
-                    <label>Nro. de Identificación:</label>
-                    <div class="id-container">
-                        <select id="clientNac" class="select-nac" onchange="formatearCliente()">
-                            <option value="V">V</option>
-                            <option value="E">E</option>
-                            <option value="J">J</option>
-                            <option value="G">G</option>
-                        </select>
-                        <input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()">
-                    </div>
-
-                    <div class="preview">
-                        <strong>Formato de nombre</strong>
-                        <p id="previewClientText">Ingresa los datos del cliente...</p>
-                        <button type="button" class="btn-copy" id="btnCopyCliente" onclick="copiarTexto('previewClientText', 'btnCopyCliente')">📋 Copiar Nombre</button>
-                        <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MÓDULO 3: CALCULADORA -->
+            <!-- MÓDULO 2: CALCULADORA -->
             <div class="module-pane" id="mod-calc">
                 <div class="card">
                     <h2>🧮 Calculadora de Montos (VES / USD)</h2>
@@ -926,7 +957,7 @@
                 </div>
             </div>
 
-            <!-- MÓDULO 4: MONITOR DE TASAS -->
+            <!-- MÓDULO 3: MONITOR DE TASAS -->
             <div class="module-pane" id="mod-tasas">
                 <div class="card">
                     <h2>📊 Tasas y Brechas Cambiarias</h2>
@@ -956,44 +987,11 @@
                 </div>
             </div>
 
-            <!-- MÓDULO 5: REGISTRO BASE DE DATOS -->
-            <div class="module-pane" id="mod-db">
-                <div class="card">
-                    <h2>📁 Guardar en Base de Datos</h2>
-                    <div id="tabDbCliente">
-                        <label>Nombre Completo:</label>
-                        <input type="text" id="regNombre" placeholder="Ej: Haniel Marquez">
-
-                        <label>Documento Identidad:</label>
-                        <div class="id-container">
-                            <select id="regTipoDoc" class="select-nac">
-                                <option value="V">V</option>
-                                <option value="E">E</option>
-                                <option value="J">J</option>
-                                <option value="G">G</option>
-                            </select>
-                            <input type="text" id="regNumDoc" placeholder="31390480">
-                        </div>
-
-                        <label>Teléfono:</label>
-                        <input type="text" id="regTelefono" placeholder="+58 412 8467801">
-
-                        <label>Código Referencia:</label>
-                        <input type="text" id="regCodigoRef" placeholder="584128467801">
-
-                        <label>Nota / Observación:</label>
-                        <input type="text" id="regNota" placeholder="Nota del cliente...">
-
-                        <button type="button" class="btn-copy" style="margin-top: 16px;" id="btnGuardarCliente" onclick="guardarCliente()">💾 Guardar Cliente en DB</button>
-                    </div>
-                </div>
-            </div>
-
         </main>
     </div>
 </div>
 
-<!-- MODAL FLOTANTE "AÑADIR ARTÍCULO" (ESTILO REFERENCIA) -->
+<!-- MODAL FLOTANTE "AÑADIR ARTÍCULO" -->
 <div id="modalAnadirArticulo" class="modal-overlay" onclick="if(event.target === this) cerrarModalArticulos()">
     <div class="modal-card">
         <div class="modal-header">
@@ -1007,7 +1005,60 @@
             </div>
         </div>
         <div class="modal-items-list" id="modalListaItemsContainer">
-            <!-- Se llena dinámicamente o muestra estado vacío preparado -->
+        </div>
+    </div>
+</div>
+
+<!-- MODAL FLOTANTE "GENERADOR DE CLIENTE" -->
+<div id="modalGeneradorCliente" class="modal-overlay" onclick="if(event.target === this) cerrarModalGeneradorCliente()">
+    <div class="modal-card" style="max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h3 class="modal-title">Generar Nombre</h3>
+            <button type="button" class="modal-close-btn" onclick="cerrarModalGeneradorCliente()">✕</button>
+        </div>
+        
+        <div style="padding: 20px 24px;">
+            <label style="margin-top: 0;">Nombre y Apellido:</label>
+            <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()">
+
+            <label>Nro. de Identificación:</label>
+            <div class="id-container">
+                <select id="clientNac" class="select-nac" onchange="formatearCliente()">
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                    <option value="J">J</option>
+                    <option value="G">G</option>
+                </select>
+                <input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()">
+            </div>
+
+            <div class="preview" style="margin-top: 20px;">
+                <strong>Formato de nombre</strong>
+                <p id="previewClientText">Ingresa los datos del cliente...</p>
+                <button type="button" class="btn-copy" id="btnCopyCliente" onclick="registrarNombreCheckout()">📋 Registrar nombre</button>
+                <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL FLOTANTE "EFECTIVO USD" -->
+<div id="modalEfectivoUSD" class="modal-overlay" onclick="if(event.target === this) cerrarModalEfectivoUSD()">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Efectivo USD</h3>
+            <button type="button" class="modal-close-btn" onclick="cerrarModalEfectivoUSD()">✕</button>
+        </div>
+        <div style="padding: 20px 24px;">
+            <label style="margin-top: 0;">¿Con qué billete paga el cliente ($)?</label>
+            <input type="number" step="0.01" id="inputBilleteUSD" placeholder="Ej: 20, 50, 100..." oninput="calcularCambioUSDModal()" onkeydown="if(event.key === 'Enter') confirmarBilleteUSD()">
+            
+            <div class="preview" style="margin-top: 16px;">
+                <strong>Monto de Cambio a llevar en efectivo</strong>
+                <p id="previewCambioUSDText" style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: var(--turquesa-dark);">$0.00</p>
+            </div>
+
+            <button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="confirmarBilleteUSD()">Confirmar y Guardar</button>
         </div>
     </div>
 </div>
@@ -1045,28 +1096,30 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const PERFILES_CORREOS = {
     "moyfa1314@gmail.com": {
         nombreUsuario: "Moisés",
-        alias: "Brooklyn Moisés"
+        alias: "Brooklyn - Búho Electronics"
     },
     "gilder.torrealba@buhoelectronics.com": {
         nombreUsuario: "Gilder",
-        alias: "Brooklyn Gilder"
+        alias: "Brooklyn - Búho Electronics"
     }
 };
 
 let listaArticulosPedido = [];
 let inventarioProductosCache = []; 
+let billeteUSDCliente = 0;
 
 function actualizarInterfazUsuario(email) {
     let perfil = PERFILES_CORREOS[email];
     if (!perfil) {
         const parts = email.split('@')[0];
         const nombreGenerico = parts.charAt(0).toUpperCase() + parts.slice(1);
-        perfil = { nombreUsuario: nombreGenerico, alias: "Brooklyn Business" };
+        perfil = { nombreUsuario: nombreGenerico, alias: "Brooklyn - Búho Electronics" };
     }
 
     document.getElementById('welcomeUserName').innerText = perfil.nombreUsuario;
     document.getElementById('brandNameAlias').innerText = perfil.alias;
-    document.getElementById('brandLogoLetter').innerText = perfil.alias.charAt(0).toUpperCase();
+    const logoLetter = document.getElementById('brandLogoLetter');
+    if (logoLetter) logoLetter.innerText = perfil.alias.charAt(0).toUpperCase();
 }
 
 function seleccionarModulo(idModulo) {
@@ -1087,11 +1140,11 @@ function toggleTheme() {
     const btn = document.getElementById('themeToggle');
     if (html.getAttribute('data-theme') === 'dark') {
         html.removeAttribute('data-theme');
-        btn.innerHTML = '🌙 Modo Oscuro';
+        if (btn) btn.innerHTML = '🌙 Modo Oscuro';
         localStorage.setItem('theme', 'light');
     } else {
         html.setAttribute('data-theme', 'dark');
-        btn.innerHTML = '☀️ Modo Claro';
+        if (btn) btn.innerHTML = '☀️ Modo Claro';
         localStorage.setItem('theme', 'dark');
     }
 }
@@ -1363,6 +1416,110 @@ function abrirModalDireccionDelivery() {
     }
 }
 
+function alCambiarMetodoPago() {
+    const radios = document.getElementsByName('metodoPagoRadio');
+    let metodo = 'pago_movil';
+    for (let r of radios) {
+        if (r.checked) { metodo = r.value; break; }
+    }
+    
+    if (metodo === 'efectivo_usd') {
+        abrirModalEfectivoUSD();
+    } else {
+        actualizarObservacionCheckout();
+    }
+}
+
+function abrirModalEfectivoUSD() {
+    const modal = document.getElementById('modalEfectivoUSD');
+    modal.style.display = 'flex';
+    
+    let sumaArticulos = 0;
+    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
+    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
+    const totalUSD = sumaArticulos + ajuste;
+
+    const input = document.getElementById('inputBilleteUSD');
+    if (billeteUSDCliente > 0) {
+        input.value = billeteUSDCliente;
+    } else {
+        input.value = totalUSD > 0 ? totalUSD : '';
+    }
+    
+    calcularCambioUSDModal();
+    setTimeout(() => { 
+        input.focus(); 
+        input.select(); 
+    }, 50);
+}
+
+function cerrarModalEfectivoUSD() {
+    document.getElementById('modalEfectivoUSD').style.display = 'none';
+    actualizarObservacionCheckout();
+}
+
+function calcularCambioUSDModal() {
+    let sumaArticulos = 0;
+    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
+    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
+    const totalUSD = sumaArticulos + ajuste;
+
+    const billete = parseFloat(document.getElementById('inputBilleteUSD').value) || 0;
+    const cambio = billete - totalUSD;
+
+    const preview = document.getElementById('previewCambioUSDText');
+    if (cambio >= 0) {
+        preview.innerText = `$${cambio.toFixed(2)} USD`;
+        preview.style.color = 'var(--turquesa-dark)';
+    } else {
+        preview.innerText = `Faltan $${Math.abs(cambio).toFixed(2)} USD`;
+        preview.style.color = '#ef4444';
+    }
+}
+
+function confirmarBilleteUSD() {
+    const val = parseFloat(document.getElementById('inputBilleteUSD').value) || 0;
+    billeteUSDCliente = val;
+    cerrarModalEfectivoUSD();
+}
+
+function actualizarObservacionCheckout() {
+    let sumaArticulos = 0;
+    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
+    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
+    const totalUSD = sumaArticulos + ajuste;
+    const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
+    
+    const radios = document.getElementsByName('metodoPagoRadio');
+    let metodo = 'pago_movil';
+    for (let r of radios) {
+        if (r.checked) { metodo = r.value; break; }
+    }
+
+    let nota = "";
+    
+    if (metodo === 'pago_movil') {
+        const totalBs = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`;
+    } else if (metodo === 'efectivo_usd') {
+        let billete = billeteUSDCliente > 0 ? billeteUSDCliente : totalUSD;
+        let cambio = billete - totalUSD;
+        if (cambio < 0) cambio = 0;
+        nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${cambio.toFixed(2)}) de cambio.`;
+    } else if (metodo === 'binance') {
+        nota = `Transferencia Binance Pay | Total: $${totalUSD.toFixed(2)}`;
+    } else if (metodo === 'zelle') {
+        nota = `Transferencia Zelle | Total: $${totalUSD.toFixed(2)}`;
+    } else if (metodo === 'zinli') {
+        nota = `Transferencia Zinli | Total: $${totalUSD.toFixed(2)}`;
+    }
+
+    const obsInput = document.getElementById('pedidoObservacion');
+    if (obsInput) {
+        obsInput.value = nota;
+    }
+}
+
 function calcularTotalesPedido() {
     let sumaArticulos = 0;
     listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
@@ -1372,8 +1529,17 @@ function calcularTotalesPedido() {
     const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
     const totalVES = totalUSD * tasaBCV;
 
+    const formattedVes = `Bs. ${totalVES.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
     document.getElementById('pedidoTotalUsdVal').innerText = `$${totalUSD.toFixed(2)}`;
-    document.getElementById('pedidoTotalVesVal').innerText = `Bs. ${totalVES.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('pedidoTotalVesVal').innerText = formattedVes;
+    
+    const elPreviewPagoMovil = document.getElementById('previewPagoMovilVes');
+    if (elPreviewPagoMovil) {
+        elPreviewPagoMovil.innerText = formattedVes;
+    }
+    
+    actualizarObservacionCheckout();
 }
 
 async function realizarPedidoYCopiarCaptura() {
@@ -1420,40 +1586,6 @@ async function realizarPedidoYCopiarCaptura() {
     } catch (e) {
         alert("Error al capturar la imagen.");
         btn.innerText = originalText;
-    }
-}
-
-// --- LÓGICA BASE DE DATOS (SOLO CLIENTES) ---
-async function guardarCliente() {
-    const btn = document.getElementById('btnGuardarCliente');
-    const nombre = document.getElementById('regNombre').value.trim();
-    const tipoDoc = document.getElementById('regTipoDoc').value;
-    const numDoc = document.getElementById('regNumDoc').value.trim();
-    const telefono = document.getElementById('regTelefono').value.trim();
-    const codigoRef = document.getElementById('regCodigoRef').value.trim();
-    const nota = document.getElementById('regNota').value.trim();
-
-    if (!nombre) { alert("Ingresa al menos el nombre del cliente."); return; }
-
-    btn.innerText = "⏳ Guardando...";
-
-    const { data, error } = await supabaseClient
-        .from('clientes')
-        .insert([{
-            nombre_completo: nombre,
-            tipo_documento: tipoDoc,
-            numero_documento: numDoc,
-            telefono: telefono,
-            codigo_referencia: codigoRef,
-            nota: nota
-        }]);
-
-    if (error) {
-        alert("Error al guardar cliente: " + error.message);
-        btn.innerText = "💾 Guardar Cliente en DB";
-    } else {
-        btn.innerText = "✅ ¡Cliente Guardado!";
-        setTimeout(() => { btn.innerText = "💾 Guardar Cliente en DB"; }, 2000);
     }
 }
 
@@ -1614,6 +1746,15 @@ function calcularNota() {
     document.getElementById('previewText').innerText = nota;
 }
 
+// --- LÓGICA MODAL GENERADOR DE CLIENTES ---
+function abrirModalGeneradorCliente() {
+    document.getElementById('modalGeneradorCliente').style.display = 'flex';
+}
+
+function cerrarModalGeneradorCliente() {
+    document.getElementById('modalGeneradorCliente').style.display = 'none';
+}
+
 function formatearCliente() {
     const rawNameInput = document.getElementById('clientFullName');
     if (!rawNameInput) return;
@@ -1635,10 +1776,6 @@ function formatearCliente() {
     else if (idFormatted) res = `${nac}-${idFormatted}`;
 
     document.getElementById('previewClientText').innerText = res;
-
-    if(document.getElementById('regNombre')) document.getElementById('regNombre').value = nameFormatted;
-    if(document.getElementById('regTipoDoc')) document.getElementById('regTipoDoc').value = nac;
-    if(document.getElementById('regNumDoc')) document.getElementById('regNumDoc').value = rawId;
 }
 
 async function pegarDatosCliente() {
@@ -1672,15 +1809,38 @@ async function pegarDatosCliente() {
     formatearCliente();
 }
 
+function registrarNombreCheckout() {
+    const texto = document.getElementById('previewClientText').innerText;
+    if (texto.includes("Ingresa los datos")) return;
+
+    const inputNombrePedido = document.getElementById('pedidoClienteNombre');
+    if (inputNombrePedido) {
+        inputNombrePedido.value = texto;
+        autocorregirNombrePedido();
+    }
+
+    const btnNode = document.getElementById('btnCopyCliente');
+    const originalText = btnNode.innerText;
+    btnNode.innerText = "✅ ¡Registrado!";
+    
+    setTimeout(() => { 
+        btnNode.innerText = originalText;
+        cerrarModalGeneradorCliente();
+    }, 800);
+}
+
 async function copiarTexto(elementId, btnElement) {
     const texto = document.getElementById(elementId).innerText;
     if (texto.includes("Ingresa los datos")) return;
 
     try {
         await navigator.clipboard.writeText(texto);
-        const originalText = btnElement.innerText;
-        btnElement.innerText = "✅ ¡Copiado!";
-        setTimeout(() => { btnElement.innerText = originalText; }, 2000);
+        
+        let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement;
+        
+        const originalText = btnNode.innerText;
+        btnNode.innerText = "✅ ¡Copiado!";
+        setTimeout(() => { btnNode.innerText = originalText; }, 2000);
     } catch (err) {
         alert("Error al copiar texto.");
     }
