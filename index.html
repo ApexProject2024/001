@@ -100,7 +100,6 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* Contenedor del logo ampliado */
         .brand-logo {
             width: 52px;
             height: 52px;
@@ -111,26 +110,10 @@
             flex-shrink: 0;
         }
 
-        .brand-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        /* Ocultar por defecto la versión oscura en modo claro */
-        .brand-logo .logo-dark { 
-            display: none; 
-        }
-
-        /* Intercambio al activar el tema oscuro en el HTML o contenedor padre */
-        [data-theme="dark"] .brand-logo .logo-light { 
-            display: none; 
-        }
-
-        [data-theme="dark"] .brand-logo .logo-dark { 
-            display: block; 
-        }
+        .brand-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .brand-logo .logo-dark { display: none; }
+        [data-theme="dark"] .brand-logo .logo-light { display: none; }
+        [data-theme="dark"] .brand-logo .logo-dark { display: block; }
 
         .brand-info { display: flex; flex-direction: column; }
         .brand-name { font-weight: 800; font-size: 15px; line-height: 1.2; }
@@ -179,9 +162,7 @@
 
         .welcome-title { font-size: 20px; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 8px; }
         
-        .header-stats {
-            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-        }
+        .header-stats { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .header-stat-pill {
             background: var(--bg-input); border: 1px solid var(--border-color);
             padding: 6px 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center;
@@ -211,45 +192,12 @@
         }
         .card.card-wide { max-width: 100% !important; }
 
-        .card h2 { 
-            margin: 0; color: var(--text-main); font-size: 20px; font-weight: 800;
-        }
+        .card h2 { margin: 0; color: var(--text-main); font-size: 20px; font-weight: 800; }
 
-        .checkout-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 24px;
-        }
-
-        .checkout-top-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .checkout-main-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--text-main);
-            margin: 0;
-        }
-
-        .btn-home-icon {
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: auto;
-            margin: 0;
-        }
+        .checkout-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+        .checkout-top-title { font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        .checkout-main-title { font-size: 22px; font-weight: 800; color: var(--text-main); margin: 0; }
+        .btn-home-icon { background: transparent; border: none; color: var(--text-main); font-size: 18px; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; width: auto; margin: 0; }
 
         .checkout-card-section {
             background: var(--bg-card);
@@ -260,34 +208,10 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .checkout-section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-
-        .checkout-section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin: 0;
-        }
-
-        .checkout-section-action {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            width: auto;
-            margin: 0;
-        }
-        .checkout-section-action:hover {
-            color: var(--turquesa-dark);
-        }
+        .checkout-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .checkout-section-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin: 0; }
+        .checkout-section-action { font-size: 13px; font-weight: 600; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; width: auto; margin: 0; }
+        .checkout-section-action:hover { color: var(--turquesa-dark); }
 
         label { font-weight: 700; display: block; margin-top: 14px; color: var(--text-main); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -297,44 +221,21 @@
             color: var(--text-main); font-family: inherit; font-size: 13.5px; outline: none;
             transition: all 0.2s ease;
         }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--turquesa);
-            box-shadow: 0 0 0 3px rgba(25, 211, 211, 0.2);
-            background-color: var(--bg-card);
-        }
+        input:focus, select:focus, textarea:focus { border-color: var(--turquesa); box-shadow: 0 0 0 3px rgba(25, 211, 211, 0.2); background-color: var(--bg-card); }
 
         .tasa-container, .id-container { display: flex; gap: 10px; align-items: center; }
         .select-nac { width: 90px; flex-shrink: 0; }
 
-        .btn-refresh { 
-            width: auto; margin-top: 6px; padding: 11px 16px; 
-            background-color: var(--bg-input); color: var(--text-main);
-            border: 1px solid var(--border-color); border-radius: 10px; cursor: pointer; font-size: 15px;
-        }
+        .btn-refresh { width: auto; margin-top: 6px; padding: 11px 16px; background-color: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 10px; cursor: pointer; font-size: 15px; }
 
         .preview { background: var(--bg-input); padding: 16px; border-left: 4px solid var(--turquesa); margin-top: 20px; border-radius: 10px; border: 1px solid var(--border-color); }
         .preview strong { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); }
         .preview p { font-size: 14px; font-weight: 600; margin: 8px 0 14px 0; line-height: 1.5; }
 
-        .map-preview-container {
-            margin-top: 10px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            display: none;
-        }
-        .map-preview-container iframe {
-            width: 100%;
-            height: 220px;
-            border: 0;
-            display: block;
-        }
+        .map-preview-container { margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background: var(--bg-card); display: none; }
+        .map-preview-container iframe { width: 100%; height: 220px; border: 0; display: block; }
 
-        .btn-copy {
-            background-color: var(--turquesa); color: #1C2430; font-weight: 700; 
-            border: none; margin-top: 0; cursor: pointer; border-radius: 10px; padding: 11px;
-        }
+        .btn-copy { background-color: var(--turquesa); color: #1C2430; font-weight: 700; border: none; margin-top: 0; cursor: pointer; border-radius: 10px; padding: 11px; }
         .btn-copy:hover { background-color: var(--turquesa-dark); color: #fff; }
 
         .btn-paste { background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); font-weight: 600; margin-top: 8px; }
@@ -348,11 +249,17 @@
         .badge-gap { color: var(--badge-text); background: var(--badge-bg); padding: 2px 8px; border-radius: 12px; display: inline-block; }
         .market-time { font-size: 11px; opacity: 0.6; text-align: center; margin-top: 14px; }
 
-        .table-container { overflow-x: auto; margin-top: 16px; border-radius: 10px; border: 1px solid var(--border-color); }
+        /* Estilos modificados para Visibilidad y Sticky Header/Column de la Tabla */
+        .table-container { overflow-x: auto; margin-top: 16px; border-radius: 10px; border: 1px solid var(--border-color); position: relative; }
         .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
         .data-table th, .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
         .data-table th { background: var(--bg-input); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         .data-table tr:hover { background-color: var(--border-color); }
+        
+        /* Asegurar que el botón de Modificar siempre sea visible al hacer scroll */
+        .data-table th:last-child, .data-table td:last-child { position: sticky; right: 0; background-color: var(--bg-card); z-index: 2; box-shadow: -3px 0px 5px rgba(0,0,0,0.03); }
+        .data-table th:last-child { background: var(--bg-input); }
+        .data-table tr:hover td:last-child { background-color: var(--border-color); }
 
         .pedidos-toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
         .pedidos-toolbar .modal-search-input-wrapper { flex-grow: 1; min-width: 220px; }
@@ -369,219 +276,66 @@
         .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .form-row-2 > div { min-width: 0; }
 
+        /* ESTILOS PARA ESTADOS DEL PEDIDO TIPO "PILL" COMPACTO */
+        .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        @media (max-width: 600px) { .status-grid { grid-template-columns: 1fr; } }
+        .status-pill-card {
+            background: var(--bg-input); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 10px 12px;
+            display: flex; flex-direction: column; gap: 2px;
+        }
+        .status-pill-card label { margin: 0; font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; }
+        .status-pill-card select {
+            background: transparent; border: none; padding: 0; margin: 0;
+            font-size: 13.5px; font-weight: 700; color: var(--text-main);
+            cursor: pointer; box-shadow: none; width: 100%;
+        }
+        .status-pill-card select:focus { box-shadow: none; background: transparent; }
+
+        .inventario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+        .inventario-card { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-card); display: flex; flex-direction: column; }
+        .inventario-card img { width: 100%; height: 130px; object-fit: cover; background: var(--border-color); }
+        .inventario-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
+        .inventario-card-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
+        .inventario-variante-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 4px 0; border-top: 1px dashed var(--border-color); gap: 8px; }
+        .inventario-variante-nombre { color: var(--text-muted); flex: 1; }
+        .inventario-variante-precio { font-weight: 700; white-space: nowrap; }
+
         /* ESTILOS MODAL */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(2px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-card {
-            background: var(--bg-card);
-            width: 100%;
-            max-width: 480px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-modal);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: modalPop 0.25s ease-out;
-        }
-
-        @keyframes modalPop {
-            0% { transform: scale(0.95); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-header {
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .modal-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin: 0;
-        }
-
-        .modal-close-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 18px;
-            cursor: pointer;
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0;
-            transition: background 0.2s;
-        }
-        .modal-close-btn:hover {
-            background: var(--border-color);
-            color: var(--text-main);
-        }
-
-        .modal-search-box {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .modal-search-input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .modal-search-input-wrapper span {
-            position: absolute;
-            left: 14px;
-            color: var(--text-muted);
-            font-size: 15px;
-        }
-
-        .modal-search-input {
-            width: 100%;
-            padding: 11px 14px 11px 40px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-input);
-            color: var(--text-main);
-            font-size: 13.5px;
-            margin-top: 0;
-        }
-
-        .modal-items-list {
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 0 12px;
-        }
-
-        .modal-item-row {
-            padding: 14px 12px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: background 0.15s ease;
-            border-radius: 10px;
-            margin: 4px 0;
-        }
-
-        .modal-item-row:last-child {
-            border-bottom: none;
-            margin-bottom: 10px;
-        }
-
-        .modal-item-row:hover {
-            background-color: var(--border-color);
-        }
-
-        .modal-item-info {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .modal-item-name {
-            font-weight: 600;
-            font-size: 13.5px;
-            color: var(--text-main);
-            line-height: 1.3;
-        }
-
-        .modal-item-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .modal-item-price-box {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2px;
-        }
-
-        .modal-item-price {
-            font-weight: 700;
-            font-size: 13.5px;
-            color: var(--text-main);
-        }
-
-        .modal-item-qty {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .modal-item-agotado {
-            color: #ef4444;
-            font-size: 11px;
-            font-weight: 600;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(2px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-card { background: var(--bg-card); width: 100%; max-width: 480px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-modal); display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.25s ease-out; }
+        @keyframes modalPop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .modal-header { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+        .modal-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0; }
+        .modal-close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0; transition: background 0.2s; }
+        .modal-close-btn:hover { background: var(--border-color); color: var(--text-main); }
+        .modal-search-box { padding: 16px 24px; border-bottom: 1px solid var(--border-color); }
+        .modal-search-input-wrapper { position: relative; display: flex; align-items: center; }
+        .modal-search-input-wrapper span { position: absolute; left: 14px; color: var(--text-muted); font-size: 15px; }
+        .modal-search-input { width: 100%; padding: 11px 14px 11px 40px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-size: 13.5px; margin-top: 0; }
+        .modal-items-list { max-height: 400px; overflow-y: auto; padding: 0 12px; }
+        .modal-item-row { padding: 14px 12px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.15s ease; border-radius: 10px; margin: 4px 0; }
+        .modal-item-row:last-child { border-bottom: none; margin-bottom: 10px; }
+        .modal-item-row:hover { background-color: var(--border-color); }
+        .modal-item-info { display: flex; flex-direction: column; gap: 3px; }
+        .modal-item-name { font-weight: 600; font-size: 13.5px; color: var(--text-main); line-height: 1.3; }
+        .modal-item-sub { font-size: 12px; color: var(--text-muted); }
+        .modal-item-price-box { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+        .modal-item-price { font-weight: 700; font-size: 13.5px; color: var(--text-main); }
+        .modal-item-qty { font-size: 11px; color: var(--text-muted); }
+        .modal-item-agotado { color: #ef4444; font-size: 11px; font-weight: 600; }
 
         /* Radio Cards de Envío y Pago */
-        .shipping-option-card, .payment-option-card {
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            background: var(--bg-card);
-            transition: all 0.2s ease;
-        }
-        .shipping-option-card:hover, .payment-option-card:hover {
-            border-color: var(--turquesa);
-        }
-        .shipping-option-card input[type="radio"], .payment-option-card input[type="radio"] {
-            margin-top: 3px;
-            width: auto;
-            accent-color: var(--turquesa);
-            cursor: pointer;
-        }
-        .shipping-option-info, .payment-option-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .shipping-option-title, .payment-option-title {
-            font-weight: 700;
-            font-size: 13.5px;
-            color: var(--text-main);
-        }
-        .shipping-option-desc, .payment-option-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
+        .shipping-option-card, .payment-option-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; background: var(--bg-card); transition: all 0.2s ease; }
+        .shipping-option-card:hover, .payment-option-card:hover { border-color: var(--turquesa); }
+        .shipping-option-card input[type="radio"], .payment-option-card input[type="radio"] { margin-top: 3px; width: auto; accent-color: var(--turquesa); cursor: pointer; }
+        .shipping-option-info, .payment-option-info { display: flex; flex-direction: column; gap: 2px; }
+        .shipping-option-title, .payment-option-title { font-weight: 700; font-size: 13.5px; color: var(--text-main); }
+        .shipping-option-desc, .payment-option-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
 
         /* CAPTURE CARD HIDDEN */
-        #captureCard {
-            position: fixed; left: -9999px; top: 0; width: 450px; padding: 32px;
-            background: linear-gradient(135deg, #E6E1F7 0%, #E0F5F6 50%, #D8F2F6 100%);
-            font-family: 'Poppins', sans-serif; border-radius: 24px;
-        }
-
-        .shot-box {
-            background: #FFFFFF; border-radius: 20px; padding: 28px 24px;
-            box-shadow: 0 15px 35px rgba(28, 36, 48, 0.08);
-            border: 1px solid rgba(25, 211, 211, 0.2); text-align: center;
-        }
-
+        #captureCard { position: fixed; left: -9999px; top: 0; width: 450px; padding: 32px; background: linear-gradient(135deg, #E6E1F7 0%, #E0F5F6 50%, #D8F2F6 100%); font-family: 'Poppins', sans-serif; border-radius: 24px; }
+        .shot-box { background: #FFFFFF; border-radius: 20px; padding: 28px 24px; box-shadow: 0 15px 35px rgba(28, 36, 48, 0.08); border: 1px solid rgba(25, 211, 211, 0.2); text-align: center; }
         .shot-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
         .shot-header img { max-width: 200px; max-height: 90px; object-fit: contain; }
         .shot-title { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
@@ -597,7 +351,6 @@
 </head>
 <body>
 
-<!-- LOGIN OVERLAY -->
 <div id="loginOverlay" class="login-overlay">
     <div class="login-card">
         <h2>🔐 Acceso al Panel</h2>
@@ -612,7 +365,6 @@
 
 <div class="app-layout">
     
-    <!-- SIDEBAR DE NAVEGACIÓN -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <div class="brand-logo" aria-label="Logo">
@@ -629,17 +381,18 @@
             <li class="nav-item active" data-module="mod-registrar-pedido" onclick="seleccionarModulo('mod-registrar-pedido')">
                 <span class="nav-icon">🛒</span> Registrar pedido
             </li>
-
+            <li class="menu-category">Catálogo</li>
+            <li class="nav-item" data-module="mod-inventario" onclick="seleccionarModulo('mod-inventario'); cargarProductosInventario(true);">
+                <span class="nav-icon">🗂️</span> Inventario en tiempo real
+            </li>
             <li class="menu-category">Pedidos y Envíos</li>
             <li class="nav-item" data-module="mod-gestion-pedidos" onclick="seleccionarModulo('mod-gestion-pedidos'); cargarGestionPedidos();">
                 <span class="nav-icon">📦</span> Gestión de Pedidos
             </li>
-
             <li class="menu-category">Herramientas</li>
             <li class="nav-item" data-module="mod-calc" onclick="seleccionarModulo('mod-calc')">
                 <span class="nav-icon">🧮</span> Calculadora
             </li>
-
             <li class="menu-category">Finanzas & Mercado</li>
             <li class="nav-item" data-module="mod-tasas" onclick="seleccionarModulo('mod-tasas')">
                 <span class="nav-icon">📊</span> Tasas y Brechas
@@ -647,66 +400,42 @@
         </ul>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <div class="main-wrapper">
-        
-        <!-- TOP HEADER -->
         <header class="top-header">
             <div class="header-left">
                 <button class="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
-                <h1 class="welcome-title">
-                    Hola, <span id="welcomeUserName">Usuario</span> <span style="font-size: 18px;">⛅</span>
-                </h1>
+                <h1 class="welcome-title">Hola, <span id="welcomeUserName">Usuario</span> <span style="font-size: 18px;">⛅</span></h1>
             </div>
-
             <div class="header-stats">
-                <div class="header-stat-pill">
-                    <span class="header-stat-label">BCV Oficial</span>
-                    <span class="header-stat-value" id="topStatBcv">-- Bs/$</span>
-                </div>
-                <div class="header-stat-pill">
-                    <span class="header-stat-label">Binance USDT</span>
-                    <span class="header-stat-value" id="topStatUsdt">-- Bs/$</span>
-                </div>
-                <div class="header-stat-pill">
-                    <span class="header-stat-label">Brecha</span>
-                    <span class="header-stat-value" id="topStatBrecha">-- %</span>
-                </div>
+                <div class="header-stat-pill"><span class="header-stat-label">BCV Oficial</span><span class="header-stat-value" id="topStatBcv">-- Bs/$</span></div>
+                <div class="header-stat-pill"><span class="header-stat-label">Binance USDT</span><span class="header-stat-value" id="topStatUsdt">-- Bs/$</span></div>
+                <div class="header-stat-pill"><span class="header-stat-label">Brecha</span><span class="header-stat-value" id="topStatBrecha">-- %</span></div>
             </div>
-
             <div class="header-actions">
                 <button type="button" class="btn-pill" id="themeToggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
                 <button type="button" class="btn-pill" id="btnLogout" onclick="cerrarSesion()" style="display:none;">🚪 Salir</button>
             </div>
         </header>
 
-        <!-- CONTENT BODY -->
         <main class="content-body">
-
             <!-- MÓDULO: REGISTRAR PEDIDO -->
             <div class="module-pane active" id="mod-registrar-pedido">
                 <div class="card card-wide">
-                    
                     <div class="checkout-header">
                         <div>
                             <div class="checkout-top-title">Checkout</div>
                             <h2 class="checkout-main-title">Búho Electronics</h2>
                         </div>
-                        <button type="button" class="btn-home-icon" onclick="seleccionarModulo('mod-notas')" title="Inicio">
-                            🏠
-                        </button>
+                        <button type="button" class="btn-home-icon" onclick="seleccionarModulo('mod-notas')" title="Inicio">🏠</button>
                     </div>
                     
-                    <!-- Tarjeta Cliente -->
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Cliente</h3>
                             <button type="button" class="checkout-section-action" onclick="abrirModalGeneradorCliente()">Generar Nombre</button>
                         </div>
-                        
                         <label>Nombre <span style="color:#ef4444;">*</span></label>
                         <input type="text" id="pedidoClienteNombre" placeholder="Ej: Diego Vergara" oninput="autocorregirNombrePedido()">
-
                         <label>Número de WhatsApp <span style="color:#ef4444;">*</span></label>
                         <div class="tasa-container">
                             <select id="pedidoWpCod" class="select-nac">
@@ -720,45 +449,31 @@
                         </div>
                     </div>
 
-                    <!-- Tarjeta Artículos -->
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Artículos</h3>
                             <button type="button" class="checkout-section-action" onclick="abrirModalArticulos()">Añadir artículo</button>
                         </div>
-                        
                         <div style="text-align: center; padding: 20px 0;" id="placeholderSinArticulos">
                             <p style="color: var(--text-muted); font-size: 13.5px; margin: 0 0 16px 0;" id="textoSinArticulos">No se añadieron artículos</p>
                         </div>
-
                         <div class="table-container" id="tablaArticulosContainer" style="display:none;">
                             <table class="data-table" id="tablaArticulosPedido">
-                                <thead>
-                                    <tr>
-                                        <th>Artículo</th>
-                                        <th>Precio ($)</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyArticulosPedido">
-                                </tbody>
+                                <thead><tr><th>Artículo</th><th>Precio ($)</th><th>Acción</th></tr></thead>
+                                <tbody id="tbodyArticulosPedido"></tbody>
                             </table>
                         </div>
-
                         <div style="text-align: center; margin-top: 14px;">
                             <button type="button" class="checkout-section-action" style="font-weight: 700; color: var(--text-main);" onclick="mostrarCampoArticuloPersonalizado()">Añadir artículo personalizado</button>
                         </div>
                     </div>
 
-                    <!-- Contenedor dinámico de artículos personalizados -->
                     <div id="contenedorArticulosPersonalizados"></div>
 
-                    <!-- Tarjeta Método de envíos -->
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Método de Envíos <span style="color:#ef4444;">*</span></h3>
                         </div>
-                        
                         <label class="shipping-option-card" onclick="document.getElementById('radioEnvioDelivery').click(); toggleCamposEnvio();">
                             <input type="radio" name="metodoEnvioRadio" id="radioEnvioDelivery" value="delivery" checked onchange="toggleCamposEnvio()">
                             <div class="shipping-option-info">
@@ -766,7 +481,6 @@
                                 <span class="shipping-option-desc">Aplica solo para Valencia, Naguanagua, San Diego, Libertador, Guacara y Los Guayos.</span>
                             </div>
                         </label>
-
                         <label class="shipping-option-card" onclick="document.getElementById('radioEnvioNacional').click(); toggleCamposEnvio();">
                             <input type="radio" name="metodoEnvioRadio" id="radioEnvioNacional" value="nacional" onchange="toggleCamposEnvio()">
                             <div class="shipping-option-info">
@@ -774,21 +488,15 @@
                                 <span class="shipping-option-desc">Envíos GRATIS únicamente por MRW.<br>Zoom, Tealca, Domesa y LibertyExpress cobro a destino.</span>
                             </div>
                         </label>
-
                         <div style="border-top: 1px solid var(--border-color); margin-top: 16px; padding-top: 16px;"></div>
-
                         <div id="envioDeliveryContainer" style="margin-top:12px;">
                             <button type="button" class="btn-pill" style="width: 100%; justify-content: center; padding: 12px; border-radius: 10px; background: var(--bg-card);" onclick="abrirModalDireccionDelivery()">📍 Introduzca la dirección</button>
                             <div id="previewDireccionDelivery" class="preview" style="display:none; margin-top:10px;">
                                 <strong>Dirección de Envío:</strong>
                                 <p id="textoDireccionDelivery" style="margin:4px 0 10px 0;"></p>
-                                
-                                <div id="mapPreviewContainer" class="map-preview-container">
-                                    <iframe id="googleMapIframe" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                                </div>
+                                <div id="mapPreviewContainer" class="map-preview-container"><iframe id="googleMapIframe" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
                             </div>
                         </div>
-
                         <div id="envioNacionalContainer" style="display:none; margin-top:12px;">
                             <label>Agencia de envío:</label>
                             <select id="envioNacionalAgencia">
@@ -798,37 +506,21 @@
                                 <option value="Domesa">Domesa</option>
                                 <option value="LibertyExpress">LibertyExpress</option>
                             </select>
-
                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <div>
-                                    <label>Nombre (Receptor):</label>
-                                    <input type="text" id="envioNacNombre" placeholder="Nombre">
-                                </div>
-                                <div>
-                                    <label>Apellido (Receptor):</label>
-                                    <input type="text" id="envioNacApellido" placeholder="Apellido">
-                                </div>
+                                <div><label>Nombre (Receptor):</label><input type="text" id="envioNacNombre" placeholder="Nombre"></div>
+                                <div><label>Apellido (Receptor):</label><input type="text" id="envioNacApellido" placeholder="Apellido"></div>
                             </div>
-
                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <div>
-                                    <label>Nro. de contacto:</label>
-                                    <input type="text" id="envioNacTelefono" placeholder="Teléfono">
-                                </div>
-                                <div>
-                                    <label>Nro. de Cédula:</label>
-                                    <input type="text" id="envioNacCedula" placeholder="Cédula">
-                                </div>
+                                <div><label>Nro. de contacto:</label><input type="text" id="envioNacTelefono" placeholder="Teléfono"></div>
+                                <div><label>Nro. de Cédula:</label><input type="text" id="envioNacCedula" placeholder="Cédula"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tarjeta Método de Pago -->
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Método de Pago <span style="color:#ef4444;">*</span></h3>
                         </div>
-                        
                         <label class="payment-option-card" onclick="document.getElementById('radioPagoMovil').click();">
                             <input type="radio" name="metodoPagoRadio" id="radioPagoMovil" value="pago_movil" checked onchange="alCambiarMetodoPago()">
                             <div class="payment-option-info">
@@ -836,7 +528,6 @@
                                 <span class="payment-option-desc">Monto exacto a transferir: <strong id="previewPagoMovilVes" style="color:var(--turquesa-dark);">Bs. 0,00</strong></span>
                             </div>
                         </label>
-
                         <label class="payment-option-card" onclick="document.getElementById('radioEfectivoUSD').click();">
                             <input type="radio" name="metodoPagoRadio" id="radioEfectivoUSD" value="efectivo_usd" onchange="alCambiarMetodoPago()">
                             <div class="payment-option-info">
@@ -844,7 +535,6 @@
                                 <span class="payment-option-desc">Pago físico en divisas en efectivo al momento de la entrega.</span>
                             </div>
                         </label>
-
                         <label class="payment-option-card" onclick="document.getElementById('radioBinance').click();">
                             <input type="radio" name="metodoPagoRadio" id="radioBinance" value="binance" onchange="alCambiarMetodoPago()">
                             <div class="payment-option-info">
@@ -852,7 +542,6 @@
                                 <span class="payment-option-desc">Transferencia en Criptomonedas / USDT vía Binance Pay.</span>
                             </div>
                         </label>
-
                         <label class="payment-option-card" onclick="document.getElementById('radioZelle').click();">
                             <input type="radio" name="metodoPagoRadio" id="radioZelle" value="zelle" onchange="alCambiarMetodoPago()">
                             <div class="payment-option-info">
@@ -860,7 +549,6 @@
                                 <span class="payment-option-desc">Transferencia bancaria en USD.</span>
                             </div>
                         </label>
-
                         <label class="payment-option-card" onclick="document.getElementById('radioZinli').click();">
                             <input type="radio" name="metodoPagoRadio" id="radioZinli" value="zinli" onchange="alCambiarMetodoPago()">
                             <div class="payment-option-info">
@@ -870,7 +558,6 @@
                         </label>
                     </div>
 
-                    <!-- Tarjeta Observación -->
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Observación (Visible para los clientes)</h3>
@@ -878,27 +565,58 @@
                         <textarea id="pedidoObservacion" rows="3" placeholder="Nota de la venta..." style="margin-top:0; resize:vertical;"></textarea>
                     </div>
 
+                    <!-- ESTADOS DE PEDIDO TIPO "PILLS" COMPACTAS -->
+                    <div class="checkout-card-section">
+                        <div class="checkout-section-header">
+                            <h3 class="checkout-section-title">Estados Iniciales del Pedido</h3>
+                        </div>
+                        <div class="status-grid">
+                            <div class="status-pill-card">
+                                <label>1. Pedido</label>
+                                <select id="nuevoPedidoEstado">
+                                    <option value="pending" selected>Pendiente</option>
+                                    <option value="confirmed">Confirmado</option>
+                                    <option value="completed">Completado</option>
+                                    <option value="cancelled">Cancelado</option>
+                                </select>
+                            </div>
+                            <div class="status-pill-card">
+                                <label>2. Pago</label>
+                                <select id="nuevoPedidoPago">
+                                    <option value="unpaid" selected>Sin pagar</option>
+                                    <option value="confirming">Confirmando pago</option>
+                                    <option value="partially_paid">Parc. pagado</option>
+                                    <option value="paid">Pagado</option>
+                                    <option value="refunded">Reembolsado</option>
+                                    <option value="voided">Anulado</option>
+                                </select>
+                            </div>
+                            <div class="status-pill-card">
+                                <label>3. Envío</label>
+                                <select id="nuevoPedidoCumplimiento">
+                                    <option value="unfulfilled" selected>Incumplido</option>
+                                    <option value="ready">Listo</option>
+                                    <option value="in_transit">En camino</option>
+                                    <option value="partially_fulfilled">Parc. cumplido</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Ajuste del pedido y Totales -->
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Cálculos y Totales</h3>
                         </div>
-                        
                         <label>Ajuste del pedido (Cantidad arbitraria para cargos en factura $):</label>
                         <input type="number" step="0.01" id="pedidoAjuste" value="0.00" oninput="calcularTotalesPedido()">
-
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px;">
-                            <div class="market-item" style="margin:0;">
-                                <div class="market-label">Monto del pedido en USD</div>
-                                <div class="market-value" id="pedidoTotalUsdVal">$0.00</div>
-                            </div>
-                            <div class="market-item" style="margin:0;">
-                                <div class="market-label">Monto del pedido en VES</div>
-                                <div class="market-value" id="pedidoTotalVesVal">Bs. 0,00</div>
-                            </div>
+                            <div class="market-item" style="margin:0;"><div class="market-label">Monto del pedido en USD</div><div class="market-value" id="pedidoTotalUsdVal">$0.00</div></div>
+                            <div class="market-item" style="margin:0;"><div class="market-label">Monto del pedido en VES</div><div class="market-value" id="pedidoTotalVesVal">Bs. 0,00</div></div>
                         </div>
-
-                        <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 20px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()">🚀 Realizar pedido (Copiar captura)</button>
+                        <button type="button" class="btn-copy" id="btnCrearPedidoTakeApp" style="margin-top: 20px; width: 100%; background: var(--turquesa-dark); color: #fff;" onclick="crearNuevoPedido()">🧾 Crear nuevo pedido</button>
+                        <p id="crearPedidoFeedback" style="margin-top:8px; font-size:12.5px; min-height:14px;"></p>
+                        <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 10px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()">🚀 Realizar pedido (Copiar captura)</button>
                     </div>
 
                 </div>
@@ -914,45 +632,40 @@
                         </div>
                         <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarGestionPedidos()">🔄</button>
                     </div>
-
                     <div class="pedidos-toolbar">
                         <div class="modal-search-input-wrapper">
-                            <span>🔎</span>
-                            <input type="text" id="pedidosBuscador" class="modal-search-input" placeholder="Buscar por cliente, teléfono o N° de pedido..." oninput="renderTablaGestionPedidos()">
+                            <span>🔎</span><input type="text" id="pedidosBuscador" class="modal-search-input" placeholder="Buscar por cliente, teléfono o N° de pedido..." oninput="renderTablaGestionPedidos()">
                         </div>
                         <select id="pedidosFiltroEstadoEnvio" onchange="renderTablaGestionPedidos()">
-                            <option value="">Envío: todos</option>
-                            <option value="unfulfilled">Sin enviar</option>
-                            <option value="fulfilled">Enviado / entregado</option>
-                            <option value="cancelled">Cancelado</option>
+                            <option value="">Envío: todos</option><option value="unfulfilled">Incumplido / Sin enviar</option><option value="ready">Listo para enviar</option><option value="in_transit">En camino</option><option value="fulfilled">Enviado / entregado</option><option value="cancelled">Cancelado</option>
                         </select>
                         <select id="pedidosFiltroPago" onchange="renderTablaGestionPedidos()">
-                            <option value="">Pago: todos</option>
-                            <option value="paid">Pagado</option>
-                            <option value="pending">Pendiente</option>
-                            <option value="refunded">Reembolsado</option>
+                            <option value="">Pago: todos</option><option value="unpaid">Sin pagar</option><option value="paid">Pagado</option><option value="pending">Pendiente</option><option value="refunded">Reembolsado</option>
                         </select>
                     </div>
-
                     <div class="table-container">
                         <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>N° Pedido</th>
-                                    <th>Cliente</th>
-                                    <th>Total</th>
-                                    <th>Pago</th>
-                                    <th>Estado pedido</th>
-                                    <th>Envío</th>
-                                    <th>Fecha</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyGestionPedidos">
-                                <tr><td colspan="8" class="pedidos-empty">Cargando pedidos...</td></tr>
-                            </tbody>
+                            <thead><tr><th>N° Pedido</th><th>Cliente</th><th>Total</th><th>Pago</th><th>Estado pedido</th><th>Envío</th><th>Fecha</th><th></th></tr></thead>
+                            <tbody id="tbodyGestionPedidos"><tr><td colspan="8" class="pedidos-empty">Cargando pedidos...</td></tr></tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <!-- MÓDULO: INVENTARIO EN TIEMPO REAL -->
+            <div class="module-pane" id="mod-inventario">
+                <div class="card card-wide">
+                    <div class="checkout-header">
+                        <div>
+                            <div class="checkout-top-title">Catálogo</div>
+                            <h2 class="checkout-main-title">🗂️ Inventario en tiempo real</h2>
+                        </div>
+                        <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarProductosInventario(true)">🔄</button>
+                    </div>
+                    <div class="pedidos-toolbar">
+                        <div class="modal-search-input-wrapper"><span>🔎</span><input type="text" id="inventarioBuscador" class="modal-search-input" placeholder="Buscar producto o variante..." oninput="renderInventarioModulo()"></div>
+                    </div>
+                    <div id="inventarioGrid" class="inventario-grid"><div class="pedidos-empty">Cargando inventario...</div></div>
                 </div>
             </div>
 
@@ -960,252 +673,50 @@
             <div class="modal-overlay" id="modalEstadoPedido">
                 <div class="modal-card">
                     <div class="modal-header">
-                        <h3 class="modal-title">Actualizar pedido <span id="modalEstadoPedidoNumero"></span></h3>
+                        <h3 class="modal-title">Modificar pedido <span id="modalEstadoPedidoNumero"></span></h3>
                         <button type="button" class="modal-close-btn" onclick="cerrarModalEstadoPedido()">✕</button>
                     </div>
                     <div style="padding: 20px 24px;">
                         <div id="modalEstadoPedidoCliente" style="font-size:13px; color: var(--text-muted); margin-bottom: 4px;"></div>
-
                         <div class="form-row-2">
                             <div>
                                 <label>Estado del pedido</label>
                                 <select id="selectEstadoPedido">
-                                    <option value="pending">Pendiente</option>
-                                    <option value="confirmed">Confirmado</option>
-                                    <option value="completed">Completado</option>
-                                    <option value="cancelled">Cancelado</option>
+                                    <option value="pending">Pendiente</option><option value="confirmed">Confirmado</option><option value="completed">Completado</option><option value="cancelled">Cancelado</option>
                                 </select>
                             </div>
                             <div>
                                 <label>Estado de pago</label>
                                 <select id="selectEstadoPago">
-                                    <option value="pending">Pendiente</option>
-                                    <option value="paid">Pagado</option>
-                                    <option value="refunded">Reembolsado</option>
-                                    <option value="voided">Anulado</option>
+                                    <option value="unpaid">Sin pagar</option><option value="confirming">Confirmando pago</option><option value="partially_paid">Parcialmente pagado</option><option value="paid">Pagado</option><option value="refunded">Reembolsado</option><option value="voided">Anulado</option>
                                 </select>
                             </div>
                         </div>
-
                         <label>Estado de envío</label>
                         <select id="selectEstadoEnvio">
-                            <option value="unfulfilled">Sin enviar</option>
-                            <option value="processing">En preparación</option>
-                            <option value="fulfilled">Enviado / entregado</option>
-                            <option value="cancelled">Cancelado</option>
+                            <option value="unfulfilled">Incumplido</option><option value="ready">Listo para enviar/retirar</option><option value="in_transit">En camino para la entrega</option><option value="partially_fulfilled">Parcialmente cumplido</option><option value="fulfilled">Enviado / entregado</option><option value="cancelled">Cancelado</option>
                         </select>
-
                         <label>Nota interna (no visible para el cliente)</label>
                         <textarea id="inputNotaInternaPedido" rows="2" placeholder="Ej: Esperando repuesto en almacén..." style="margin-top:6px; resize:vertical;"></textarea>
-
                         <p id="modalEstadoPedidoError" class="login-error" style="margin-top:10px; min-height: 14px;"></p>
-
                         <button type="button" class="btn-copy" id="btnGuardarEstadoPedido" style="margin-top: 14px;" onclick="guardarEstadoPedido()">💾 Guardar cambios</button>
                     </div>
                 </div>
             </div>
 
-            <!-- MÓDULO 1: REDACTAR NOTAS -->
-            <div class="module-pane" id="mod-notas">
-                <div class="card">
-                    <h2>💳 Redactar notas de pago</h2>
-                    
-                    <label>Tasa BCV VES</label>
-                    <div class="tasa-container">
-                        <input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="sincronizarTasa('main')">
-                        <button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa">🔄</button>
-                    </div>
-
-                    <label>Monto total de la orden ($)</label>
-                    <input type="number" step="0.01" id="totalUSD" placeholder="0.00" oninput="calcularNota()">
-
-                    <label>Método de Pago:</label>
-                    <select id="paymentMethod" onchange="toggleCampos(); calcularNota();">
-                        <option value="pago_movil">Pago móvil</option>
-                        <option value="cuotas">Pago en Cuotas / Crédito</option>
-                        <option value="divisas">Divisas (Efectivo)</option>
-                    </select>
-
-                    <div id="campoDivisas" style="display:none;">
-                        <label>¿Con cuánto cancela el cliente ($)?</label>
-                        <input type="number" id="billete" placeholder="0.00" oninput="calcularNota()">
-                    </div>
-
-                    <div id="campoCuotas" style="display:none;">
-                        <label>Monto de Inicial ($):</label>
-                        <input type="number" step="0.01" id="montoInicial" placeholder="0.00" oninput="calcularNota()">
-
-                        <label>Número de Cuotas:</label>
-                        <select id="numCuotas" onchange="generarCamposFechas(); calcularNota();">
-                            <option value="1">1 Cuota</option>
-                            <option value="2">2 Cuotas</option>
-                            <option value="3">3 Cuotas</option>
-                            <option value="4">4 Cuotas</option>
-                            <option value="5">5 Cuotas</option>
-                        </select>
-                        <div id="contenedorFechasCuotas"></div>
-                    </div>
-
-                    <div class="preview">
-                        <strong>Nota generada:</strong>
-                        <p id="previewText">Ingresa los datos del pedido...</p>
-                        <button type="button" class="btn-copy" id="btnCopyNota" onclick="copiarTexto('previewText', 'btnCopyNota')">📋 Copiar Texto</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MÓDULO 2: CALCULADORA -->
-            <div class="module-pane" id="mod-calc">
-                <div class="card">
-                    <h2>🧮 Calculadora de Montos (VES / USD)</h2>
-                    
-                    <label>Tasa BCV Aplicada (Bs/USD):</label>
-                    <input type="number" step="0.01" id="modalTasaInput" placeholder="0.00" oninput="sincronizarTasa('modal')">
-
-                    <label>Monto en USD ($):</label>
-                    <input type="number" step="0.01" id="calcUSD" placeholder="0.00" oninput="convertirDesdeUSD()">
-
-                    <label>Monto en Bolívares (Bs. S):</label>
-                    <input type="number" step="0.01" id="calcVES" placeholder="0.00" oninput="convertirDesdeVES()">
-
-                    <div class="preview">
-                        <strong>Monto del pedido en Bolívares:</strong>
-                        <p id="calcResumen" style="margin-bottom: 0;">Ingresa un monto para convertir...</p>
-                    </div>
-
-                    <button type="button" class="btn-copy" style="margin-top: 14px;" onclick="copiarTexto('calcResumen', this)">📋 Copiar Texto</button>
-                    <button type="button" class="btn-copy btn-shot" id="btnCopyImage" onclick="generarYCopiarImagen()">📸 Copiar Captura (Imagen)</button>
-                </div>
-            </div>
-
-            <!-- MÓDULO 3: MONITOR DE TASAS -->
-            <div class="module-pane" id="mod-tasas">
-                <div class="card">
-                    <h2>📊 Tasas y Brechas Cambiarias</h2>
-                    <div class="market-grid">
-                        <div class="market-item">
-                            <div class="market-label">Dólar BCV</div>
-                            <div class="market-value" id="mBcvUsd">Cargando...</div>
-                        </div>
-                        <div class="market-item">
-                            <div class="market-label">Euro BCV</div>
-                            <div class="market-value" id="mBcvEur">Cargando...</div>
-                        </div>
-                        <div class="market-item full-width">
-                            <div class="market-label">USDT Binance</div>
-                            <div class="market-value" id="mUsdt">Cargando...</div>
-                        </div>
-                        <div class="market-item">
-                            <div class="market-label">Brecha USDT/BCV</div>
-                            <div class="market-value badge-gap" id="mBrechaUsdt">--%</div>
-                        </div>
-                        <div class="market-item">
-                            <div class="market-label">Brecha EUR/USD</div>
-                            <div class="market-value badge-gap" id="mBrechaEur">--%</div>
-                        </div>
-                    </div>
-                    <div class="market-time" id="mTime">Sincronizando mercado...</div>
-                </div>
-            </div>
-
+            <!-- LOS OTROS MÓDULOS PERMANECEN IGUAL (NOTAS, CALCULADORA, TASAS, ETC.) -->
+            <div class="module-pane" id="mod-notas"><div class="card"><h2>💳 Redactar notas de pago</h2><label>Tasa BCV VES</label><div class="tasa-container"><input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="sincronizarTasa('main')"><button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa">🔄</button></div><label>Monto total de la orden ($)</label><input type="number" step="0.01" id="totalUSD" placeholder="0.00" oninput="calcularNota()"><label>Método de Pago:</label><select id="paymentMethod" onchange="toggleCampos(); calcularNota();"><option value="pago_movil">Pago móvil</option><option value="cuotas">Pago en Cuotas / Crédito</option><option value="divisas">Divisas (Efectivo)</option></select><div id="campoDivisas" style="display:none;"><label>¿Con cuánto cancela el cliente ($)?</label><input type="number" id="billete" placeholder="0.00" oninput="calcularNota()"></div><div id="campoCuotas" style="display:none;"><label>Monto de Inicial ($):</label><input type="number" step="0.01" id="montoInicial" placeholder="0.00" oninput="calcularNota()"><label>Número de Cuotas:</label><select id="numCuotas" onchange="generarCamposFechas(); calcularNota();"><option value="1">1 Cuota</option><option value="2">2 Cuotas</option><option value="3">3 Cuotas</option><option value="4">4 Cuotas</option><option value="5">5 Cuotas</option></select><div id="contenedorFechasCuotas"></div></div><div class="preview"><strong>Nota generada:</strong><p id="previewText">Ingresa los datos del pedido...</p><button type="button" class="btn-copy" id="btnCopyNota" onclick="copiarTexto('previewText', 'btnCopyNota')">📋 Copiar Texto</button></div></div></div>
+            <div class="module-pane" id="mod-calc"><div class="card"><h2>🧮 Calculadora de Montos (VES / USD)</h2><label>Tasa BCV Aplicada (Bs/USD):</label><input type="number" step="0.01" id="modalTasaInput" placeholder="0.00" oninput="sincronizarTasa('modal')"><label>Monto en USD ($):</label><input type="number" step="0.01" id="calcUSD" placeholder="0.00" oninput="convertirDesdeUSD()"><label>Monto en Bolívares (Bs. S):</label><input type="number" step="0.01" id="calcVES" placeholder="0.00" oninput="convertirDesdeVES()"><div class="preview"><strong>Monto del pedido en Bolívares:</strong><p id="calcResumen" style="margin-bottom: 0;">Ingresa un monto para convertir...</p></div><button type="button" class="btn-copy" style="margin-top: 14px;" onclick="copiarTexto('calcResumen', this)">📋 Copiar Texto</button><button type="button" class="btn-copy btn-shot" id="btnCopyImage" onclick="generarYCopiarImagen()">📸 Copiar Captura (Imagen)</button></div></div>
+            <div class="module-pane" id="mod-tasas"><div class="card"><h2>📊 Tasas y Brechas Cambiarias</h2><div class="market-grid"><div class="market-item"><div class="market-label">Dólar BCV</div><div class="market-value" id="mBcvUsd">Cargando...</div></div><div class="market-item"><div class="market-label">Euro BCV</div><div class="market-value" id="mBcvEur">Cargando...</div></div><div class="market-item full-width"><div class="market-label">USDT Binance</div><div class="market-value" id="mUsdt">Cargando...</div></div><div class="market-item"><div class="market-label">Brecha USDT/BCV</div><div class="market-value badge-gap" id="mBrechaUsdt">--%</div></div><div class="market-item"><div class="market-label">Brecha EUR/USD</div><div class="market-value badge-gap" id="mBrechaEur">--%</div></div></div><div class="market-time" id="mTime">Sincronizando mercado...</div></div></div>
         </main>
     </div>
 </div>
 
-<!-- MODAL FLOTANTE "AÑADIR ARTÍCULO" -->
-<div id="modalAnadirArticulo" class="modal-overlay" onclick="if(event.target === this) cerrarModalArticulos()">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3 class="modal-title">Añadir artículo</h3>
-            <button type="button" class="modal-close-btn" onclick="cerrarModalArticulos()">✕</button>
-        </div>
-        <div class="modal-search-box">
-            <div class="modal-search-input-wrapper">
-                <span>🔍</span>
-                <input type="text" id="inputModalBuscadorArticulo" class="modal-search-input" placeholder="Search by producto name, variable o SKU..." oninput="filtrarProductosModal()" autocomplete="off">
-            </div>
-        </div>
-        <div class="modal-items-list" id="modalListaItemsContainer">
-        </div>
-    </div>
-</div>
-
-<!-- MODAL FLOTANTE "GENERADOR DE CLIENTE" -->
-<div id="modalGeneradorCliente" class="modal-overlay" onclick="if(event.target === this) cerrarModalGeneradorCliente()">
-    <div class="modal-card" style="max-height: 90vh; overflow-y: auto;">
-        <div class="modal-header">
-            <h3 class="modal-title">Generar Nombre</h3>
-            <button type="button" class="modal-close-btn" onclick="cerrarModalGeneradorCliente()">✕</button>
-        </div>
-        
-        <div style="padding: 20px 24px;">
-            <label style="margin-top: 0;">Nombre y Apellido:</label>
-            <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()">
-
-            <label>Nro. de Identificación:</label>
-            <div class="id-container">
-                <select id="clientNac" class="select-nac" onchange="formatearCliente()">
-                    <option value="V">V</option>
-                    <option value="E">E</option>
-                    <option value="J">J</option>
-                    <option value="G">G</option>
-                </select>
-                <input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()">
-            </div>
-
-            <div class="preview" style="margin-top: 20px;">
-                <strong>Formato de nombre</strong>
-                <p id="previewClientText">Ingresa los datos del cliente...</p>
-                <button type="button" class="btn-copy" id="btnCopyCliente" onclick="registrarNombreCheckout()">📋 Registrar nombre</button>
-                <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL FLOTANTE "EFECTIVO USD" -->
-<div id="modalEfectivoUSD" class="modal-overlay" onclick="if(event.target === this) cerrarModalEfectivoUSD()">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3 class="modal-title">Efectivo USD</h3>
-            <button type="button" class="modal-close-btn" onclick="cerrarModalEfectivoUSD()">✕</button>
-        </div>
-        <div style="padding: 20px 24px;">
-            <label style="margin-top: 0;">¿Con qué billete paga el cliente ($)?</label>
-            <input type="number" step="0.01" id="inputBilleteUSD" placeholder="Ej: 20, 50, 100..." oninput="calcularCambioUSDModal()" onkeydown="if(event.key === 'Enter') confirmarBilleteUSD()">
-            
-            <div class="preview" style="margin-top: 16px;">
-                <strong>Monto de Cambio a llevar en efectivo</strong>
-                <p id="previewCambioUSDText" style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: var(--turquesa-dark);">$0.00</p>
-            </div>
-
-            <button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="confirmarBilleteUSD()">Confirmar y Guardar</button>
-        </div>
-    </div>
-</div>
-
-<!-- CAPTURE CARD -->
-<div id="captureCard">
-    <div class="shot-box">
-        <div class="shot-header">
-            <img src="https://i.imgur.com/6iqT3wE.png" alt="Logo" id="shotLogo" crossorigin="anonymous">
-        </div>
-        <div class="shot-title">Monto Total del Pedido</div>
-        <div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div>
-        <div class="shot-subtitle">Tasa Oficial BCV Venezuela</div>
-        <div class="shot-details">
-            <div class="shot-detail-item">
-                <div class="shot-detail-label">Monto USD</div>
-                <div class="shot-detail-value" id="shotUSD">$0.00</div>
-            </div>
-            <div class="shot-detail-item">
-                <div class="shot-detail-label">Tasa Oficial</div>
-                <div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div>
-            </div>
-        </div>
-        <div class="shot-footer" id="shotFecha">Cotización válida por hoy</div>
-    </div>
-</div>
+<!-- MODAL FLOTANTE "AÑADIR ARTÍCULO" Y RESTO DE HTML... -->
+<div id="modalAnadirArticulo" class="modal-overlay" onclick="if(event.target === this) cerrarModalArticulos()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Añadir artículo del inventario</h3><div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn-home-icon" title="Actualizar inventario" onclick="refrescarInventarioModal()" id="btnRefrescarInventarioModal">🔄</button><button type="button" class="modal-close-btn" onclick="cerrarModalArticulos()">✕</button></div></div><div class="modal-search-box"><div class="modal-search-input-wrapper"><span>🔍</span><input type="text" id="inputModalBuscadorArticulo" class="modal-search-input" placeholder="Buscar por producto, variante..." oninput="filtrarProductosModal()" autocomplete="off"></div></div><div class="modal-items-list" id="modalListaItemsContainer"></div></div></div>
+<div id="modalGeneradorCliente" class="modal-overlay" onclick="if(event.target === this) cerrarModalGeneradorCliente()"><div class="modal-card" style="max-height: 90vh; overflow-y: auto;"><div class="modal-header"><h3 class="modal-title">Generar Nombre</h3><button type="button" class="modal-close-btn" onclick="cerrarModalGeneradorCliente()">✕</button></div><div style="padding: 20px 24px;"><label style="margin-top: 0;">Nombre y Apellido:</label><input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()"><label>Nro. de Identificación:</label><div class="id-container"><select id="clientNac" class="select-nac" onchange="formatearCliente()"><option value="V">V</option><option value="E">E</option><option value="J">J</option><option value="G">G</option></select><input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()"></div><div class="preview" style="margin-top: 20px;"><strong>Formato de nombre</strong><p id="previewClientText">Ingresa los datos del cliente...</p><button type="button" class="btn-copy" id="btnCopyCliente" onclick="registrarNombreCheckout()">📋 Registrar nombre</button><button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button></div></div></div></div>
+<div id="modalEfectivoUSD" class="modal-overlay" onclick="if(event.target === this) cerrarModalEfectivoUSD()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Efectivo USD</h3><button type="button" class="modal-close-btn" onclick="cerrarModalEfectivoUSD()">✕</button></div><div style="padding: 20px 24px;"><label style="margin-top: 0;">¿Con qué billete paga el cliente ($)?</label><input type="number" step="0.01" id="inputBilleteUSD" placeholder="Ej: 20, 50, 100..." oninput="calcularCambioUSDModal()" onkeydown="if(event.key === 'Enter') confirmarBilleteUSD()"><div class="preview" style="margin-top: 16px;"><strong>Monto de Cambio a llevar en efectivo</strong><p id="previewCambioUSDText" style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: var(--turquesa-dark);">$0.00</p></div><button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="confirmarBilleteUSD()">Confirmar y Guardar</button></div></div></div>
+<div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://i.imgur.com/6iqT3wE.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto Total del Pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa Oficial BCV Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa Oficial</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
 
 <script>
 const SUPABASE_URL = "https://okguzqyujdnubhllnamo.supabase.co"; 
@@ -1214,240 +725,78 @@ const SUPABASE_ANON_KEY = "sb_publishable_K6URdRchmZt3TqpWcO5fng_DHNhmOlr";
 const { createClient } = window.supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const PERFILES_CORREOS = {
-    "moyfa1314@gmail.com": {
-        nombreUsuario: "Moisés",
-        alias: "Brooklyn - Búho Electronics"
-    },
-    "gilder.torrealba@buhoelectronics.com": {
-        nombreUsuario: "Gilder",
-        alias: "Brooklyn - Búho Electronics"
-    }
-};
+const PERFILES_CORREOS = { "moyfa1314@gmail.com": { nombreUsuario: "Moisés", alias: "Brooklyn - Búho Electronics" }, "gilder.torrealba@buhoelectronics.com": { nombreUsuario: "Gilder", alias: "Brooklyn - Búho Electronics" } };
+let listaArticulosPedido = []; let inventarioProductosCache = []; let billeteUSDCliente = 0;
 
-let listaArticulosPedido = [];
-let inventarioProductosCache = []; 
-let billeteUSDCliente = 0;
+function actualizarInterfazUsuario(email) { let perfil = PERFILES_CORREOS[email]; if (!perfil) { const parts = email.split('@')[0]; const nombreGenerico = parts.charAt(0).toUpperCase() + parts.slice(1); perfil = { nombreUsuario: nombreGenerico, alias: "Brooklyn - Búho Electronics" }; } document.getElementById('welcomeUserName').innerText = perfil.nombreUsuario; document.getElementById('brandNameAlias').innerText = perfil.alias; }
+function seleccionarModulo(idModulo) { document.querySelectorAll('.module-pane').forEach(pane => pane.classList.remove('active')); document.getElementById(idModulo).classList.add('active'); document.querySelectorAll('.nav-item').forEach(item => { item.classList.toggle('active', item.dataset.module === idModulo); }); }
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+function toggleTheme() { const html = document.documentElement; const btn = document.getElementById('themeToggle'); if (html.getAttribute('data-theme') === 'dark') { html.removeAttribute('data-theme'); if (btn) btn.innerHTML = '🌙 Modo Oscuro'; localStorage.setItem('theme', 'light'); } else { html.setAttribute('data-theme', 'dark'); if (btn) btn.innerHTML = '☀️ Modo Claro'; localStorage.setItem('theme', 'dark'); } }
+(function initTheme() { if (localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); const btn = document.getElementById('themeToggle'); if (btn) btn.innerHTML = '☀️ Modo Claro'; } })();
 
-function actualizarInterfazUsuario(email) {
-    let perfil = PERFILES_CORREOS[email];
-    if (!perfil) {
-        const parts = email.split('@')[0];
-        const nombreGenerico = parts.charAt(0).toUpperCase() + parts.slice(1);
-        perfil = { nombreUsuario: nombreGenerico, alias: "Brooklyn - Búho Electronics" };
-    }
-
-    document.getElementById('welcomeUserName').innerText = perfil.nombreUsuario;
-    document.getElementById('brandNameAlias').innerText = perfil.alias;
-    const logoLetter = document.getElementById('brandLogoLetter');
-    if (logoLetter) logoLetter.innerText = perfil.alias.charAt(0).toUpperCase();
-}
-
-function seleccionarModulo(idModulo) {
-    document.querySelectorAll('.module-pane').forEach(pane => pane.classList.remove('active'));
-    document.getElementById(idModulo).classList.add('active');
-
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.module === idModulo);
-    });
-}
-
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('collapsed');
-}
-
-function toggleTheme() {
-    const html = document.documentElement;
-    const btn = document.getElementById('themeToggle');
-    if (html.getAttribute('data-theme') === 'dark') {
-        html.removeAttribute('data-theme');
-        if (btn) btn.innerHTML = '🌙 Modo Oscuro';
-        localStorage.setItem('theme', 'light');
-    } else {
-        html.setAttribute('data-theme', 'dark');
-        if (btn) btn.innerHTML = '☀️ Modo Claro';
-        localStorage.setItem('theme', 'dark');
-    }
-}
-
-(function initTheme() {
-    if (localStorage.getItem('theme') === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        const btn = document.getElementById('themeToggle');
-        if (btn) btn.innerHTML = '☀️ Modo Claro';
-    }
-})();
-
-async function validarAcceso() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const error = document.getElementById('loginError');
-
-    if (!email || !password) {
-        error.innerText = "Por favor ingresa correo y contraseña.";
-        return;
-    }
-
-    error.innerText = "Verificando...";
-
-    const { data, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-    if (authError) {
-        error.innerText = "❌ Credenciales incorrectas";
-    } else {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('btnLogout').style.display = 'inline-flex';
-        error.innerText = "";
-        actualizarInterfazUsuario(email);
-        cargarProductosInventario();
-    }
-}
-
-async function comprobarSesion() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session && session.user) {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('btnLogout').style.display = 'inline-flex';
-        actualizarInterfazUsuario(session.user.email);
-        cargarProductosInventario();
-    }
-}
-
-async function cerrarSesion() {
-    await supabaseClient.auth.signOut();
-    location.reload();
-}
-
+async function validarAcceso() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPassword').value; const error = document.getElementById('loginError'); if (!email || !password) { error.innerText = "Por favor ingresa correo y contraseña."; return; } error.innerText = "Verificando..."; const { data, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password }); if (authError) { error.innerText = "❌ Credenciales incorrectas"; } else { document.getElementById('loginOverlay').style.display = 'none'; document.getElementById('btnLogout').style.display = 'inline-flex'; error.innerText = ""; actualizarInterfazUsuario(email); cargarProductosInventario(); } }
+async function comprobarSesion() { const { data: { session } } = await supabaseClient.auth.getSession(); if (session && session.user) { document.getElementById('loginOverlay').style.display = 'none'; document.getElementById('btnLogout').style.display = 'inline-flex'; actualizarInterfazUsuario(session.user.email); cargarProductosInventario(); } }
+async function cerrarSesion() { await supabaseClient.auth.signOut(); location.reload(); }
 comprobarSesion();
 
-// --- LÓGICA MÓDULO REGISTRAR PEDIDO & MODAL ARTÍCULOS ---
-function autocorregirNombrePedido() {
-    const inputElement = document.getElementById('pedidoClienteNombre');
-    if (!inputElement) return;
-    
-    const raw = inputElement.value;
-    const formatted = raw.trim().split(/\s+/)
-        .map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '')
-        .join(' ');
-    if (inputElement.value !== formatted) {
-        inputElement.value = formatted;
-    }
-}
+function autocorregirNombrePedido() { const inputElement = document.getElementById('pedidoClienteNombre'); if (!inputElement) return; const raw = inputElement.value; const formatted = raw.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' '); if (inputElement.value !== formatted) { inputElement.value = formatted; } }
 
-async function cargarProductosInventario() {
-    const { data, error } = await supabaseClient
-        .from('productos')
-        .select('*')
-        .order('nombre', { ascending: true });
-
-    if (!error && data) {
-        inventarioProductosCache = data;
-    } else {
-        inventarioProductosCache = [];
-    }
-}
-
-// --- LÓGICA MÓDULO GESTIÓN DE PEDIDOS ---
-let gestionPedidosCache = [];
-let pedidosGestionCargados = false;
-let pedidoSeleccionadoId = null;
-
-function formatoMonedaUSD(valor) {
-    const n = Number(valor) || 0;
-    return `$${n.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
-
-function formatoFechaCorta(valor) {
-    if (!valor) return '—';
-    const d = new Date(valor);
-    if (isNaN(d.getTime())) return '—';
-    return d.toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' });
-}
+// LÓGICA GESTIÓN PEDIDOS ACTUALIZADA
+let gestionPedidosCache = []; let pedidosGestionCargados = false; let pedidoSeleccionadoId = null;
+function formatoMonedaUSD(valor) { const n = Number(valor) || 0; return `$${n.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; }
+function formatoFechaCorta(valor) { if (!valor) return '—'; const d = new Date(valor); if (isNaN(d.getTime())) return '—'; return d.toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' }); }
 
 const ETIQUETAS_ESTADO_PEDIDO = { pending: 'Pendiente', confirmed: 'Confirmado', completed: 'Completado', cancelled: 'Cancelado', draft: 'Borrador' };
-const ETIQUETAS_ESTADO_PAGO = { pending: 'Pendiente', paid: 'Pagado', refunded: 'Reembolsado', voided: 'Anulado' };
-const ETIQUETAS_ESTADO_ENVIO = { unfulfilled: 'Sin enviar', processing: 'En preparación', fulfilled: 'Enviado', delivered: 'Entregado', cancelled: 'Cancelado' };
+const ETIQUETAS_ESTADO_PAGO = { unpaid: 'Sin pagar', pending: 'Pendiente', confirming: 'Confirmando pago', partially_paid: 'Parcial. pagado', paid: 'Pagado', refunded: 'Reembolsado', voided: 'Anulado' };
+const ETIQUETAS_ESTADO_ENVIO = { unfulfilled: 'Incumplido', ready: 'Listo', in_transit: 'En camino', partially_fulfilled: 'Parcial. cumplido', processing: 'En preparación', fulfilled: 'Enviado', delivered: 'Entregado', cancelled: 'Cancelado' };
 
-function claseBadgePago(estado) {
-    if (estado === 'paid') return 'st-ok';
-    if (estado === 'refunded' || estado === 'voided') return 'st-bad';
-    return 'st-warn';
-}
-function claseBadgeEnvio(estado) {
-    if (estado === 'fulfilled' || estado === 'delivered') return 'st-ok';
-    if (estado === 'cancelled') return 'st-bad';
-    return 'st-warn';
-}
-function claseBadgePedido(estado) {
-    if (estado === 'completed' || estado === 'confirmed') return 'st-ok';
-    if (estado === 'cancelled') return 'st-bad';
-    return 'st-neutral';
-}
+function claseBadgePago(estado) { if (estado === 'paid') return 'st-ok'; if (estado === 'refunded' || estado === 'voided') return 'st-bad'; return 'st-warn'; }
+function claseBadgeEnvio(estado) { if (estado === 'fulfilled' || estado === 'delivered') return 'st-ok'; if (estado === 'cancelled') return 'st-bad'; return 'st-warn'; }
+function claseBadgePedido(estado) { if (estado === 'completed' || estado === 'confirmed') return 'st-ok'; if (estado === 'cancelled') return 'st-bad'; return 'st-neutral'; }
 
 async function cargarGestionPedidos(forzar = false) {
     if (pedidosGestionCargados && !forzar) { renderTablaGestionPedidos(); return; }
-
     const tbody = document.getElementById('tbodyGestionPedidos');
     if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">Cargando pedidos...</td></tr>';
-
-    const { data, error } = await supabaseClient
-        .from('gestion_pedidos')
-        .select('*')
-        .order('fecha_pedido', { ascending: false })
-        .limit(300);
-
-    if (error) {
-        console.warn('Error cargando pedidos:', error);
-        if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">No se pudieron cargar los pedidos.</td></tr>';
-        return;
-    }
-
-    gestionPedidosCache = data || [];
-    pedidosGestionCargados = true;
-    renderTablaGestionPedidos();
+    const { data, error } = await supabaseClient.from('gestion_pedidos').select('*').order('fecha_pedido', { ascending: false }).limit(300);
+    if (error) { console.warn('Error cargando pedidos:', error); if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">No se pudieron cargar los pedidos.</td></tr>'; return; }
+    gestionPedidosCache = data || []; pedidosGestionCargados = true; renderTablaGestionPedidos();
 }
 
 function renderTablaGestionPedidos() {
     const tbody = document.getElementById('tbodyGestionPedidos');
     if (!tbody) return;
-
     const texto = (document.getElementById('pedidosBuscador')?.value || '').trim().toLowerCase();
     const filtroEnvio = document.getElementById('pedidosFiltroEstadoEnvio')?.value || '';
     const filtroPago = document.getElementById('pedidosFiltroPago')?.value || '';
-
     let lista = gestionPedidosCache.filter(p => {
         if (filtroEnvio && p.estado_envio !== filtroEnvio) return false;
         if (filtroPago && p.estado_pago !== filtroPago) return false;
-        if (texto) {
-            const campo = `${p.numero_pedido || ''} ${p.cliente_nombre || ''} ${p.cliente_telefono || ''}`.toLowerCase();
-            if (!campo.includes(texto)) return false;
-        }
+        if (texto) { const campo = `${p.numero_pedido || ''} ${p.cliente_nombre || ''} ${p.cliente_telefono || ''}`.toLowerCase(); if (!campo.includes(texto)) return false; }
         return true;
     });
 
-    if (lista.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">No se encontraron pedidos con esos filtros.</td></tr>';
-        return;
-    }
+    if (lista.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">No se encontraron pedidos con esos filtros.</td></tr>'; return; }
 
-    tbody.innerHTML = lista.map(p => `
+    tbody.innerHTML = lista.map(p => {
+        const linkTakeApp = p.takeapp_url || p.url_pedido || `https://take.app/orders/${p.numero_pedido || ''}`;
+        return `
         <tr>
-            <td><strong>#${p.numero_pedido || '—'}</strong></td>
+            <td><strong><a href="${linkTakeApp}" target="_blank" style="color: var(--turquesa-dark); text-decoration: none;" title="Ver Nota de Entrega">#${p.numero_pedido || '—'}</a></strong></td>
             <td>${p.cliente_nombre || 'Sin nombre'}${p.cliente_telefono ? `<br><span style="color:var(--text-muted); font-size:11px;">${p.cliente_telefono}</span>` : ''}</td>
             <td>${formatoMonedaUSD(p.monto_total)}</td>
             <td><span class="status-badge ${claseBadgePago(p.estado_pago)}">${ETIQUETAS_ESTADO_PAGO[p.estado_pago] || p.estado_pago || '—'}</span></td>
             <td><span class="status-badge ${claseBadgePedido(p.estado_pedido)}">${ETIQUETAS_ESTADO_PEDIDO[p.estado_pedido] || p.estado_pedido || '—'}</span></td>
             <td><span class="status-badge ${claseBadgeEnvio(p.estado_envio)}">${ETIQUETAS_ESTADO_ENVIO[p.estado_envio] || p.estado_envio || '—'}</span></td>
             <td>${formatoFechaCorta(p.fecha_pedido)}</td>
-            <td><button type="button" class="btn-pill btn-pequeno" onclick="abrirModalEstadoPedido('${p.id}')">Actualizar</button></td>
+            <td><button type="button" class="btn-pill btn-pequeno" onclick="abrirModalEstadoPedido('${p.id}')">Modificar</button></td>
         </tr>
-    `).join('');
+    `}).join('');
 }
 
 function abrirModalEstadoPedido(pedidoId) {
     const pedido = gestionPedidosCache.find(p => String(p.id) === String(pedidoId));
     if (!pedido) return;
-
     pedidoSeleccionadoId = pedido.id;
     document.getElementById('modalEstadoPedidoNumero').innerText = `#${pedido.numero_pedido || ''}`;
     document.getElementById('modalEstadoPedidoCliente').innerText = `${pedido.cliente_nombre || 'Sin nombre'}${pedido.cliente_telefono ? ' · ' + pedido.cliente_telefono : ''}`;
@@ -1456,728 +805,289 @@ function abrirModalEstadoPedido(pedidoId) {
     document.getElementById('selectEstadoEnvio').value = pedido.estado_envio || 'unfulfilled';
     document.getElementById('inputNotaInternaPedido').value = '';
     document.getElementById('modalEstadoPedidoError').innerText = '';
-
     document.getElementById('modalEstadoPedido').style.display = 'flex';
 }
 
-function cerrarModalEstadoPedido() {
-    document.getElementById('modalEstadoPedido').style.display = 'none';
-    pedidoSeleccionadoId = null;
-}
+function cerrarModalEstadoPedido() { document.getElementById('modalEstadoPedido').style.display = 'none'; pedidoSeleccionadoId = null; }
 
 async function guardarEstadoPedido() {
     if (!pedidoSeleccionadoId) return;
-
     const btn = document.getElementById('btnGuardarEstadoPedido');
     const errorEl = document.getElementById('modalEstadoPedidoError');
-    errorEl.innerText = '';
-    btn.disabled = true;
-    const textoOriginal = btn.innerText;
-    btn.innerText = '⏳ Guardando...';
-
-    const cambios = {
-        orderStatus: document.getElementById('selectEstadoPedido').value,
-        paymentStatus: document.getElementById('selectEstadoPago').value,
-        fulfillmentStatus: document.getElementById('selectEstadoEnvio').value,
-    };
+    errorEl.innerText = ''; btn.disabled = true;
+    const textoOriginal = btn.innerText; btn.innerText = '⏳ Guardando...';
+    const cambios = { orderStatus: document.getElementById('selectEstadoPedido').value, paymentStatus: document.getElementById('selectEstadoPago').value, fulfillmentStatus: document.getElementById('selectEstadoEnvio').value, };
     const nota = document.getElementById('inputNotaInternaPedido').value.trim();
     if (nota) cambios.internalNote = nota;
-
     try {
-        const { data, error } = await supabaseClient.functions.invoke('brooklyn-orders', {
-            body: { action: 'update_order', pedidoId: pedidoSeleccionadoId, changes: cambios },
-        });
-
-        if (error || !data?.ok) {
-            throw new Error(data?.error || error?.message || 'No se pudo actualizar el pedido.');
-        }
-
+        const { data, error } = await supabaseClient.functions.invoke('brooklyn-orders', { body: { action: 'update_order', pedidoId: pedidoSeleccionadoId, changes: cambios }, });
+        if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo actualizar el pedido.');
         const idx = gestionPedidosCache.findIndex(p => String(p.id) === String(pedidoSeleccionadoId));
-        if (idx !== -1) {
-            gestionPedidosCache[idx].estado_pedido = data.pedido.estado_pedido;
-            gestionPedidosCache[idx].estado_pago = data.pedido.estado_pago;
-            gestionPedidosCache[idx].estado_envio = data.pedido.estado_envio;
-        }
-
-        renderTablaGestionPedidos();
-        cerrarModalEstadoPedido();
-    } catch (err) {
-        errorEl.innerText = `❌ ${err.message || 'Error al guardar los cambios.'}`;
-    } finally {
-        btn.disabled = false;
-        btn.innerText = textoOriginal;
-    }
+        if (idx !== -1) { gestionPedidosCache[idx].estado_pedido = data.pedido.estado_pedido; gestionPedidosCache[idx].estado_pago = data.pedido.estado_pago; gestionPedidosCache[idx].estado_envio = data.pedido.estado_envio; }
+        renderTablaGestionPedidos(); cerrarModalEstadoPedido();
+    } catch (err) { errorEl.innerText = `❌ ${err.message || 'Error al guardar los cambios.'}`; } finally { btn.disabled = false; btn.innerText = textoOriginal; }
 }
 
-function abrirModalArticulos() {
-    const modal = document.getElementById('modalAnadirArticulo');
-    modal.style.display = 'flex';
-    document.getElementById('inputModalBuscadorArticulo').value = '';
-    filtrarProductosModal();
-    setTimeout(() => {
-        document.getElementById('inputModalBuscadorArticulo').focus();
-    }, 50);
+let catalogoProductosCache = []; let catalogoCargando = false; let catalogoCargadoUnaVez = false;
+async function cargarProductosInventario(forzar = false) {
+    if (catalogoCargando) return; if (catalogoCargadoUnaVez && !forzar) { renderInventarioModulo(); return; }
+    catalogoCargando = true; const grid = document.getElementById('inventarioGrid');
+    if (grid) grid.innerHTML = '<div class="pedidos-empty">Cargando inventario...</div>';
+    try {
+        const { data, error } = await supabaseClient.functions.invoke('brooklyn-catalog');
+        if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo cargar el inventario.');
+        catalogoProductosCache = data.productos || []; inventarioProductosCache = [];
+        catalogoProductosCache.forEach(p => {
+            if (p.variantes && p.variantes.length > 0) { p.variantes.forEach(v => { inventarioProductosCache.push({ nombre: p.nombre, variable: v.nombre, sku: '', precio: v.precio, stock: v.stock, productId: p.id, variantId: v.id, }); }); } else { inventarioProductosCache.push({ nombre: p.nombre, variable: '', sku: '', precio: p.precio || 0, stock: p.stock, productId: p.id, variantId: null, }); }
+        });
+        catalogoCargadoUnaVez = true;
+    } catch (err) { console.warn('Error cargando el inventario:', err); catalogoProductosCache = []; inventarioProductosCache = []; if (grid) grid.innerHTML = `<div class="pedidos-empty">❌ No se pudo cargar el inventario: ${err.message}</div>`; } finally { catalogoCargando = false; if (catalogoCargadoUnaVez) renderInventarioModulo(); }
 }
 
-function cerrarModalArticulos() {
-    document.getElementById('modalAnadirArticulo').style.display = 'none';
+function renderInventarioModulo() {
+    const grid = document.getElementById('inventarioGrid'); if (!grid) return;
+    const texto = (document.getElementById('inventarioBuscador')?.value || '').trim().toLowerCase();
+    let lista = catalogoProductosCache.filter(p => { if (!texto) return true; const campo = `${p.nombre} ${(p.variantes || []).map(v => v.nombre).join(' ')}`.toLowerCase(); return campo.includes(texto); });
+    if (lista.length === 0) { grid.innerHTML = '<div class="pedidos-empty">No se encontraron productos.</div>'; return; }
+    grid.innerHTML = lista.map(p => {
+        const imagen = p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy">` : ''; let cuerpoVariantes = '';
+        if (p.variantes && p.variantes.length > 0) { cuerpoVariantes = p.variantes.map(v => ` <div class="inventario-variante-row"> <span class="inventario-variante-nombre">${v.nombre}</span> <span class="inventario-variante-precio" style="color:${v.agotado ? '#ef4444' : 'var(--turquesa-dark)'};"> ${v.agotado ? 'Agotado' : `$${v.precio.toFixed(2)}`} </span> </div> `).join(''); } else { cuerpoVariantes = ` <div class="inventario-variante-row" style="border-top:none;"> <span class="inventario-variante-nombre">${p.stock !== null ? `Stock: ${p.stock}` : 'Sin variantes'}</span> <span class="inventario-variante-precio" style="color:${p.agotado ? '#ef4444' : 'var(--turquesa-dark)'};"> ${p.agotado ? 'Agotado' : `$${(p.precio || 0).toFixed(2)}`} </span> </div> `; }
+        return ` <div class="inventario-card"> ${imagen} <div class="inventario-card-body"> <div class="inventario-card-title">${p.nombre}</div> ${cuerpoVariantes} </div> </div> `;
+    }).join('');
 }
 
+async function abrirModalArticulos() { const modal = document.getElementById('modalAnadirArticulo'); modal.style.display = 'flex'; document.getElementById('inputModalBuscadorArticulo').value = ''; document.getElementById('modalListaItemsContainer').innerHTML = '<div class="pedidos-empty">Cargando inventario en tiempo real...</div>'; await cargarProductosInventario(true); filtrarProductosModal(); setTimeout(() => { document.getElementById('inputModalBuscadorArticulo').focus(); }, 50); }
+function cerrarModalArticulos() { document.getElementById('modalAnadirArticulo').style.display = 'none'; }
 function filtrarProductosModal() {
-    const query = document.getElementById('inputModalBuscadorArticulo').value.toLowerCase().trim();
-    const container = document.getElementById('modalListaItemsContainer');
-    container.innerHTML = '';
-
-    if (!inventarioProductosCache || inventarioProductosCache.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                <p style="font-weight: 600; font-size: 14px; margin: 0 0 4px 0;">No hay ítems guardados en el inventario</p>
-                <p style="font-size: 12px; margin: 0;">El diseño ya está listo para cuando agregues productos.</p>
-            </div>
-        `;
-        return;
-    }
-
-    const filtrados = inventarioProductosCache.filter(p => {
-        const nombre = (p.nombre || '').toLowerCase();
-        const sku = (p.sku || '').toLowerCase();
-        const variable = (p.variable || p.variacion || p.modelo || '').toLowerCase();
-        return nombre.includes(query) || sku.includes(query) || variable.includes(query);
-    });
-
-    if (filtrados.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13.5px;">
-                No se encontraron artículos con ese nombre, variable o SKU.
-            </div>
-        `;
-    } else {
+    const query = document.getElementById('inputModalBuscadorArticulo').value.toLowerCase().trim(); const container = document.getElementById('modalListaItemsContainer'); container.innerHTML = '';
+    if (!inventarioProductosCache || inventarioProductosCache.length === 0) { container.innerHTML = `<div style="text-align: center; padding: 40px 20px; color: var(--text-muted);"><p style="font-weight: 600; font-size: 14px; margin: 0 0 4px 0;">No hay ítems guardados</p></div>`; return; }
+    const filtrados = inventarioProductosCache.filter(p => { const nombre = (p.nombre || '').toLowerCase(); const sku = (p.sku || '').toLowerCase(); const variable = (p.variable || p.variacion || p.modelo || '').toLowerCase(); return nombre.includes(query) || sku.includes(query) || variable.includes(query); });
+    if (filtrados.length === 0) { container.innerHTML = `<div style="text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13.5px;">No se encontraron artículos.</div>`; } else {
         filtrados.forEach(p => {
-            const nombre = p.nombre || 'Sin nombre';
-            const sku = p.sku || 'S/N';
-            const variable = p.variable || p.variacion || p.modelo || '';
-            const precio = parseFloat(p.precio) || 0;
-            const stock = p.stock !== undefined ? parseInt(p.stock) : 1;
-            const esAgotado = stock <= 0;
-
-            const nombreCompleto = variable ? `${nombre} | ${variable}` : nombre;
-
-            const row = document.createElement('div');
-            row.className = 'modal-item-row';
-            row.innerHTML = `
-                <div class="modal-item-info">
-                    <span class="modal-item-name">${nombreCompleto}</span>
-                    <span class="modal-item-sub">SKU: ${sku}</span>
-                </div>
-                <div class="modal-item-price-box">
-                    <span class="modal-item-price">$${precio.toFixed(2)}</span>
-                    ${esAgotado ? '<span class="modal-item-agotado">Agotado</span>' : '<span class="modal-item-qty">/ 1 QTY</span>'}
-                </div>
-            `;
-            
-            if (!esAgotado) {
-                row.onclick = () => {
-                    seleccionarArticuloDesdeModal(nombreCompleto, precio);
-                };
-            } else {
-                row.style.opacity = '0.6';
-            }
+            const nombre = p.nombre || 'Sin nombre'; const sku = p.sku || 'S/N'; const variable = p.variable || p.variacion || p.modelo || ''; const precio = parseFloat(p.precio) || 0; const stock = p.stock !== undefined ? parseInt(p.stock) : 1; const esAgotado = stock <= 0; const nombreCompleto = variable ? `${nombre} | ${variable}` : nombre;
+            const row = document.createElement('div'); row.className = 'modal-item-row'; row.innerHTML = ` <div class="modal-item-info"> <span class="modal-item-name">${nombreCompleto}</span> <span class="modal-item-sub">SKU: ${sku}</span> </div> <div class="modal-item-price-box"> <span class="modal-item-price">$${precio.toFixed(2)}</span> ${esAgotado ? '<span class="modal-item-agotado">Agotado</span>' : '<span class="modal-item-qty">/ 1 QTY</span>'} </div> `;
+            if (!esAgotado) { row.onclick = () => { seleccionarArticuloDesdeModal(nombreCompleto, precio, p.productId, p.variantId); }; } else { row.style.opacity = '0.6'; }
             container.appendChild(row);
         });
     }
 }
 
-function seleccionarArticuloDesdeModal(nombreCompleto, precio) {
-    listaArticulosPedido.push({ nombre: nombreCompleto, precio });
-    cerrarModalArticulos();
-    actualizarTablaArticulosPedido();
-}
-
+function seleccionarArticuloDesdeModal(nombreCompleto, precio, productId = null, variantId = null) { listaArticulosPedido.push({ nombre: nombreCompleto, precio, productId, variantId }); cerrarModalArticulos(); actualizarTablaArticulosPedido(); }
+async function refrescarInventarioModal() { const btn = document.getElementById('btnRefrescarInventarioModal'); if (btn) btn.innerText = '⏳'; await cargarProductosInventario(true); filtrarProductosModal(); if (btn) btn.innerText = '🔄'; }
 function mostrarCampoArticuloPersonalizado() {
-    const contenedor = document.getElementById('contenedorArticulosPersonalizados');
-    const idUnico = 'custom_group_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-
-    const div = document.createElement('div');
-    div.className = 'tasa-container';
-    div.style.marginBottom = '10px';
-    div.id = idUnico;
-    div.innerHTML = `
-        <input type="text" placeholder="Descripción del artículo..." class="custom-art-name" style="flex:2;">
-        <input type="number" step="0.01" placeholder="Precio ($)" class="custom-art-price" style="flex:1;">
-        <button type="button" class="btn-copy" style="margin-top:6px; flex:0 0 auto; width:auto; background-color:#ef4444; color:#fff;" onclick="eliminarFilaPersonalizada('${idUnico}')">❌</button>
-        <button type="button" class="btn-copy" style="margin-top:6px; flex:0 0 auto; width:auto;" onclick="guardarArticuloPersonalizadoFila('${idUnico}')">➕ Agregar</button>
-    `;
+    const contenedor = document.getElementById('contenedorArticulosPersonalizados'); const idUnico = 'custom_group_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+    const div = document.createElement('div'); div.className = 'tasa-container'; div.style.marginBottom = '10px'; div.id = idUnico;
+    div.innerHTML = ` <input type="text" placeholder="Descripción del artículo..." class="custom-art-name" style="flex:2;"> <input type="number" step="0.01" placeholder="Precio ($)" class="custom-art-price" style="flex:1;"> <button type="button" class="btn-copy" style="margin-top:6px; flex:0 0 auto; width:auto; background-color:#ef4444; color:#fff;" onclick="eliminarFilaPersonalizada('${idUnico}')">❌</button> <button type="button" class="btn-copy" style="margin-top:6px; flex:0 0 auto; width:auto;" onclick="guardarArticuloPersonalizadoFila('${idUnico}')">➕ Agregar</button> `;
     contenedor.appendChild(div);
 }
 
-function eliminarFilaPersonalizada(id) {
-    const el = document.getElementById(id);
-    if (el) el.remove();
-}
-
+function eliminarFilaPersonalizada(id) { const el = document.getElementById(id); if (el) el.remove(); }
 function guardarArticuloPersonalizadoFila(id) {
-    const fila = document.getElementById(id);
-    if (!fila) return;
-
-    const nombreInput = fila.querySelector('.custom-art-name');
-    const precioInput = fila.querySelector('.custom-art-price');
-
-    const nombre = nombreInput.value.trim();
-    const precio = parseFloat(precioInput.value) || 0;
-
-    if (!nombre) {
-        alert("Ingresa la descripción del artículo personalizado.");
-        return;
-    }
-
-    listaArticulosPedido.push({ nombre, precio });
-    fila.remove();
-    actualizarTablaArticulosPedido();
+    const fila = document.getElementById(id); if (!fila) return; const nombreInput = fila.querySelector('.custom-art-name'); const precioInput = fila.querySelector('.custom-art-price');
+    const nombre = nombreInput.value.trim(); const precio = parseFloat(precioInput.value) || 0;
+    if (!nombre) { alert("Ingresa la descripción del artículo."); return; }
+    listaArticulosPedido.push({ nombre, precio }); fila.remove(); actualizarTablaArticulosPedido();
 }
-
-function eliminarArticuloPedido(index) {
-    listaArticulosPedido.splice(index, 1);
-    actualizarTablaArticulosPedido();
-}
-
+function eliminarArticuloPedido(index) { listaArticulosPedido.splice(index, 1); actualizarTablaArticulosPedido(); }
 function actualizarTablaArticulosPedido() {
-    const tbody = document.getElementById('tbodyArticulosPedido');
-    const container = document.getElementById('tablaArticulosContainer');
-    const placeholder = document.getElementById('placeholderSinArticulos');
-    
+    const tbody = document.getElementById('tbodyArticulosPedido'); const container = document.getElementById('tablaArticulosContainer'); const placeholder = document.getElementById('placeholderSinArticulos');
     if (!tbody) return;
-    if (listaArticulosPedido.length === 0) {
-        container.style.display = 'none';
-        placeholder.style.display = 'block';
-        calcularTotalesPedido();
-        return;
-    }
-
-    placeholder.style.display = 'none';
-    container.style.display = 'block';
-    tbody.innerHTML = "";
-    listaArticulosPedido.forEach((art, idx) => {
-        tbody.innerHTML += `
-            <tr>
-                <td>${art.nombre}</td>
-                <td>$${art.precio.toFixed(2)}</td>
-                <td><button type="button" class="btn-pill" style="padding:4px 8px; font-size:11px; color:#ef4444; border-color:#ef4444;" onclick="eliminarArticuloPedido(${idx})">Eliminar</button></td>
-            </tr>
-        `;
-    });
+    if (listaArticulosPedido.length === 0) { container.style.display = 'none'; placeholder.style.display = 'block'; calcularTotalesPedido(); return; }
+    placeholder.style.display = 'none'; container.style.display = 'block'; tbody.innerHTML = "";
+    listaArticulosPedido.forEach((art, idx) => { tbody.innerHTML += ` <tr> <td>${art.nombre}</td> <td>$${art.precio.toFixed(2)}</td> <td><button type="button" class="btn-pill" style="padding:4px 8px; font-size:11px; color:#ef4444; border-color:#ef4444;" onclick="eliminarArticuloPedido(${idx})">Eliminar</button></td> </tr> `; });
     calcularTotalesPedido();
 }
 
-function toggleCamposEnvio() {
-    const radioDelivery = document.getElementById('radioEnvioDelivery');
-    const metodo = radioDelivery && radioDelivery.checked ? 'delivery' : 'nacional';
-    
-    document.getElementById('envioDeliveryContainer').style.display = metodo === 'delivery' ? 'block' : 'none';
-    document.getElementById('envioNacionalContainer').style.display = metodo === 'nacional' ? 'block' : 'none';
-}
-
+function toggleCamposEnvio() { const radioDelivery = document.getElementById('radioEnvioDelivery'); const metodo = radioDelivery && radioDelivery.checked ? 'delivery' : 'nacional'; document.getElementById('envioDeliveryContainer').style.display = metodo === 'delivery' ? 'block' : 'none'; document.getElementById('envioNacionalContainer').style.display = metodo === 'nacional' ? 'block' : 'none'; }
 function abrirModalDireccionDelivery() {
     const inputDir = prompt("Introduce la dirección de calle, Plus Code, link de Google Maps o coordenada:");
     if (inputDir !== null) {
-        const previewDiv = document.getElementById('previewDireccionDelivery');
-        const textP = document.getElementById('textoDireccionDelivery');
-        const mapContainer = document.getElementById('mapPreviewContainer');
-        const iframeMap = document.getElementById('googleMapIframe');
-
-        if (inputDir.trim() !== "") {
-            textP.innerText = inputDir;
-            previewDiv.style.display = 'block';
-
-            const encodedQuery = encodeURIComponent(inputDir.trim());
-            iframeMap.src = `https://www.google.com/maps?q=${encodedQuery}&output=embed`;
-            mapContainer.style.display = 'block';
-        } else {
-            previewDiv.style.display = 'none';
-            mapContainer.style.display = 'none';
-            iframeMap.src = "";
-        }
+        const previewDiv = document.getElementById('previewDireccionDelivery'); const textP = document.getElementById('textoDireccionDelivery'); const mapContainer = document.getElementById('mapPreviewContainer'); const iframeMap = document.getElementById('googleMapIframe');
+        if (inputDir.trim() !== "") { textP.innerText = inputDir; previewDiv.style.display = 'block'; const encodedQuery = encodeURIComponent(inputDir.trim()); iframeMap.src = `https://www.google.com/maps?q=${encodedQuery}&output=embed`; mapContainer.style.display = 'block'; } else { previewDiv.style.display = 'none'; mapContainer.style.display = 'none'; iframeMap.src = ""; }
     }
 }
-
-function alCambiarMetodoPago() {
-    const radios = document.getElementsByName('metodoPagoRadio');
-    let metodo = 'pago_movil';
-    for (let r of radios) {
-        if (r.checked) { metodo = r.value; break; }
-    }
-    
-    if (metodo === 'efectivo_usd') {
-        abrirModalEfectivoUSD();
-    } else {
-        actualizarObservacionCheckout();
-    }
-}
-
+function alCambiarMetodoPago() { const radios = document.getElementsByName('metodoPagoRadio'); let metodo = 'pago_movil'; for (let r of radios) { if (r.checked) { metodo = r.value; break; } } if (metodo === 'efectivo_usd') { abrirModalEfectivoUSD(); } else { actualizarObservacionCheckout(); } }
 function abrirModalEfectivoUSD() {
-    const modal = document.getElementById('modalEfectivoUSD');
-    modal.style.display = 'flex';
-    
-    let sumaArticulos = 0;
-    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
-    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
-    const totalUSD = sumaArticulos + ajuste;
-
-    const input = document.getElementById('inputBilleteUSD');
-    if (billeteUSDCliente > 0) {
-        input.value = billeteUSDCliente;
-    } else {
-        input.value = totalUSD > 0 ? totalUSD : '';
-    }
-    
-    calcularCambioUSDModal();
-    setTimeout(() => { 
-        input.focus(); 
-        input.select(); 
-    }, 50);
+    const modal = document.getElementById('modalEfectivoUSD'); modal.style.display = 'flex'; let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste;
+    const input = document.getElementById('inputBilleteUSD'); if (billeteUSDCliente > 0) { input.value = billeteUSDCliente; } else { input.value = totalUSD > 0 ? totalUSD : ''; }
+    calcularCambioUSDModal(); setTimeout(() => { input.focus(); input.select(); }, 50);
 }
-
-function cerrarModalEfectivoUSD() {
-    document.getElementById('modalEfectivoUSD').style.display = 'none';
+function cerrarModalEfectivoUSD() { document.getElementById('modalEfectivoUSD').style.display = 'none'; actualizarObservacionCheckout(); }
+function calcularCambioUSDModal() {
+    let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste; const billete = parseFloat(document.getElementById('inputBilleteUSD').value) || 0; const cambio = billete - totalUSD; const preview = document.getElementById('previewCambioUSDText');
+    if (cambio >= 0) { preview.innerText = `$${cambio.toFixed(2)} USD`; preview.style.color = 'var(--turquesa-dark)'; } else { preview.innerText = `Faltan $${Math.abs(cambio).toFixed(2)} USD`; preview.style.color = '#ef4444'; }
+}
+function confirmarBilleteUSD() { const val = parseFloat(document.getElementById('inputBilleteUSD').value) || 0; billeteUSDCliente = val; cerrarModalEfectivoUSD(); }
+function actualizarObservacionCheckout() {
+    let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
+    const radios = document.getElementsByName('metodoPagoRadio'); let metodo = 'pago_movil'; for (let r of radios) { if (r.checked) { metodo = r.value; break; } }
+    let nota = "";
+    if (metodo === 'pago_movil') { const totalBs = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`; } else if (metodo === 'efectivo_usd') { let billete = billeteUSDCliente > 0 ? billeteUSDCliente : totalUSD; let cambio = billete - totalUSD; if (cambio < 0) cambio = 0; nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${cambio.toFixed(2)}) de cambio.`; } else if (metodo === 'binance') { nota = `Transferencia Binance Pay | Total: $${totalUSD.toFixed(2)}`; } else if (metodo === 'zelle') { nota = `Transferencia Zelle | Total: $${totalUSD.toFixed(2)}`; } else if (metodo === 'zinli') { nota = `Transferencia Zinli | Total: $${totalUSD.toFixed(2)}`; }
+    const obsInput = document.getElementById('pedidoObservacion'); if (obsInput) { obsInput.value = nota; }
+}
+function calcularTotalesPedido() {
+    let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; const totalVES = totalUSD * tasaBCV;
+    const formattedVes = `Bs. ${totalVES.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('pedidoTotalUsdVal').innerText = `$${totalUSD.toFixed(2)}`; document.getElementById('pedidoTotalVesVal').innerText = formattedVes;
+    const elPreviewPagoMovil = document.getElementById('previewPagoMovilVes'); if (elPreviewPagoMovil) { elPreviewPagoMovil.innerText = formattedVes; }
     actualizarObservacionCheckout();
 }
-
-function calcularCambioUSDModal() {
-    let sumaArticulos = 0;
-    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
-    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
-    const totalUSD = sumaArticulos + ajuste;
-
-    const billete = parseFloat(document.getElementById('inputBilleteUSD').value) || 0;
-    const cambio = billete - totalUSD;
-
-    const preview = document.getElementById('previewCambioUSDText');
-    if (cambio >= 0) {
-        preview.innerText = `$${cambio.toFixed(2)} USD`;
-        preview.style.color = 'var(--turquesa-dark)';
-    } else {
-        preview.innerText = `Faltan $${Math.abs(cambio).toFixed(2)} USD`;
-        preview.style.color = '#ef4444';
-    }
+function obtenerEtiquetaMetodoPago() { const radios = document.getElementsByName('metodoPagoRadio'); let metodo = 'pago_movil'; for (let r of radios) { if (r.checked) { metodo = r.value; break; } } const etiquetas = { pago_movil: 'Pago móvil', efectivo_usd: 'Efectivo USD', binance: 'Binance', zelle: 'Zelle', zinli: 'Zinli' }; return etiquetas[metodo] || metodo; }
+function obtenerDatosEnvioPedido() {
+    const esNacional = document.getElementById('radioEnvioNacional').checked;
+    if (esNacional) { const agencia = document.getElementById('envioNacionalAgencia').value; const nombre = document.getElementById('envioNacNombre').value.trim(); const apellido = document.getElementById('envioNacApellido').value.trim(); const telefono = document.getElementById('envioNacTelefono').value.trim(); const cedula = document.getElementById('envioNacCedula').value.trim(); if (!nombre || !apellido || !telefono || !cedula) { return { valido: false, mensaje: 'Completa los datos del receptor para el envío nacional.' }; } return { valido: true, metodoEntrega: `Envío Nacional (${agencia})`, direccionEnvio: `Receptor: ${nombre} ${apellido} | Tel: ${telefono} | Cédula: ${cedula}`, }; }
+    const direccionTexto = (document.getElementById('textoDireccionDelivery').innerText || '').trim(); if (!direccionTexto) { return { valido: false, mensaje: 'Introduce la dirección de delivery antes de crear el pedido.' }; } return { valido: true, metodoEntrega: 'Delivery', direccionEnvio: direccionTexto };
 }
 
-function confirmarBilleteUSD() {
-    const val = parseFloat(document.getElementById('inputBilleteUSD').value) || 0;
-    billeteUSDCliente = val;
-    cerrarModalEfectivoUSD();
-}
+// CREACIÓN DE PEDIDO ACTUALIZADA (Creación + Actualización en dos pasos)
+async function crearNuevoPedido() {
+    const feedback = document.getElementById('crearPedidoFeedback'); 
+    feedback.style.color = '#ef4444'; 
+    feedback.innerText = '';
 
-function actualizarObservacionCheckout() {
-    let sumaArticulos = 0;
-    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
-    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
-    const totalUSD = sumaArticulos + ajuste;
-    const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
-    
-    const radios = document.getElementsByName('metodoPagoRadio');
-    let metodo = 'pago_movil';
-    for (let r of radios) {
-        if (r.checked) { metodo = r.value; break; }
-    }
+    const nombre = document.getElementById('pedidoClienteNombre').value.trim(); 
+    const codPais = document.getElementById('pedidoWpCod').value; 
+    const numTel = document.getElementById('pedidoWpNum').value.trim();
 
-    let nota = "";
-    
-    if (metodo === 'pago_movil') {
-        const totalBs = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`;
-    } else if (metodo === 'efectivo_usd') {
-        let billete = billeteUSDCliente > 0 ? billeteUSDCliente : totalUSD;
-        let cambio = billete - totalUSD;
-        if (cambio < 0) cambio = 0;
-        nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${cambio.toFixed(2)}) de cambio.`;
-    } else if (metodo === 'binance') {
-        nota = `Transferencia Binance Pay | Total: $${totalUSD.toFixed(2)}`;
-    } else if (metodo === 'zelle') {
-        nota = `Transferencia Zelle | Total: $${totalUSD.toFixed(2)}`;
-    } else if (metodo === 'zinli') {
-        nota = `Transferencia Zinli | Total: $${totalUSD.toFixed(2)}`;
-    }
+    if (!nombre) { feedback.innerText = '❌ Ingresa el nombre del cliente.'; return; } 
+    if (!numTel) { feedback.innerText = '❌ Ingresa el número de WhatsApp del cliente.'; return; } 
+    if (listaArticulosPedido.length === 0) { feedback.innerText = '❌ Añade al menos un artículo al pedido.'; return; }
 
-    const obsInput = document.getElementById('pedidoObservacion');
-    if (obsInput) {
-        obsInput.value = nota;
-    }
-}
+    const envio = obtenerDatosEnvioPedido(); 
+    if (!envio.valido) { feedback.innerText = `❌ ${envio.mensaje}`; return; }
 
-function calcularTotalesPedido() {
-    let sumaArticulos = 0;
-    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
-
-    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
-    const totalUSD = sumaArticulos + ajuste;
-    const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
+    let sumaArticulos = 0; 
+    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); 
+    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; 
+    const totalUSD = sumaArticulos + ajuste; 
+    const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; 
     const totalVES = totalUSD * tasaBCV;
 
-    const formattedVes = `Bs. ${totalVES.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (totalUSD <= 0) { feedback.innerText = '❌ El total del pedido debe ser mayor a 0.'; return; }
+    
+    const btn = document.getElementById('btnCrearPedidoTakeApp'); 
+    btn.disabled = true; 
+    const textoOriginal = btn.innerText; 
+    btn.innerText = '⏳ Procesando pedido...';
 
-    document.getElementById('pedidoTotalUsdVal').innerText = `$${totalUSD.toFixed(2)}`;
-    document.getElementById('pedidoTotalVesVal').innerText = formattedVes;
-    
-    const elPreviewPagoMovil = document.getElementById('previewPagoMovilVes');
-    if (elPreviewPagoMovil) {
-        elPreviewPagoMovil.innerText = formattedVes;
+    // 1. Payload original SOLO con los datos de creación aceptados
+    const payloadCreate = {
+        action: 'create_order',
+        customer: { name: nombre, phone: `${codPais}${numTel.replace(/\D/g, '')}` },
+        currency: 'USD',
+        totalAmount: totalUSD,
+        lineItems: listaArticulosPedido.map(a => ({ name: a.nombre, quantity: 1, unit: 'unidad', price: a.precio, productId: a.productId || undefined, variantId: a.variantId || undefined, })),
+        remark: (document.getElementById('pedidoObservacion').value || '').trim(),
+        paymentMethod: obtenerEtiquetaMetodoPago(),
+        metodoEntrega: envio.metodoEntrega,
+        direccionEnvio: envio.direccionEnvio,
+        montoUsd: totalUSD,
+        tasaBcv: tasaBCV,
+        montoVes: totalVES
+    };
+
+    try {
+        // PASO 1: Crear el pedido en la base de datos
+        const { data, error } = await supabaseClient.functions.invoke('brooklyn-orders', { body: payloadCreate });
+        if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo crear el pedido inicial.');
+
+        // PASO 2: Actualizar inmediatamente con los estados seleccionados usando el ID generado
+        const pedidoIdGenerado = data.pedido.id;
+        const orderStatusVal = document.getElementById('nuevoPedidoEstado').value;
+        const paymentStatusVal = document.getElementById('nuevoPedidoPago').value;
+        const fulfillmentStatusVal = document.getElementById('nuevoPedidoCumplimiento').value;
+
+        // Solo se hace la actualización si se cambió algún estado de las tarjetas
+        if (orderStatusVal !== 'pending' || paymentStatusVal !== 'unpaid' || fulfillmentStatusVal !== 'unfulfilled') {
+            const cambios = {
+                orderStatus: orderStatusVal,
+                paymentStatus: paymentStatusVal,
+                fulfillmentStatus: fulfillmentStatusVal
+            };
+            
+            await supabaseClient.functions.invoke('brooklyn-orders', { 
+                body: { action: 'update_order', pedidoId: pedidoIdGenerado, changes: cambios } 
+            });
+        }
+
+        feedback.style.color = 'var(--turquesa-dark)'; 
+        feedback.innerText = `✅ Pedido #${data.pedido.numero_pedido} creado y actualizado correctamente.`; 
+        
+        // Forzamos la actualización de la tabla de Gestión de pedidos automáticamente
+        pedidosGestionCargados = false;
+        cargarGestionPedidos(true); 
+
+    } catch (err) { 
+        feedback.innerText = `❌ ${err.message || 'Error al procesar el pedido.'}`; 
+    } finally { 
+        btn.disabled = false; 
+        btn.innerText = textoOriginal; 
     }
-    
-    actualizarObservacionCheckout();
 }
 
 async function realizarPedidoYCopiarCaptura() {
-    let sumaArticulos = 0;
-    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
-    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
-    const totalUSD = sumaArticulos + ajuste;
-    const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
-    const totalVES = totalUSD * tasaBCV;
-
-    if (totalUSD <= 0) {
-        alert("El total del pedido debe ser mayor a 0 para generar la captura.");
-        return;
-    }
-
-    const btn = document.getElementById('btnRealizarPedido');
-    const originalText = btn.innerText;
-    btn.innerText = "⏳ Generando captura del pedido...";
-
-    document.getElementById('shotVES').innerText = `Bs. S ${totalVES.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    document.getElementById('shotUSD').innerText = `$${totalUSD.toFixed(2)}`;
-    document.getElementById('shotTasa').innerText = `${tasaBCV.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`;
-    document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-
+    let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; const totalVES = totalUSD * tasaBCV;
+    if (totalUSD <= 0) { alert("El total del pedido debe ser mayor a 0 para generar la captura."); return; }
+    const btn = document.getElementById('btnRealizarPedido'); const originalText = btn.innerText; btn.innerText = "⏳ Generando captura del pedido...";
+    document.getElementById('shotVES').innerText = `Bs. S ${totalVES.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; document.getElementById('shotUSD').innerText = `$${totalUSD.toFixed(2)}`; document.getElementById('shotTasa').innerText = `${tasaBCV.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`; document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
     const captureCard = document.getElementById('captureCard');
-
     try {
         const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true });
-        canvas.toBlob(async (blob) => {
-            if (navigator.clipboard && window.ClipboardItem) {
-                try {
-                    await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]);
-                    btn.innerText = "✅ ¡Pedido realizado e imagen copiada!";
-                } catch (err) {
-                    descargarImagenFallback(canvas);
-                    btn.innerText = "📥 ¡Pedido realizado e imagen descargada!";
-                }
-            } else {
-                descargarImagenFallback(canvas);
-                btn.innerText = "📥 ¡Pedido realizado e imagen descargada!";
-            }
-            setTimeout(() => { btn.innerText = originalText; }, 3000);
-        }, 'image/png');
-    } catch (e) {
-        alert("Error al capturar la imagen.");
-        btn.innerText = originalText;
-    }
+        canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerText = "✅ ¡Pedido realizado e imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerText = "📥 ¡Pedido realizado e imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerText = "📥 ¡Pedido realizado e imagen descargada!"; } setTimeout(() => { btn.innerText = originalText; }, 3000); }, 'image/png');
+    } catch (e) { alert("Error al capturar la imagen."); btn.innerText = originalText; }
 }
 
-// --- HERRAMIENTAS MÓDULOS DE VENTA ---
-function sincronizarTasa(origen) {
-    const mainTasa = document.getElementById('tasaInput');
-    const calcTasa = document.getElementById('modalTasaInput');
-
-    if (origen === 'main') { calcTasa.value = mainTasa.value; }
-    else if (origen === 'modal') { mainTasa.value = calcTasa.value; }
-
-    calcularNota();
-    convertirDesdeUSD();
-    calcularTotalesPedido();
-}
-
-function convertirDesdeUSD() {
-    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0;
-    const usd = parseFloat(document.getElementById('calcUSD').value);
-    const vesInput = document.getElementById('calcVES');
-    const resumen = document.getElementById('calcResumen');
-
-    if (isNaN(usd) || usd <= 0) {
-        vesInput.value = "";
-        resumen.innerText = "Ingresa un monto para convertir...";
-        return;
-    }
-
-    const totalVes = usd * tasa;
-    vesInput.value = totalVes.toFixed(2);
-    resumen.innerText = `$${usd.toFixed(2)} USD = Bs. S ${totalVes.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
-
-function convertirDesdeVES() {
-    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0;
-    const ves = parseFloat(document.getElementById('calcVES').value);
-    const usdInput = document.getElementById('calcUSD');
-    const resumen = document.getElementById('calcResumen');
-
-    if (isNaN(ves) || ves <= 0 || tasa <= 0) {
-        usdInput.value = "";
-        resumen.innerText = "Ingresa un monto para convertir...";
-        return;
-    }
-
-    const totalUsd = ves / tasa;
-    usdInput.value = totalUsd.toFixed(2);
-    resumen.innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} = $${totalUsd.toFixed(2)} USD`;
-}
-
+function sincronizarTasa(origen) { const mainTasa = document.getElementById('tasaInput'); const calcTasa = document.getElementById('modalTasaInput'); if (origen === 'main') { calcTasa.value = mainTasa.value; } else if (origen === 'modal') { mainTasa.value = calcTasa.value; } calcularNota(); convertirDesdeUSD(); calcularTotalesPedido(); }
+function convertirDesdeUSD() { const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value); const vesInput = document.getElementById('calcVES'); const resumen = document.getElementById('calcResumen'); if (isNaN(usd) || usd <= 0) { vesInput.value = ""; resumen.innerText = "Ingresa un monto para convertir..."; return; } const totalVes = usd * tasa; vesInput.value = totalVes.toFixed(2); resumen.innerText = `$${usd.toFixed(2)} USD = Bs. S ${totalVes.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; }
+function convertirDesdeVES() { const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value); const usdInput = document.getElementById('calcUSD'); const resumen = document.getElementById('calcResumen'); if (isNaN(ves) || ves <= 0 || tasa <= 0) { usdInput.value = ""; resumen.innerText = "Ingresa un monto para convertir..."; return; } const totalUsd = ves / tasa; usdInput.value = totalUsd.toFixed(2); resumen.innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} = $${totalUsd.toFixed(2)} USD`; }
 function generarCamposFechas() {
-    const num = parseInt(document.getElementById('numCuotas').value) || 1;
-    const container = document.getElementById('contenedorFechasCuotas');
-    container.innerHTML = '';
-    const hoy = new Date();
-
-    for (let i = 1; i <= num; i++) {
-        const label = document.createElement('label');
-        label.innerText = `Fecha Cuota ${i}:`;
-        
-        const input = document.createElement('input');
-        input.type = 'date';
-        input.className = 'fecha-cuota-input';
-        input.onchange = calcularNota;
-
-        const fechaSugerida = new Date(hoy);
-        fechaSugerida.setDate(hoy.getDate() + (15 * i));
-        const yyyy = fechaSugerida.getFullYear();
-        const mm = String(fechaSugerida.getMonth() + 1).padStart(2, '0');
-        const dd = String(fechaSugerida.getDate()).padStart(2, '0');
-        input.value = `${yyyy}-${mm}-${dd}`;
-
-        container.appendChild(label);
-        container.appendChild(input);
-    }
+    const num = parseInt(document.getElementById('numCuotas').value) || 1; const container = document.getElementById('contenedorFechasCuotas'); container.innerHTML = ''; const hoy = new Date();
+    for (let i = 1; i <= num; i++) { const label = document.createElement('label'); label.innerText = `Fecha Cuota ${i}:`; const input = document.createElement('input'); input.type = 'date'; input.className = 'fecha-cuota-input'; input.onchange = calcularNota; const fechaSugerida = new Date(hoy); fechaSugerida.setDate(hoy.getDate() + (15 * i)); const yyyy = fechaSugerida.getFullYear(); const mm = String(fechaSugerida.getMonth() + 1).padStart(2, '0'); const dd = String(fechaSugerida.getDate()).padStart(2, '0'); input.value = `${yyyy}-${mm}-${dd}`; container.appendChild(label); container.appendChild(input); }
 }
-
-function formatearFecha(fechaStr) {
-    if (!fechaStr) return "";
-    const [year, month, day] = fechaStr.split('-').map(Number);
-    const fecha = new Date(year, month - 1, day);
-    const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' });
-    const diaNum = String(fecha.getDate()).padStart(2, '0');
-    const mes = fecha.toLocaleDateString('es-ES', { month: 'long' });
-    return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} ${diaNum} ${mes.charAt(0).toUpperCase() + mes.slice(1)}`;
-}
-
+function formatearFecha(fechaStr) { if (!fechaStr) return ""; const [year, month, day] = fechaStr.split('-').map(Number); const fecha = new Date(year, month - 1, day); const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' }); const diaNum = String(fecha.getDate()).padStart(2, '0'); const mes = fecha.toLocaleDateString('es-ES', { month: 'long' }); return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} ${diaNum} ${mes.charAt(0).toUpperCase() + mes.slice(1)}`; }
 async function obtenerTasa() {
-    const tasaInput = document.getElementById('tasaInput');
-    tasaInput.placeholder = "Buscando...";
-
-    try {
-        const res = await fetch(`https://www.brecha-cambiaria.com/api/latest?_=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-            const data = await res.json();
-            if (data && data.bcv_usd) {
-                tasaInput.value = parseFloat(data.bcv_usd).toFixed(2);
-                sincronizarTasa('main');
-                
-                document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
-                document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
-                document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
-                document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`;
-                document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`;
-
-                document.getElementById('topStatBcv').innerText = `${parseFloat(data.bcv_usd).toFixed(2)} Bs/$`;
-                document.getElementById('topStatUsdt').innerText = `${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs/$`;
-                document.getElementById('topStatBrecha').innerText = `+${data.brecha_usdt_usd}%`;
-
-                if (data.timestamp) {
-                    const hora = new Date(data.timestamp).toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('mTime').innerText = `Actualizado a las ${hora}`;
-                }
-                return;
-            }
-        }
-    } catch (e) {
-        console.warn("Error obteniendo tasa", e);
-    }
-
-    tasaInput.placeholder = "Ingresa tasa a mano";
+    const tasaInput = document.getElementById('tasaInput'); tasaInput.placeholder = "Buscando...";
+    try { const res = await fetch(`https://www.brecha-cambiaria.com/api/latest?_=${Date.now()}`, { cache: 'no-store' }); if (res.ok) { const data = await res.json(); if (data && data.bcv_usd) { tasaInput.value = parseFloat(data.bcv_usd).toFixed(2); sincronizarTasa('main'); document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`; document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`; document.getElementById('topStatBcv').innerText = `${parseFloat(data.bcv_usd).toFixed(2)} Bs/$`; document.getElementById('topStatUsdt').innerText = `${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs/$`; document.getElementById('topStatBrecha').innerText = `+${data.brecha_usdt_usd}%`; if (data.timestamp) { const hora = new Date(data.timestamp).toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }); document.getElementById('mTime').innerText = `Actualizado a las ${hora}`; } return; } } } catch (e) { console.warn("Error obteniendo tasa", e); } tasaInput.placeholder = "Ingresa tasa a mano";
 }
-
-function toggleCampos() {
-    const metodo = document.getElementById('paymentMethod').value;
-    document.getElementById('campoDivisas').style.display = metodo === 'divisas' ? 'block' : 'none';
-    document.getElementById('campoCuotas').style.display = metodo === 'cuotas' ? 'block' : 'none';
-    if (metodo === 'cuotas') generarCamposFechas();
-}
-
+function toggleCampos() { const metodo = document.getElementById('paymentMethod').value; document.getElementById('campoDivisas').style.display = metodo === 'divisas' ? 'block' : 'none'; document.getElementById('campoCuotas').style.display = metodo === 'cuotas' ? 'block' : 'none'; if (metodo === 'cuotas') generarCamposFechas(); }
 function calcularNota() {
-    const usd = parseFloat(document.getElementById('totalUSD').value) || 0;
-    const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
-    const metodo = document.getElementById('paymentMethod').value;
-    let nota = "";
-
-    if (metodo === 'pago_movil') {
-        const totalBs = (usd * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`;
-    } else if (metodo === 'cuotas') {
-        const inicialVal = parseFloat(document.getElementById('montoInicial').value) || 0;
-        const numCuotas = parseInt(document.getElementById('numCuotas').value) || 1;
-        const restanteVal = usd - inicialVal;
-        const montoPorCuota = (restanteVal > 0 ? restanteVal / numCuotas : 0).toFixed(2);
-        
-        const inputsFechas = document.querySelectorAll('.fecha-cuota-input');
-        const detalles = [];
-        inputsFechas.forEach((input, index) => {
-            if (input.value) detalles.push(`${index + 1}a (${formatearFecha(input.value)})`);
-        });
-
-        nota = `Pago de inicial $${inicialVal} | ${numCuotas} cuotas de $${montoPorCuota} | ${detalles.join(', ')}`;
-    } else if (metodo === 'divisas') {
-        const billete = parseFloat(document.getElementById('billete').value) || 0;
-        nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${(billete - usd).toFixed(2)}) de cambio.`;
-    }
-
+    const usd = parseFloat(document.getElementById('totalUSD').value) || 0; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; const metodo = document.getElementById('paymentMethod').value; let nota = "";
+    if (metodo === 'pago_movil') { const totalBs = (usd * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`; } else if (metodo === 'cuotas') { const inicialVal = parseFloat(document.getElementById('montoInicial').value) || 0; const numCuotas = parseInt(document.getElementById('numCuotas').value) || 1; const restanteVal = usd - inicialVal; const montoPorCuota = (restanteVal > 0 ? restanteVal / numCuotas : 0).toFixed(2); const inputsFechas = document.querySelectorAll('.fecha-cuota-input'); const detalles = []; inputsFechas.forEach((input, index) => { if (input.value) detalles.push(`${index + 1}a (${formatearFecha(input.value)})`); }); nota = `Pago de inicial $${inicialVal} | ${numCuotas} cuotas de $${montoPorCuota} | ${detalles.join(', ')}`; } else if (metodo === 'divisas') { const billete = parseFloat(document.getElementById('billete').value) || 0; nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${(billete - usd).toFixed(2)}) de cambio.`; }
     document.getElementById('previewText').innerText = nota;
 }
 
-// --- LÓGICA MODAL GENERADOR DE CLIENTES ---
-function abrirModalGeneradorCliente() {
-    document.getElementById('modalGeneradorCliente').style.display = 'flex';
-}
-
-function cerrarModalGeneradorCliente() {
-    document.getElementById('modalGeneradorCliente').style.display = 'none';
-}
-
+function abrirModalGeneradorCliente() { document.getElementById('modalGeneradorCliente').style.display = 'flex'; }
+function cerrarModalGeneradorCliente() { document.getElementById('modalGeneradorCliente').style.display = 'none'; }
 function formatearCliente() {
-    const rawNameInput = document.getElementById('clientFullName');
-    if (!rawNameInput) return;
-    
-    const rawName = rawNameInput.value;
-    const nac = document.getElementById('clientNac').value;
-    const clientIdNumEl = document.getElementById('clientIdNum');
-    const rawId = clientIdNumEl ? clientIdNumEl.value.replace(/\D/g, '') : '';
-
-    const nameFormatted = rawName.trim().split(/\s+/)
-        .map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '')
-        .join(' ');
-
-    const idFormatted = rawId ? parseInt(rawId, 10).toLocaleString('es-VE') : '';
-
-    let res = "Ingresa los datos del cliente...";
-    if (nameFormatted && idFormatted) res = `${nameFormatted} | ${nac}-${idFormatted}`;
-    else if (nameFormatted) res = nameFormatted;
-    else if (idFormatted) res = `${nac}-${idFormatted}`;
-
+    const rawNameInput = document.getElementById('clientFullName'); if (!rawNameInput) return;
+    const rawName = rawNameInput.value; const nac = document.getElementById('clientNac').value; const clientIdNumEl = document.getElementById('clientIdNum'); const rawId = clientIdNumEl ? clientIdNumEl.value.replace(/\D/g, '') : '';
+    const nameFormatted = rawName.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' '); const idFormatted = rawId ? parseInt(rawId, 10).toLocaleString('es-VE') : '';
+    let res = "Ingresa los datos del cliente..."; if (nameFormatted && idFormatted) res = `${nameFormatted} | ${nac}-${idFormatted}`; else if (nameFormatted) res = nameFormatted; else if (idFormatted) res = `${nac}-${idFormatted}`;
     document.getElementById('previewClientText').innerText = res;
 }
-
 async function pegarDatosCliente() {
-    let texto = "";
-    try { texto = await navigator.clipboard.readText(); } 
-    catch (err) { texto = prompt("Pega aquí los datos del cliente:"); }
-
-    if (!texto || !texto.trim()) return;
-
-    let textClean = texto.replace(/(?:nombre y apellido|nombres|apellidos|nombre|cédula|cedula|c\.i\.?|ci|rif|dni|cliente)[:\-]?/gi, ' ');
-    const matchId = textClean.match(/([VEJGvejg])[\s\.\-]*(\d[\d\.\s]{5,10}\d|\d{6,9})/);
-
-    let nac = "V";
-    let idNum = "";
-    let namePart = textClean;
-
-    if (matchId) {
-        nac = matchId[1].toUpperCase();
-        idNum = matchId[2].replace(/\D/g, '');
-        namePart = textClean.replace(matchId[0], ' ');
-    }
-
+    let texto = ""; try { texto = await navigator.clipboard.readText(); } catch (err) { texto = prompt("Pega aquí los datos del cliente:"); }
+    if (!texto || !texto.trim()) return; let textClean = texto.replace(/(?:nombre y apellido|nombres|apellidos|nombre|cédula|cedula|c\.i\.?|ci|rif|dni|cliente)[:\-]?/gi, ' '); const matchId = textClean.match(/([VEJGvejg])[\s\.\-]*(\d[\d\.\s]{5,10}\d|\d{6,9})/);
+    let nac = "V"; let idNum = ""; let namePart = textClean;
+    if (matchId) { nac = matchId[1].toUpperCase(); idNum = matchId[2].replace(/\D/g, ''); namePart = textClean.replace(matchId[0], ' '); }
     let nameFormatted = namePart.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ' ').replace(/\s+/g, ' ').trim();
-
-    if (nameFormatted) document.getElementById('clientFullName').value = nameFormatted;
-    if (idNum) {
-        document.getElementById('clientNac').value = nac;
-        document.getElementById('clientIdNum').value = idNum;
-    }
-
+    if (nameFormatted) document.getElementById('clientFullName').value = nameFormatted; if (idNum) { document.getElementById('clientNac').value = nac; document.getElementById('clientIdNum').value = idNum; }
     formatearCliente();
 }
-
 function registrarNombreCheckout() {
-    const texto = document.getElementById('previewClientText').innerText;
-    if (texto.includes("Ingresa los datos")) return;
-
-    const inputNombrePedido = document.getElementById('pedidoClienteNombre');
-    if (inputNombrePedido) {
-        inputNombrePedido.value = texto;
-        autocorregirNombrePedido();
-    }
-
-    const btnNode = document.getElementById('btnCopyCliente');
-    const originalText = btnNode.innerText;
-    btnNode.innerText = "✅ ¡Registrado!";
-    
-    setTimeout(() => { 
-        btnNode.innerText = originalText;
-        cerrarModalGeneradorCliente();
-    }, 800);
+    const texto = document.getElementById('previewClientText').innerText; if (texto.includes("Ingresa los datos")) return;
+    const inputNombrePedido = document.getElementById('pedidoClienteNombre'); if (inputNombrePedido) { inputNombrePedido.value = texto; autocorregirNombrePedido(); }
+    const btnNode = document.getElementById('btnCopyCliente'); const originalText = btnNode.innerText; btnNode.innerText = "✅ ¡Registrado!"; setTimeout(() => { btnNode.innerText = originalText; cerrarModalGeneradorCliente(); }, 800);
 }
-
-async function copiarTexto(elementId, btnElement) {
-    const texto = document.getElementById(elementId).innerText;
-    if (texto.includes("Ingresa los datos")) return;
-
-    try {
-        await navigator.clipboard.writeText(texto);
-        
-        let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement;
-        
-        const originalText = btnNode.innerText;
-        btnNode.innerText = "✅ ¡Copiado!";
-        setTimeout(() => { btnNode.innerText = originalText; }, 2000);
-    } catch (err) {
-        alert("Error al copiar texto.");
-    }
-}
-
+async function copiarTexto(elementId, btnElement) { const texto = document.getElementById(elementId).innerText; if (texto.includes("Ingresa los datos")) return; try { await navigator.clipboard.writeText(texto); let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement; const originalText = btnNode.innerText; btnNode.innerText = "✅ ¡Copiado!"; setTimeout(() => { btnNode.innerText = originalText; }, 2000); } catch (err) { alert("Error al copiar texto."); } }
 async function generarYCopiarImagen() {
-    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0;
-    const usd = parseFloat(document.getElementById('calcUSD').value) || 0;
-    const ves = parseFloat(document.getElementById('calcVES').value) || 0;
-    const btn = document.getElementById('btnCopyImage');
-
-    if (ves <= 0 || usd <= 0) {
-        alert("Ingresa un monto válido para generar la imagen.");
-        return;
-    }
-
-    document.getElementById('shotVES').innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    document.getElementById('shotUSD').innerText = `$${usd.toFixed(2)}`;
-    document.getElementById('shotTasa').innerText = `${tasa.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`;
-    document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-
-    const captureCard = document.getElementById('captureCard');
-    const originalText = btn.innerText;
-    btn.innerText = "⏳ Generando imagen...";
-
-    try {
-        const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true });
-        canvas.toBlob(async (blob) => {
-            if (navigator.clipboard && window.ClipboardItem) {
-                try {
-                    await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]);
-                    btn.innerText = "✅ ¡Imagen copiada!";
-                } catch (err) {
-                    descargarImagenFallback(canvas);
-                    btn.innerText = "📥 ¡Imagen descargada!";
-                }
-            } else {
-                descargarImagenFallback(canvas);
-                btn.innerText = "📥 ¡Imagen descargada!";
-            }
-            setTimeout(() => { btn.innerText = originalText; }, 2500);
-        }, 'image/png');
-    } catch (e) {
-        alert("Error al capturar la imagen.");
-        btn.innerText = originalText;
-    }
+    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value) || 0; const btn = document.getElementById('btnCopyImage');
+    if (ves <= 0 || usd <= 0) { alert("Ingresa un monto válido para generar la imagen."); return; }
+    document.getElementById('shotVES').innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; document.getElementById('shotUSD').innerText = `$${usd.toFixed(2)}`; document.getElementById('shotTasa').innerText = `${tasa.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`; document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+    const captureCard = document.getElementById('captureCard'); const originalText = btn.innerText; btn.innerText = "⏳ Generando imagen...";
+    try { const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true }); canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerText = "✅ ¡Imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerText = "📥 ¡Imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerText = "📥 ¡Imagen descargada!"; } setTimeout(() => { btn.innerText = originalText; }, 2500); }, 'image/png'); } catch (e) { alert("Error al capturar la imagen."); btn.innerText = originalText; }
 }
-
-function descargarImagenFallback(canvas) {
-    const link = document.createElement('a');
-    link.download = `Cotizacion-Brooklyn-${Date.now()}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-}
+function descargarImagenFallback(canvas) { const link = document.createElement('a'); link.download = `Cotizacion-Brooklyn-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }
 
 obtenerTasa();
 </script>
