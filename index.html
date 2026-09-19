@@ -180,7 +180,7 @@
         }
         .btn-pill:hover { border-color: var(--turquesa); background: var(--bg-card); }
 
-        .content-body { padding: 24px 28px; max-width: 800px; width: 100%; margin: 0 auto; }
+        .content-body { padding: 24px 28px; max-width: 1400px; width: 100%; margin: 0 auto; }
 
         .module-pane { display: none; }
         .module-pane.active { display: block; }
@@ -327,6 +327,32 @@
         .top-clientes-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border-color); font-size: 12.5px; }
         .top-clientes-row:last-child { border-bottom: none; }
 
+        /* SELECTOR TIPO PILL (dispara modal flotante) — mismo lenguaje visual que status-pill-card / header-stat-pill */
+        .selector-trigger-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 600px) { .selector-trigger-grid { grid-template-columns: 1fr; } }
+        .selector-trigger {
+            background: var(--bg-input); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 10px 12px; cursor: pointer;
+            display: flex; flex-direction: column; gap: 2px; text-align: left;
+            width: 100%; margin: 0; transition: border-color .15s ease;
+        }
+        .selector-trigger:hover { border-color: var(--turquesa); }
+        .selector-trigger .st-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; }
+        .selector-trigger .st-value { font-size: 13.5px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+        .selector-trigger .st-value small { font-weight: 400; color: var(--text-muted); font-size: 11px; }
+
+        /* Fila de opción dentro del modal flotante de selección */
+        .modal-option-pill { border: 1px solid var(--border-color); border-radius: 12px; padding: 13px 14px; margin: 6px 12px; cursor: pointer; transition: all .15s ease; }
+        .modal-option-pill:hover { border-color: var(--turquesa); background: var(--border-color); }
+        .modal-option-pill.selected { border-color: var(--turquesa-dark); background: rgba(25, 211, 211, 0.08); }
+        .modal-option-pill .mop-title { font-weight: 700; font-size: 13.5px; color: var(--text-main); }
+        .modal-option-pill .mop-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-top: 2px; }
+
+        /* Barra de progreso dentro de las ventanas flotantes (modales) */
+        .modal-progress-track { height: 4px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin: 0 24px 14px 24px; }
+        .modal-progress-fill { height: 100%; width: 0%; background: var(--turquesa-dark); transition: width .25s ease; border-radius: 3px; }
+        .modal-progress-label { font-size: 10.5px; color: var(--text-muted); margin: -8px 24px 12px 24px; text-align: right; }
+
         /* ESTILOS MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(2px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-card { background: var(--bg-card); width: 100%; max-width: 480px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-modal); display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.25s ease-out; }
@@ -460,11 +486,13 @@
                     
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
-                            <h3 class="checkout-section-title">Cliente</h3>
-                            <button type="button" class="checkout-section-action" onclick="abrirModalGeneradorCliente()">Generar Nombre</button>
+                            <h3 class="checkout-section-title">Cliente <span style="color:#ef4444;">*</span></h3>
                         </div>
-                        <label>Nombre <span style="color:#ef4444;">*</span></label>
-                        <input type="text" id="pedidoClienteNombre" placeholder="Ej: Diego Vergara" oninput="autocorregirNombrePedido()">
+                        <button type="button" class="selector-trigger" onclick="abrirModalBuscarCliente()">
+                            <span class="st-label">Cliente</span>
+                            <span class="st-value"><span id="resumenClienteSeleccionado">Buscar cliente</span> <small>Cambiar ▾</small></span>
+                        </button>
+                        <input type="hidden" id="pedidoClienteNombre">
                         <label>Número de WhatsApp <span style="color:#ef4444;">*</span></label>
                         <div class="tasa-container">
                             <select id="pedidoWpCod" class="select-nac">
@@ -475,6 +503,53 @@
                                 <option value="+54">+54</option>
                             </select>
                             <input type="text" id="pedidoWpNum" placeholder="Número de teléfono">
+                        </div>
+                    </div>
+
+                    <!-- MODAL FLOTANTE: BUSCAR / REGISTRAR CLIENTE -->
+                    <div id="modalBuscarCliente" class="modal-overlay" onclick="if(event.target === this) cerrarModalBuscarCliente()">
+                        <div class="modal-card" style="max-height: 90vh; overflow-y: auto;">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="tituloModalCliente">Buscar cliente</h3>
+                                <button type="button" class="modal-close-btn" onclick="cerrarModalBuscarCliente()">✕</button>
+                            </div>
+
+                            <div id="vistaBuscarCliente">
+                                <div class="modal-search-box">
+                                    <div class="modal-search-input-wrapper">
+                                        <span>🔍</span>
+                                        <input type="text" id="inputBuscarCliente" class="modal-search-input" placeholder="Buscar por nombre o teléfono..." oninput="filtrarClientesModal()" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div style="padding: 0 24px 8px 24px;">
+                                    <button type="button" class="btn-pill" style="width:100%; justify-content:center;" onclick="mostrarVistaRegistrarCliente()">➕ Registrar cliente</button>
+                                </div>
+                                <div class="modal-items-list" id="listaClientesEncontrados"></div>
+                            </div>
+
+                            <div id="vistaRegistrarCliente" style="display:none; padding: 4px 24px 20px 24px;">
+                                <button type="button" class="btn-pill" style="width:auto; padding: 6px 12px; font-size:12px; margin-bottom:12px;" onclick="mostrarVistaBuscarCliente()">‹ Volver a buscar</button>
+                                <label style="margin-top: 0;">Nombre y Apellido:</label>
+                                <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()">
+                                <label>Nro. de Identificación:</label>
+                                <div class="id-container">
+                                    <select id="clientNac" class="select-nac" onchange="formatearCliente()"><option value="V">V</option><option value="E">E</option><option value="J">J</option><option value="G">G</option></select>
+                                    <input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()">
+                                </div>
+                                <label>Número de WhatsApp:</label>
+                                <div class="tasa-container">
+                                    <select id="clientPhoneCod" class="select-nac">
+                                        <option value="+58" selected>+58</option><option value="+1">+1</option><option value="+34">+34</option><option value="+57">+57</option><option value="+54">+54</option>
+                                    </select>
+                                    <input type="text" id="clientPhoneNum" placeholder="Número de teléfono">
+                                </div>
+                                <div class="preview" style="margin-top: 16px;">
+                                    <strong>Formato de nombre</strong>
+                                    <p id="previewClientText">Ingresa los datos del cliente...</p>
+                                    <button type="button" class="btn-copy" id="btnCopyCliente" onclick="registrarNombreCheckout()">💾 Registrar cliente</button>
+                                    <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -503,22 +578,14 @@
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Método de Envíos <span style="color:#ef4444;">*</span></h3>
                         </div>
-                        <label class="shipping-option-card" onclick="document.getElementById('radioEnvioDelivery').click(); toggleCamposEnvio();">
-                            <input type="radio" name="metodoEnvioRadio" id="radioEnvioDelivery" value="delivery" checked onchange="toggleCamposEnvio()">
-                            <div class="shipping-option-info">
-                                <span class="shipping-option-title">Delivery GRATIS</span>
-                                <span class="shipping-option-desc">Aplica solo para Valencia, Naguanagua, San Diego, Libertador, Guacara y Los Guayos.</span>
-                            </div>
-                        </label>
-                        <label class="shipping-option-card" onclick="document.getElementById('radioEnvioNacional').click(); toggleCamposEnvio();">
-                            <input type="radio" name="metodoEnvioRadio" id="radioEnvioNacional" value="nacional" onchange="toggleCamposEnvio()">
-                            <div class="shipping-option-info">
-                                <span class="shipping-option-title">Envío Nacional GRATIS</span>
-                                <span class="shipping-option-desc">Envíos GRATIS únicamente por MRW.<br>Zoom, Tealca, Domesa y LibertyExpress cobro a destino.</span>
-                            </div>
-                        </label>
-                        <div style="border-top: 1px solid var(--border-color); margin-top: 16px; padding-top: 16px;"></div>
-                        <div id="envioDeliveryContainer" style="margin-top:12px;">
+                        <button type="button" class="selector-trigger" onclick="abrirModalMetodoEnvio()">
+                            <span class="st-label">Envío seleccionado</span>
+                            <span class="st-value"><span id="resumenMetodoEnvio">📦 Delivery GRATIS</span> <small>Cambiar ▾</small></span>
+                        </button>
+                        <input type="radio" name="metodoEnvioRadio" id="radioEnvioDelivery" value="delivery" checked style="display:none;">
+                        <input type="radio" name="metodoEnvioRadio" id="radioEnvioNacional" value="nacional" style="display:none;">
+
+                        <div id="envioDeliveryContainer" style="margin-top:14px;">
                             <button type="button" class="btn-pill" style="width: 100%; justify-content: center; padding: 12px; border-radius: 10px; background: var(--bg-card);" onclick="abrirModalDireccionDelivery()">📍 Introduzca la dirección</button>
                             <div id="previewDireccionDelivery" class="preview" style="display:none; margin-top:10px;">
                                 <strong>Dirección de Envío:</strong>
@@ -526,7 +593,7 @@
                                 <div id="mapPreviewContainer" class="map-preview-container"><iframe id="googleMapIframe" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
                             </div>
                         </div>
-                        <div id="envioNacionalContainer" style="display:none; margin-top:12px;">
+                        <div id="envioNacionalContainer" style="display:none; margin-top:14px;">
                             <label>Agencia de envío:</label>
                             <select id="envioNacionalAgencia">
                                 <option value="MRW GRATIS">MRW GRATIS</option>
@@ -550,41 +617,72 @@
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Método de Pago <span style="color:#ef4444;">*</span></h3>
                         </div>
-                        <label class="payment-option-card" onclick="document.getElementById('radioPagoMovil').click();">
-                            <input type="radio" name="metodoPagoRadio" id="radioPagoMovil" value="pago_movil" checked onchange="alCambiarMetodoPago()">
-                            <div class="payment-option-info">
-                                <span class="payment-option-title">Pago móvil</span>
-                                <span class="payment-option-desc">Monto exacto a transferir: <strong id="previewPagoMovilVes" style="color:var(--turquesa-dark);">Bs. 0,00</strong></span>
+                        <button type="button" class="selector-trigger" onclick="abrirModalMetodoPago()">
+                            <span class="st-label">Pago seleccionado</span>
+                            <span class="st-value"><span id="resumenMetodoPago">💵 Pago móvil</span> <small>Cambiar ▾</small></span>
+                        </button>
+                        <input type="radio" name="metodoPagoRadio" id="radioPagoMovil" value="pago_movil" checked style="display:none;">
+                        <input type="radio" name="metodoPagoRadio" id="radioEfectivoUSD" value="efectivo_usd" style="display:none;">
+                        <input type="radio" name="metodoPagoRadio" id="radioBinance" value="binance" style="display:none;">
+                        <input type="radio" name="metodoPagoRadio" id="radioZelle" value="zelle" style="display:none;">
+                        <input type="radio" name="metodoPagoRadio" id="radioZinli" value="zinli" style="display:none;">
+                        <div id="previewPagoMovilVesWrap" style="margin-top:10px; font-size:12.5px; color: var(--text-muted);">Monto exacto a transferir: <strong id="previewPagoMovilVes" style="color:var(--turquesa-dark);">Bs. 0,00</strong></div>
+                    </div>
+
+                    <!-- MODAL FLOTANTE: MÉTODO DE ENVÍOS -->
+                    <div id="modalMetodoEnvio" class="modal-overlay" onclick="if(event.target === this) cerrarModalMetodoEnvio()">
+                        <div class="modal-card">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Método de Envíos</h3>
+                                <button type="button" class="modal-close-btn" onclick="cerrarModalMetodoEnvio()">✕</button>
                             </div>
-                        </label>
-                        <label class="payment-option-card" onclick="document.getElementById('radioEfectivoUSD').click();">
-                            <input type="radio" name="metodoPagoRadio" id="radioEfectivoUSD" value="efectivo_usd" onchange="alCambiarMetodoPago()">
-                            <div class="payment-option-info">
-                                <span class="payment-option-title">Efectivo USD</span>
-                                <span class="payment-option-desc">Pago físico en divisas en efectivo al momento de la entrega.</span>
+                            <div class="modal-progress-track"><div class="modal-progress-fill" id="progresoModalEnvio"></div></div>
+                            <div class="modal-progress-label" id="progresoModalEnvioLabel">Progreso del pedido</div>
+                            <div style="padding-bottom: 14px;">
+                                <div class="modal-option-pill" id="opcionEnvioDelivery" onclick="seleccionarMetodoEnvio('delivery')">
+                                    <div class="mop-title">📦 Delivery GRATIS</div>
+                                    <div class="mop-desc">Aplica solo para Valencia, Naguanagua, San Diego, Libertador, Guacara y Los Guayos.</div>
+                                </div>
+                                <div class="modal-option-pill" id="opcionEnvioNacional" onclick="seleccionarMetodoEnvio('nacional')">
+                                    <div class="mop-title">🚚 Envío Nacional GRATIS</div>
+                                    <div class="mop-desc">Envíos GRATIS únicamente por MRW.<br>Zoom, Tealca, Domesa y LibertyExpress cobro a destino.</div>
+                                </div>
                             </div>
-                        </label>
-                        <label class="payment-option-card" onclick="document.getElementById('radioBinance').click();">
-                            <input type="radio" name="metodoPagoRadio" id="radioBinance" value="binance" onchange="alCambiarMetodoPago()">
-                            <div class="payment-option-info">
-                                <span class="payment-option-title">Binance</span>
-                                <span class="payment-option-desc">Transferencia en Criptomonedas / USDT vía Binance Pay.</span>
+                        </div>
+                    </div>
+
+                    <!-- MODAL FLOTANTE: MÉTODO DE PAGO -->
+                    <div id="modalMetodoPago" class="modal-overlay" onclick="if(event.target === this) cerrarModalMetodoPago()">
+                        <div class="modal-card">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Método de Pago</h3>
+                                <button type="button" class="modal-close-btn" onclick="cerrarModalMetodoPago()">✕</button>
                             </div>
-                        </label>
-                        <label class="payment-option-card" onclick="document.getElementById('radioZelle').click();">
-                            <input type="radio" name="metodoPagoRadio" id="radioZelle" value="zelle" onchange="alCambiarMetodoPago()">
-                            <div class="payment-option-info">
-                                <span class="payment-option-title">Zelle</span>
-                                <span class="payment-option-desc">Transferencia bancaria en USD.</span>
+                            <div class="modal-progress-track"><div class="modal-progress-fill" id="progresoModalPago"></div></div>
+                            <div class="modal-progress-label" id="progresoModalPagoLabel">Progreso del pedido</div>
+                            <div style="padding-bottom: 14px;">
+                                <div class="modal-option-pill" id="opcionPagoPago_movil" onclick="seleccionarMetodoPago('pago_movil')">
+                                    <div class="mop-title">Pago móvil</div>
+                                    <div class="mop-desc">Monto exacto a transferir en bolívares a la tasa actual.</div>
+                                </div>
+                                <div class="modal-option-pill" id="opcionPagoEfectivo_usd" onclick="seleccionarMetodoPago('efectivo_usd')">
+                                    <div class="mop-title">Efectivo USD</div>
+                                    <div class="mop-desc">Pago físico en divisas en efectivo al momento de la entrega.</div>
+                                </div>
+                                <div class="modal-option-pill" id="opcionPagoBinance" onclick="seleccionarMetodoPago('binance')">
+                                    <div class="mop-title">Binance</div>
+                                    <div class="mop-desc">Transferencia en Criptomonedas / USDT vía Binance Pay.</div>
+                                </div>
+                                <div class="modal-option-pill" id="opcionPagoZelle" onclick="seleccionarMetodoPago('zelle')">
+                                    <div class="mop-title">Zelle</div>
+                                    <div class="mop-desc">Transferencia bancaria en USD.</div>
+                                </div>
+                                <div class="modal-option-pill" id="opcionPagoZinli" onclick="seleccionarMetodoPago('zinli')">
+                                    <div class="mop-title">Zinli</div>
+                                    <div class="mop-desc">Envío directo de USD vía Zinli Wallet.</div>
+                                </div>
                             </div>
-                        </label>
-                        <label class="payment-option-card" onclick="document.getElementById('radioZinli').click();">
-                            <input type="radio" name="metodoPagoRadio" id="radioZinli" value="zinli" onchange="alCambiarMetodoPago()">
-                            <div class="payment-option-info">
-                                <span class="payment-option-title">Zinli</span>
-                                <span class="payment-option-desc">Envío directo de USD vía Zinli Wallet.</span>
-                            </div>
-                        </label>
+                        </div>
                     </div>
 
                     <div class="checkout-card-section">
@@ -645,6 +743,7 @@
                             <div class="market-item" style="margin:0;"><div class="market-label">Monto del pedido en VES</div><div class="market-value" id="pedidoTotalVesVal">Bs. 0,00</div></div>
                         </div>
                         <button type="button" class="btn-copy" id="btnCrearPedidoTakeApp" style="margin-top: 20px; width: 100%; background: var(--turquesa-dark); color: #fff;" onclick="crearNuevoPedido()">🧾 Crear nuevo pedido</button>
+                        <button type="button" class="btn-pill" id="btnGuardarBorrador" style="margin-top: 10px; width: 100%; justify-content: center; padding: 12px;" onclick="crearNuevoPedido(true)">📝 Guardar como borrador</button>
                         <p id="crearPedidoFeedback" style="margin-top:8px; font-size:12.5px; min-height:14px;"></p>
                         <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 10px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()">🚀 Realizar pedido (Copiar captura)</button>
                     </div>
@@ -779,8 +878,18 @@
 </div>
 
 <!-- MODAL FLOTANTE "AÑADIR ARTÍCULO" Y RESTO DE HTML... -->
-<div id="modalAnadirArticulo" class="modal-overlay" onclick="if(event.target === this) cerrarModalArticulos()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Añadir artículo del inventario</h3><div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn-home-icon" title="Actualizar inventario" onclick="refrescarInventarioModal()" id="btnRefrescarInventarioModal">🔄</button><button type="button" class="modal-close-btn" onclick="cerrarModalArticulos()">✕</button></div></div><div class="modal-search-box"><div class="modal-search-input-wrapper"><span>🔍</span><input type="text" id="inputModalBuscadorArticulo" class="modal-search-input" placeholder="Buscar por producto, variante..." oninput="filtrarProductosModal()" autocomplete="off"></div></div><div class="modal-items-list" id="modalListaItemsContainer"></div></div></div>
-<div id="modalGeneradorCliente" class="modal-overlay" onclick="if(event.target === this) cerrarModalGeneradorCliente()"><div class="modal-card" style="max-height: 90vh; overflow-y: auto;"><div class="modal-header"><h3 class="modal-title">Generar Nombre</h3><button type="button" class="modal-close-btn" onclick="cerrarModalGeneradorCliente()">✕</button></div><div style="padding: 20px 24px;"><label style="margin-top: 0;">Nombre y Apellido:</label><input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()"><label>Nro. de Identificación:</label><div class="id-container"><select id="clientNac" class="select-nac" onchange="formatearCliente()"><option value="V">V</option><option value="E">E</option><option value="J">J</option><option value="G">G</option></select><input type="text" id="clientIdNum" placeholder="Ejemplo: 12345678" oninput="formatearCliente()"></div><div class="preview" style="margin-top: 20px;"><strong>Formato de nombre</strong><p id="previewClientText">Ingresa los datos del cliente...</p><button type="button" class="btn-copy" id="btnCopyCliente" onclick="registrarNombreCheckout()">📋 Registrar nombre</button><button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button></div></div></div></div>
+<div id="modalAnadirArticulo" class="modal-overlay" onclick="if(event.target === this) cerrarModalArticulos()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Añadir artículo del inventario</h3><div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn-home-icon" title="Actualizar inventario" onclick="refrescarInventarioModal()" id="btnRefrescarInventarioModal">🔄</button><button type="button" class="modal-close-btn" onclick="cerrarModalArticulos()">✕</button></div></div><div class="modal-progress-track"><div class="modal-progress-fill" id="progresoModalArticulo"></div></div><div class="modal-progress-label" id="progresoModalArticuloLabel">Progreso del pedido</div><div class="modal-search-box"><div class="modal-search-input-wrapper"><span>🔍</span><input type="text" id="inputModalBuscadorArticulo" class="modal-search-input" placeholder="Buscar por producto, variante o SKU..." oninput="filtrarProductosModal()" autocomplete="off"></div></div><div class="modal-items-list" id="modalListaItemsContainer"></div></div></div>
+
+<div id="modalProductosSinSku" class="modal-overlay" onclick="if(event.target === this) cerrarModalProductosSinSku()">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Productos sin SKU</h3>
+            <button type="button" class="modal-close-btn" onclick="cerrarModalProductosSinSku()">✕</button>
+        </div>
+        <div id="listaProductosSinSku" style="padding-bottom: 14px;"></div>
+    </div>
+</div>
+
 <div id="modalEfectivoUSD" class="modal-overlay" onclick="if(event.target === this) cerrarModalEfectivoUSD()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Efectivo USD</h3><button type="button" class="modal-close-btn" onclick="cerrarModalEfectivoUSD()">✕</button></div><div style="padding: 20px 24px;"><label style="margin-top: 0;">¿Con qué billete paga el cliente ($)?</label><input type="number" step="0.01" id="inputBilleteUSD" placeholder="Ej: 20, 50, 100..." oninput="calcularCambioUSDModal()" onkeydown="if(event.key === 'Enter') confirmarBilleteUSD()"><div class="preview" style="margin-top: 16px;"><strong>Monto de Cambio a llevar en efectivo</strong><p id="previewCambioUSDText" style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: var(--turquesa-dark);">$0.00</p></div><button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="confirmarBilleteUSD()">Confirmar y Guardar</button></div></div></div>
 <div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://i.imgur.com/6iqT3wE.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto Total del Pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa Oficial BCV Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa Oficial</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
 
@@ -1135,40 +1244,140 @@ async function cargarProductosInventario(forzar = false) {
     try {
         const { data, error } = await supabaseClient.functions.invoke('brooklyn-catalog');
         if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo cargar el inventario.');
-        catalogoProductosCache = data.productos || []; inventarioProductosCache = [];
-        catalogoProductosCache.forEach(p => {
-            if (p.variantes && p.variantes.length > 0) { p.variantes.forEach(v => { inventarioProductosCache.push({ nombre: p.nombre, variable: v.nombre, sku: '', precio: v.precio, stock: v.stock, productId: p.id, variantId: v.id, }); }); } else { inventarioProductosCache.push({ nombre: p.nombre, variable: '', sku: '', precio: p.precio || 0, stock: p.stock, productId: p.id, variantId: null, }); }
-        });
+        catalogoProductosCache = data.productos || [];
         catalogoCargadoUnaVez = true;
-    } catch (err) { console.warn('Error cargando el inventario:', err); catalogoProductosCache = []; inventarioProductosCache = []; if (grid) grid.innerHTML = `<div class="pedidos-empty">❌ No se pudo cargar el inventario: ${err.message}</div>`; } finally { catalogoCargando = false; if (catalogoCargadoUnaVez) renderInventarioModulo(); }
+    } catch (err) { console.warn('Error cargando el inventario:', err); catalogoProductosCache = []; if (grid) grid.innerHTML = `<div class="pedidos-empty">❌ No se pudo cargar el inventario: ${err.message}</div>`; } finally { catalogoCargando = false; if (catalogoCargadoUnaVez) renderInventarioModulo(); }
 }
 
 function renderInventarioModulo() {
     const grid = document.getElementById('inventarioGrid'); if (!grid) return;
     const texto = (document.getElementById('inventarioBuscador')?.value || '').trim().toLowerCase();
-    let lista = catalogoProductosCache.filter(p => { if (!texto) return true; const campo = `${p.nombre} ${(p.variantes || []).map(v => v.nombre).join(' ')}`.toLowerCase(); return campo.includes(texto); });
-    if (lista.length === 0) { grid.innerHTML = '<div class="pedidos-empty">No se encontraron productos.</div>'; return; }
-    grid.innerHTML = lista.map(p => {
-        const imagen = p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy">` : ''; let cuerpoVariantes = '';
-        if (p.variantes && p.variantes.length > 0) { cuerpoVariantes = p.variantes.map(v => ` <div class="inventario-variante-row"> <span class="inventario-variante-nombre">${v.nombre}</span> <span class="inventario-variante-precio" style="color:${v.agotado ? '#ef4444' : 'var(--turquesa-dark)'};"> ${v.agotado ? 'Agotado' : `$${v.precio.toFixed(2)}`} </span> </div> `).join(''); } else { cuerpoVariantes = ` <div class="inventario-variante-row" style="border-top:none;"> <span class="inventario-variante-nombre">${p.stock !== null ? `Stock: ${p.stock}` : 'Sin variantes'}</span> <span class="inventario-variante-precio" style="color:${p.agotado ? '#ef4444' : 'var(--turquesa-dark)'};"> ${p.agotado ? 'Agotado' : `$${(p.precio || 0).toFixed(2)}`} </span> </div> `; }
-        return ` <div class="inventario-card"> ${imagen} <div class="inventario-card-body"> <div class="inventario-card-title">${p.nombre}</div> ${cuerpoVariantes} </div> </div> `;
+    let lista = catalogoProductosCache.filter(p => { if (!texto) return true; const campo = `${p.nombre} ${p.sku || ''} ${(p.variantes || []).map(v => v.nombre).join(' ')}`.toLowerCase(); return campo.includes(texto); });
+
+    const sinSku = catalogoProductosCache.filter(p => !p.sku);
+    const tarjetaSinSku = sinSku.length > 0 ? `
+        <div class="inventario-card" style="cursor:pointer; border-color:#f59e0b;" onclick="abrirModalProductosSinSku()">
+            <div class="inventario-card-body">
+                <div class="inventario-card-title">⚠️ Productos sin SKU</div>
+                <div class="inventario-variante-row" style="border-top:none;">
+                    <span class="inventario-variante-nombre">Toca para asignarles un SKU</span>
+                    <span class="inventario-variante-precio" style="color:#f59e0b;">${sinSku.length}</span>
+                </div>
+            </div>
+        </div>
+    ` : '';
+
+    if (lista.length === 0) { grid.innerHTML = tarjetaSinSku || '<div class="pedidos-empty">No se encontraron productos.</div>'; return; }
+
+    grid.innerHTML = tarjetaSinSku + lista.map(p => {
+        let cuerpoVariantes = '';
+        if (p.variantes && p.variantes.length > 0) {
+            cuerpoVariantes = p.variantes.map(v => `
+                <div class="inventario-variante-row">
+                    <span class="inventario-variante-nombre">${v.nombre}</span>
+                    <span class="inventario-variante-precio" style="color:${v.agotado ? '#ef4444' : 'var(--turquesa-dark)'};">${v.agotado ? 'Agotado' : `$${v.precio.toFixed(2)}`}</span>
+                </div>
+            `).join('');
+        } else {
+            cuerpoVariantes = `
+                <div class="inventario-variante-row" style="border-top:none;">
+                    <span class="inventario-variante-nombre">${p.stock !== null ? `Stock: ${p.stock}` : 'Sin variantes'}</span>
+                    <span class="inventario-variante-precio" style="color:${p.agotado ? '#ef4444' : 'var(--turquesa-dark)'};">${p.agotado ? 'Agotado' : `$${(p.precio || 0).toFixed(2)}`}</span>
+                </div>
+            `;
+        }
+        return `
+            <div class="inventario-card">
+                <div class="inventario-card-body">
+                    <div class="inventario-card-title">${p.nombre}</div>
+                    <div style="font-size:11px; color:var(--text-muted);">SKU: ${p.sku || '<span style="color:#f59e0b;">Sin SKU</span>'}</div>
+                    ${cuerpoVariantes}
+                    ${p.enlace ? `<a href="${p.enlace}" target="_blank" style="font-size:11.5px; color:var(--turquesa-dark); margin-top:6px; display:inline-block;">🔗 Ver en la tienda</a>` : ''}
+                </div>
+            </div>
+        `;
     }).join('');
 }
 
-async function abrirModalArticulos() { const modal = document.getElementById('modalAnadirArticulo'); modal.style.display = 'flex'; document.getElementById('inputModalBuscadorArticulo').value = ''; document.getElementById('modalListaItemsContainer').innerHTML = '<div class="pedidos-empty">Cargando inventario en tiempo real...</div>'; await cargarProductosInventario(true); filtrarProductosModal(); setTimeout(() => { document.getElementById('inputModalBuscadorArticulo').focus(); }, 50); }
-function cerrarModalArticulos() { document.getElementById('modalAnadirArticulo').style.display = 'none'; }
-function filtrarProductosModal() {
-    const query = document.getElementById('inputModalBuscadorArticulo').value.toLowerCase().trim(); const container = document.getElementById('modalListaItemsContainer'); container.innerHTML = '';
-    if (!inventarioProductosCache || inventarioProductosCache.length === 0) { container.innerHTML = `<div style="text-align: center; padding: 40px 20px; color: var(--text-muted);"><p style="font-weight: 600; font-size: 14px; margin: 0 0 4px 0;">No hay ítems guardados</p></div>`; return; }
-    const filtrados = inventarioProductosCache.filter(p => { const nombre = (p.nombre || '').toLowerCase(); const sku = (p.sku || '').toLowerCase(); const variable = (p.variable || p.variacion || p.modelo || '').toLowerCase(); return nombre.includes(query) || sku.includes(query) || variable.includes(query); });
-    if (filtrados.length === 0) { container.innerHTML = `<div style="text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13.5px;">No se encontraron artículos.</div>`; } else {
-        filtrados.forEach(p => {
-            const nombre = p.nombre || 'Sin nombre'; const sku = p.sku || 'S/N'; const variable = p.variable || p.variacion || p.modelo || ''; const precio = parseFloat(p.precio) || 0; const stock = p.stock !== undefined ? parseInt(p.stock) : 1; const esAgotado = stock <= 0; const nombreCompleto = variable ? `${nombre} | ${variable}` : nombre;
-            const row = document.createElement('div'); row.className = 'modal-item-row'; row.innerHTML = ` <div class="modal-item-info"> <span class="modal-item-name">${nombreCompleto}</span> <span class="modal-item-sub">SKU: ${sku}</span> </div> <div class="modal-item-price-box"> <span class="modal-item-price">$${precio.toFixed(2)}</span> ${esAgotado ? '<span class="modal-item-agotado">Agotado</span>' : '<span class="modal-item-qty">/ 1 QTY</span>'} </div> `;
-            if (!esAgotado) { row.onclick = () => { seleccionarArticuloDesdeModal(nombreCompleto, precio, p.productId, p.variantId); }; } else { row.style.opacity = '0.6'; }
-            container.appendChild(row);
-        });
+// --- MODAL: PRODUCTOS SIN SKU ---
+function abrirModalProductosSinSku() {
+    const modal = document.getElementById('modalProductosSinSku');
+    modal.style.display = 'flex';
+    renderListaProductosSinSku();
+}
+function cerrarModalProductosSinSku() { document.getElementById('modalProductosSinSku').style.display = 'none'; }
+function renderListaProductosSinSku() {
+    const cont = document.getElementById('listaProductosSinSku');
+    const sinSku = catalogoProductosCache.filter(p => !p.sku);
+    if (sinSku.length === 0) { cont.innerHTML = '<div class="pedidos-empty">Todos tus productos tienen SKU. 🎉</div>'; return; }
+    cont.innerHTML = sinSku.map(p => `
+        <div class="modal-option-pill" style="cursor:default;">
+            <div class="mop-title">${p.nombre}</div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+                <input type="text" placeholder="Asignar SKU..." id="sku_input_${p.id}" style="margin:0; flex:1;">
+                <button type="button" class="btn-pill btn-pequeno" onclick="guardarSkuProducto('${p.id}')">Guardar</button>
+            </div>
+        </div>
+    `).join('');
+}
+async function guardarSkuProducto(productId) {
+    const input = document.getElementById('sku_input_' + productId);
+    const sku = (input.value || '').trim();
+    if (!sku) { alert('Escribe un SKU antes de guardar.'); return; }
+    try {
+        const { data, error } = await supabaseClient.functions.invoke('brooklyn-catalog', { body: { action: 'update_sku', productId, sku } });
+        if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo guardar el SKU.');
+        const p = catalogoProductosCache.find(x => x.id === productId);
+        if (p) p.sku = sku;
+        renderListaProductosSinSku();
+        renderInventarioModulo();
+    } catch (err) {
+        alert('❌ ' + (err.message || 'Error al guardar el SKU.'));
     }
+}
+
+async function abrirModalArticulos() { const modal = document.getElementById('modalAnadirArticulo'); modal.style.display = 'flex'; actualizarProgresoModales(); document.getElementById('progresoModalArticulo') && (document.getElementById('progresoModalArticulo').style.width = calcularProgresoCheckout() + '%'); document.getElementById('progresoModalArticuloLabel').innerText = `Progreso del pedido: ${calcularProgresoCheckout()}%`; document.getElementById('inputModalBuscadorArticulo').value = ''; document.getElementById('modalListaItemsContainer').innerHTML = '<div class="pedidos-empty">Cargando inventario en tiempo real...</div>'; await cargarProductosInventario(true); filtrarProductosModal(); setTimeout(() => { document.getElementById('inputModalBuscadorArticulo').focus(); }, 50); }
+function cerrarModalArticulos() { document.getElementById('modalAnadirArticulo').style.display = 'none'; }
+
+function filtrarProductosModal() {
+    const query = document.getElementById('inputModalBuscadorArticulo').value.toLowerCase().trim();
+    renderListaProductosModal(query);
+}
+
+function renderListaProductosModal(query) {
+    const container = document.getElementById('modalListaItemsContainer'); container.innerHTML = '';
+    if (!catalogoProductosCache || catalogoProductosCache.length === 0) { container.innerHTML = `<div style="text-align: center; padding: 40px 20px; color: var(--text-muted);"><p style="font-weight: 600; font-size: 14px; margin: 0 0 4px 0;">No hay productos disponibles</p></div>`; return; }
+    const filtrados = catalogoProductosCache.filter(p => {
+        if (!query) return true;
+        const nombre = (p.nombre || '').toLowerCase(); const sku = (p.sku || '').toLowerCase(); const variantesTxt = (p.variantes || []).map(v => v.nombre).join(' ').toLowerCase();
+        return nombre.includes(query) || sku.includes(query) || variantesTxt.includes(query);
+    });
+    if (filtrados.length === 0) { container.innerHTML = `<div style="text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13.5px;">No se encontraron artículos.</div>`; return; }
+
+    filtrados.forEach(p => {
+        const tieneVariantes = p.variantes && p.variantes.length > 0;
+        const precios = tieneVariantes ? p.variantes.map(v => v.precio) : [p.precio || 0];
+        const precioTxt = (tieneVariantes && Math.min(...precios) !== Math.max(...precios)) ? `$${Math.min(...precios).toFixed(2)} - $${Math.max(...precios).toFixed(2)}` : `$${(precios[0] || 0).toFixed(2)}`;
+        const agotadoTotal = tieneVariantes ? p.variantes.every(v => v.agotado) : p.agotado;
+        const row = document.createElement('div'); row.className = 'modal-item-row';
+        row.innerHTML = `<div class="modal-item-info"><span class="modal-item-name">${p.nombre}</span><span class="modal-item-sub">SKU: ${p.sku || 'S/N'}${tieneVariantes ? ` · ${p.variantes.length} variantes` : ''}</span></div><div class="modal-item-price-box"><span class="modal-item-price">${precioTxt}</span>${agotadoTotal ? '<span class="modal-item-agotado">Agotado</span>' : (tieneVariantes ? '<span class="modal-item-qty">Ver opciones ›</span>' : '<span class="modal-item-qty">/ 1 QTY</span>')}</div>`;
+        if (!agotadoTotal) { row.onclick = () => { if (tieneVariantes) mostrarVariantesProductoModal(p); else seleccionarArticuloDesdeModal(p.nombre, p.precio || 0, p.id, null); }; } else { row.style.opacity = '0.6'; }
+        container.appendChild(row);
+    });
+}
+
+function mostrarVariantesProductoModal(producto) {
+    const container = document.getElementById('modalListaItemsContainer'); container.innerHTML = '';
+    const backRow = document.createElement('div'); backRow.className = 'modal-item-row'; backRow.style.cssText = 'font-weight:700; color:var(--turquesa-dark);';
+    backRow.innerHTML = `‹ Volver a productos — <span style="font-weight:400;color:var(--text-main);">${producto.nombre}</span>`;
+    backRow.onclick = () => filtrarProductosModal();
+    container.appendChild(backRow);
+    producto.variantes.forEach(v => {
+        const row = document.createElement('div'); row.className = 'modal-item-row';
+        row.innerHTML = `<div class="modal-item-info"><span class="modal-item-name">${v.nombre}</span><span class="modal-item-sub">${v.stock !== null ? `Stock: ${v.stock}` : ''}</span></div><div class="modal-item-price-box"><span class="modal-item-price">$${v.precio.toFixed(2)}</span>${v.agotado ? '<span class="modal-item-agotado">Agotado</span>' : '<span class="modal-item-qty">/ 1 QTY</span>'}</div>`;
+        if (!v.agotado) { row.onclick = () => seleccionarArticuloDesdeModal(`${producto.nombre} | ${v.nombre}`, v.precio, producto.id, v.id); } else { row.style.opacity = '0.6'; }
+        container.appendChild(row);
+    });
 }
 
 function seleccionarArticuloDesdeModal(nombreCompleto, precio, productId = null, variantId = null) { listaArticulosPedido.push({ nombre: nombreCompleto, precio, productId, variantId }); cerrarModalArticulos(); actualizarTablaArticulosPedido(); }
@@ -1195,6 +1404,67 @@ function actualizarTablaArticulosPedido() {
     placeholder.style.display = 'none'; container.style.display = 'block'; tbody.innerHTML = "";
     listaArticulosPedido.forEach((art, idx) => { tbody.innerHTML += ` <tr> <td>${art.nombre}</td> <td>$${art.precio.toFixed(2)}</td> <td><button type="button" class="btn-pill" style="padding:4px 8px; font-size:11px; color:#ef4444; border-color:#ef4444;" onclick="eliminarArticuloPedido(${idx})">Eliminar</button></td> </tr> `; });
     calcularTotalesPedido();
+}
+
+function calcularProgresoCheckout() {
+    let pasos = 0; const total = 4;
+    if ((document.getElementById('pedidoClienteNombre')?.value || '').trim()) pasos++;
+    if ((document.getElementById('pedidoWpNum')?.value || '').trim()) pasos++;
+    if ((listaArticulosPedido || []).length > 0) pasos++;
+    const esNacional = document.getElementById('radioEnvioNacional')?.checked;
+    if (esNacional ? (document.getElementById('envioNacNombre')?.value || '').trim() : (document.getElementById('textoDireccionDelivery')?.innerText || '').trim()) pasos++;
+    return Math.round((pasos / total) * 100);
+}
+
+function actualizarProgresoModales() {
+    const pct = calcularProgresoCheckout();
+    ['progresoModalEnvio', 'progresoModalPago'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.width = pct + '%';
+    });
+    ['progresoModalEnvioLabel', 'progresoModalPagoLabel'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = `Progreso del pedido: ${pct}%`;
+    });
+}
+
+function abrirModalMetodoEnvio() {
+    document.getElementById('modalMetodoEnvio').style.display = 'flex';
+    const esNacional = document.getElementById('radioEnvioNacional').checked;
+    document.getElementById('opcionEnvioDelivery').classList.toggle('selected', !esNacional);
+    document.getElementById('opcionEnvioNacional').classList.toggle('selected', esNacional);
+    actualizarProgresoModales();
+}
+function cerrarModalMetodoEnvio() { document.getElementById('modalMetodoEnvio').style.display = 'none'; }
+function seleccionarMetodoEnvio(valor) {
+    document.getElementById('radioEnvioDelivery').checked = (valor === 'delivery');
+    document.getElementById('radioEnvioNacional').checked = (valor === 'nacional');
+    document.getElementById('resumenMetodoEnvio').innerText = valor === 'delivery' ? '📦 Delivery GRATIS' : '🚚 Envío Nacional GRATIS';
+    toggleCamposEnvio();
+    cerrarModalMetodoEnvio();
+    actualizarProgresoModales();
+}
+
+function abrirModalMetodoPago() {
+    document.getElementById('modalMetodoPago').style.display = 'flex';
+    const radios = document.getElementsByName('metodoPagoRadio');
+    let metodo = 'pago_movil';
+    for (let r of radios) { if (r.checked) { metodo = r.value; break; } }
+    ['Pago_movil', 'Efectivo_usd', 'Binance', 'Zelle', 'Zinli'].forEach(k => {
+        document.getElementById('opcionPago' + k)?.classList.toggle('selected', k.toLowerCase() === metodo);
+    });
+    actualizarProgresoModales();
+}
+function cerrarModalMetodoPago() { document.getElementById('modalMetodoPago').style.display = 'none'; }
+function seleccionarMetodoPago(valor) {
+    const mapa = { pago_movil: 'radioPagoMovil', efectivo_usd: 'radioEfectivoUSD', binance: 'radioBinance', zelle: 'radioZelle', zinli: 'radioZinli' };
+    Object.values(mapa).forEach(id => { document.getElementById(id).checked = false; });
+    document.getElementById(mapa[valor]).checked = true;
+    const etiquetas = { pago_movil: '💵 Pago móvil', efectivo_usd: '💲 Efectivo USD', binance: '🟡 Binance', zelle: '🏦 Zelle', zinli: '🟣 Zinli' };
+    document.getElementById('resumenMetodoPago').innerText = etiquetas[valor] || valor;
+    alCambiarMetodoPago();
+    cerrarModalMetodoPago();
+    actualizarProgresoModales();
 }
 
 function toggleCamposEnvio() { const radioDelivery = document.getElementById('radioEnvioDelivery'); const metodo = radioDelivery && radioDelivery.checked ? 'delivery' : 'nacional'; document.getElementById('envioDeliveryContainer').style.display = metodo === 'delivery' ? 'block' : 'none'; document.getElementById('envioNacionalContainer').style.display = metodo === 'nacional' ? 'block' : 'none'; }
@@ -1239,7 +1509,7 @@ function obtenerDatosEnvioPedido() {
 }
 
 // CREACIÓN DE PEDIDO ACTUALIZADA (Creación + Actualización en dos pasos)
-async function crearNuevoPedido() {
+async function crearNuevoPedido(esBorrador = false) {
     const feedback = document.getElementById('crearPedidoFeedback'); 
     feedback.style.color = '#ef4444'; 
     feedback.innerText = '';
@@ -1264,10 +1534,10 @@ async function crearNuevoPedido() {
 
     if (totalUSD <= 0) { feedback.innerText = '❌ El total del pedido debe ser mayor a 0.'; return; }
     
-    const btn = document.getElementById('btnCrearPedidoTakeApp'); 
+    const btn = document.getElementById(esBorrador ? 'btnGuardarBorrador' : 'btnCrearPedidoTakeApp'); 
     btn.disabled = true; 
     const textoOriginal = btn.innerText; 
-    btn.innerText = '⏳ Procesando pedido...';
+    btn.innerText = esBorrador ? '⏳ Guardando borrador...' : '⏳ Procesando pedido...';
 
     // 1. Payload original SOLO con los datos de creación aceptados
     const payloadCreate = {
@@ -1276,7 +1546,7 @@ async function crearNuevoPedido() {
         currency: 'USD',
         totalAmount: totalUSD,
         lineItems: listaArticulosPedido.map(a => ({ name: a.nombre, quantity: 1, unit: 'unidad', price: a.precio, productId: a.productId || undefined, variantId: a.variantId || undefined, })),
-        remark: (document.getElementById('pedidoObservacion').value || '').trim(),
+        remark: `Método de Envíos: ${envio.metodoEntrega}. ${(document.getElementById('pedidoObservacion').value || '').trim()}`.trim(),
         paymentMethod: obtenerEtiquetaMetodoPago(),
         metodoEntrega: envio.metodoEntrega,
         direccionEnvio: envio.direccionEnvio,
@@ -1292,12 +1562,12 @@ async function crearNuevoPedido() {
 
         // PASO 2: Actualizar inmediatamente con los estados seleccionados usando el ID generado
         const pedidoIdGenerado = data.pedido.id;
-        const orderStatusVal = document.getElementById('nuevoPedidoEstado').value;
+        const orderStatusVal = esBorrador ? 'draft' : document.getElementById('nuevoPedidoEstado').value;
         const paymentStatusVal = document.getElementById('nuevoPedidoPago').value;
         const fulfillmentStatusVal = document.getElementById('nuevoPedidoCumplimiento').value;
 
-        // Solo se hace la actualización si se cambió algún estado de las tarjetas
-        if (orderStatusVal !== 'pending' || paymentStatusVal !== 'pending' || fulfillmentStatusVal !== 'unfulfilled') {
+        // Solo se hace la actualización si se cambió algún estado de las tarjetas (o si es borrador)
+        if (esBorrador || orderStatusVal !== 'pending' || paymentStatusVal !== 'pending' || fulfillmentStatusVal !== 'unfulfilled') {
             const cambios = {
                 orderStatus: orderStatusVal,
                 paymentStatus: paymentStatusVal,
@@ -1310,7 +1580,9 @@ async function crearNuevoPedido() {
         }
 
         feedback.style.color = 'var(--turquesa-dark)'; 
-        feedback.innerText = `✅ Pedido #${data.pedido.numero_pedido} creado y actualizado correctamente.`; 
+        feedback.innerText = esBorrador
+            ? `📝 Pedido #${data.pedido.numero_pedido} guardado como borrador en TakeApp.`
+            : `✅ Pedido #${data.pedido.numero_pedido} creado y actualizado correctamente.`; 
         
         // Forzamos la actualización de la tabla de Gestión de pedidos automáticamente
         pedidosGestionCargados = false;
@@ -1355,8 +1627,59 @@ function calcularNota() {
     document.getElementById('previewText').innerText = nota;
 }
 
-function abrirModalGeneradorCliente() { document.getElementById('modalGeneradorCliente').style.display = 'flex'; }
-function cerrarModalGeneradorCliente() { document.getElementById('modalGeneradorCliente').style.display = 'none'; }
+let clientesCache = []; let clientesCargados = false;
+async function abrirModalBuscarCliente() {
+    document.getElementById('modalBuscarCliente').style.display = 'flex';
+    mostrarVistaBuscarCliente();
+    if (!clientesCargados) {
+        document.getElementById('listaClientesEncontrados').innerHTML = '<div class="pedidos-empty">Cargando clientes...</div>';
+        try {
+            const { data, error } = await supabaseClient.from('clientes').select('id,nombre_completo,telefono,email').order('nombre_completo', { ascending: true });
+            if (error) throw error;
+            clientesCache = data || [];
+            clientesCargados = true;
+        } catch (err) { console.warn('Error cargando clientes:', err); clientesCache = []; }
+    }
+    filtrarClientesModal();
+}
+function cerrarModalBuscarCliente() { document.getElementById('modalBuscarCliente').style.display = 'none'; }
+function mostrarVistaBuscarCliente() {
+    document.getElementById('tituloModalCliente').innerText = 'Buscar cliente';
+    document.getElementById('vistaBuscarCliente').style.display = 'block';
+    document.getElementById('vistaRegistrarCliente').style.display = 'none';
+}
+function mostrarVistaRegistrarCliente() {
+    document.getElementById('tituloModalCliente').innerText = 'Registrar cliente';
+    document.getElementById('vistaBuscarCliente').style.display = 'none';
+    document.getElementById('vistaRegistrarCliente').style.display = 'block';
+    document.getElementById('clientFullName').value = document.getElementById('inputBuscarCliente').value || '';
+    formatearCliente();
+}
+function filtrarClientesModal() {
+    const q = (document.getElementById('inputBuscarCliente').value || '').toLowerCase().trim();
+    const cont = document.getElementById('listaClientesEncontrados');
+    const filtrados = !q ? clientesCache.slice(0, 50) : clientesCache.filter(c => (c.nombre_completo || '').toLowerCase().includes(q) || (c.telefono || '').includes(q.replace(/\D/g, '')));
+    if (filtrados.length === 0) { cont.innerHTML = '<div class="pedidos-empty">No se encontraron clientes. Prueba "Registrar cliente".</div>'; return; }
+    cont.innerHTML = filtrados.map(c => `
+        <div class="modal-item-row" onclick="seleccionarClienteEncontrado('${c.id}')">
+            <div class="modal-item-info"><span class="modal-item-name">${c.nombre_completo || 'Sin nombre'}</span><span class="modal-item-sub">${c.telefono || 'Sin teléfono'}</span></div>
+        </div>
+    `).join('');
+}
+function seleccionarClienteEncontrado(id) {
+    const c = clientesCache.find(x => String(x.id) === String(id));
+    if (!c) return;
+    document.getElementById('pedidoClienteNombre').value = c.nombre_completo || '';
+    document.getElementById('resumenClienteSeleccionado').innerText = c.nombre_completo || 'Cliente';
+    const tel = (c.telefono || '').replace(/\D/g, '');
+    const codigos = ['+58', '+1', '+34', '+57', '+54'];
+    let cod = '+58'; let resto = tel;
+    for (const c2 of codigos) { const digitos = c2.replace('+', ''); if (tel.startsWith(digitos)) { cod = c2; resto = tel.slice(digitos.length); break; } }
+    document.getElementById('pedidoWpCod').value = cod;
+    document.getElementById('pedidoWpNum').value = resto;
+    cerrarModalBuscarCliente();
+    actualizarProgresoModales();
+}
 function formatearCliente() {
     const rawNameInput = document.getElementById('clientFullName'); if (!rawNameInput) return;
     const rawName = rawNameInput.value; const nac = document.getElementById('clientNac').value; const clientIdNumEl = document.getElementById('clientIdNum'); const rawId = clientIdNumEl ? clientIdNumEl.value.replace(/\D/g, '') : '';
@@ -1373,10 +1696,31 @@ async function pegarDatosCliente() {
     if (nameFormatted) document.getElementById('clientFullName').value = nameFormatted; if (idNum) { document.getElementById('clientNac').value = nac; document.getElementById('clientIdNum').value = idNum; }
     formatearCliente();
 }
-function registrarNombreCheckout() {
-    const texto = document.getElementById('previewClientText').innerText; if (texto.includes("Ingresa los datos")) return;
-    const inputNombrePedido = document.getElementById('pedidoClienteNombre'); if (inputNombrePedido) { inputNombrePedido.value = texto; autocorregirNombrePedido(); }
-    const btnNode = document.getElementById('btnCopyCliente'); const originalText = btnNode.innerText; btnNode.innerText = "✅ ¡Registrado!"; setTimeout(() => { btnNode.innerText = originalText; cerrarModalGeneradorCliente(); }, 800);
+async function registrarNombreCheckout() {
+    const nombreFormateado = document.getElementById('clientFullName').value.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' ');
+    if (!nombreFormateado) { alert('Ingresa el nombre del cliente.'); return; }
+    const cod = document.getElementById('clientPhoneCod').value;
+    const numTel = document.getElementById('clientPhoneNum').value.replace(/\D/g, '');
+    const telefonoCompleto = numTel ? `${cod}${numTel}` : '';
+
+    const btnNode = document.getElementById('btnCopyCliente'); const originalText = btnNode.innerText; btnNode.innerText = '⏳ Guardando...'; btnNode.disabled = true;
+    try {
+        if (telefonoCompleto) {
+            const existente = await supabaseClient.from('clientes').select('id').eq('telefono', telefonoCompleto.replace('+', '')).maybeSingle();
+            if (!existente.data) {
+                await supabaseClient.from('clientes').insert({ nombre_completo: nombreFormateado, telefono: telefonoCompleto.replace('+', '') });
+                clientesCargados = false; // fuerza refresco de la lista la próxima vez
+            }
+        }
+        document.getElementById('pedidoClienteNombre').value = nombreFormateado;
+        document.getElementById('resumenClienteSeleccionado').innerText = nombreFormateado;
+        if (numTel) { document.getElementById('pedidoWpCod').value = cod; document.getElementById('pedidoWpNum').value = numTel; }
+        btnNode.innerText = '✅ ¡Registrado!';
+        setTimeout(() => { btnNode.innerText = originalText; btnNode.disabled = false; cerrarModalBuscarCliente(); actualizarProgresoModales(); }, 700);
+    } catch (err) {
+        btnNode.innerText = originalText; btnNode.disabled = false;
+        alert('❌ No se pudo registrar el cliente: ' + (err.message || 'error desconocido'));
+    }
 }
 async function copiarTexto(elementId, btnElement) { const texto = document.getElementById(elementId).innerText; if (texto.includes("Ingresa los datos")) return; try { await navigator.clipboard.writeText(texto); let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement; const originalText = btnNode.innerText; btnNode.innerText = "✅ ¡Copiado!"; setTimeout(() => { btnNode.innerText = originalText; }, 2000); } catch (err) { alert("Error al copiar texto."); } }
 async function generarYCopiarImagen() {
