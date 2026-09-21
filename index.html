@@ -2574,4 +2574,122 @@ async function mapaResolverUbicacion(direccion) {
         if (!ref) return { ok: false, motivo: 'No se encontró la localidad "' + p.localidad + '"' };
         if (!ref.ok) return { ok: false, motivo: 'Localidad demasiado amplia para ubicar el Plus Code' };
         const [lat, lng] = olcRecuperarCercano(p.codigo, ref.lat, ref.lng);
-        return { ok: true, lat
+        return { ok: true, lat, lng, tipo: 'Plus Code' };
+    }
+    if (p.tipo === 'link') return { ok: false, motivo: 'Enlace corto de Google Maps (no trae coordenadas legibles)' };
+    return { ok: false, motivo: 'Dirección en texto libre' };
+}
+
+function mapaEnlaceGoogle(direccion) {
+    const p = mapaParsearUbicacion(direccion);
+    const m = (direccion || '').match(/https?:\/\/\S+/i);
+    if (p && p.tipo === 'link' && m) return m[0];
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent((direccion || '').trim());
+}
+
+let mapaEntregas = null;
+let mapaCapaMarcadores = null;
+let mapaTokenRender = 0;
+
+function mapaIconoPin(n) {
+    return L.divIcon({
+        className: 'mapa-pin-wrap',
+        html: '<div class="mapa-pin"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#19D3D3" stroke="#0E7490" stroke-width="1.4"/><circle cx="12" cy="10" r="4.2" fill="#fff"/></svg>' + (n > 1 ? '<span class="mapa-pin-n">' + n + '</span>' : '') + '</div>',
+        iconSize: [34, 34], iconAnchor: [17, 33], popupAnchor: [0, -30]
+    });
+}
+
+function cerrarMapaEntregas() {
+    mapaTokenRender++;
+    document.getElementById('modalMapaEntregas').style.display = 'none';
+}
+document.addEventListener('keydown', ev => {
+    const m = document.getElementById('modalMapaEntregas');
+    if (ev.key === 'Escape' && m && m.style.display === 'flex') cerrarMapaEntregas();
+});
+
+async function abrirMapaEntregas() {
+    const modal = document.getElementById('modalMapaEntregas');
+    const estado = document.getElementById('mapaEntregasEstado');
+    const pendientesEl = document.getElementById('mapaEntregasPendientes');
+    modal.style.display = 'flex';
+    pendientesEl.style.display = 'none';
+    pendientesEl.innerHTML = '';
+
+    if (typeof L === 'undefined') {
+        estado.innerHTML = '<re-icon icon=x-circle size=15></re-icon> No se pudo cargar la librería del mapa (Leaflet). Revisa tu conexión y recarga la página.';
+        return;
+    }
+    if (!mapaEntregas) {
+        mapaEntregas = L.map('mapaEntregasCanvas').setView([15, -60], 3);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(mapaEntregas);
+        mapaCapaMarcadores = L.layerGroup().addTo(mapaEntregas);
+    }
+    setTimeout(() => mapaEntregas.invalidateSize(), 60);
+    mapaCapaMarcadores.clearLayers();
+
+    const token = ++mapaTokenRender;
+    if (!analiticasCargadas) {
+        estado.innerHTML = '<re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Cargando pedidos…';
+        await cargarAnaliticasPedidos();
+        if (token !== mapaTokenRender) return;
+    }
+    const base = analiticasListaFiltrada();
+    const canceladas = base.filter(p => p.estado_pedido === 'cancelled' && (p.direccion_envio || '').trim()).length;
+    const lista = base.filter(p => (p.direccion_envio || '').trim() && p.estado_pedido !== 'cancelled');
+
+    if (lista.length === 0) {
+        estado.innerHTML = 'No hay entregas con dirección registrada para el rango y filtros seleccionados.' + (canceladas ? ' (' + canceladas + ' cancelada(s) omitida(s))' : '');
+        return;
+    }
+
+    const ubicados = [];
+    const pendientes = [];
+    for (let i = 0; i < lista.length; i++) {
+        if (token !== mapaTokenRender) return;
+        estado.innerHTML = '<re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Ubicando entregas… ' + (i + 1) + ' de ' + lista.length;
+        const pedido = lista[i];
+        const r = await mapaResolverUbicacion(pedido.direccion_envio);
+        if (r.ok) ubicados.push({ pedido, lat: r.lat, lng: r.lng, tipo: r.tipo });
+        else pendientes.push({ pedido, motivo: r.motivo });
+    }
+    if (token !== mapaTokenRender) return;
+
+    const grupos = {};
+    ubicados.forEach(u => {
+        const k = u.lat.toFixed(5) + ',' + u.lng.toFixed(5);
+        (grupos[k] = grupos[k] || { lat: u.lat, lng: u.lng, items: [] }).items.push(u);
+    });
+    const puntos = [];
+    Object.values(grupos).forEach(g => {
+        const html = '<div class="mapa-popup">' + g.items.map(u => {
+            const p = u.pedido;
+            const fecha = p.fecha_pedido ? new Date(p.fecha_pedido).toLocaleDateString('es-VE') : '';
+            const est = (ETIQUETAS_ESTADO_ENVIO && ETIQUETAS_ESTADO_ENVIO[p.estado_envio]) || p.estado_envio || '';
+            return '<div class="mp-item"><span class="mp-num">#' + mapaEsc(p.numero_pedido) + '</span> · ' + mapaEsc(p.cliente_nombre || 'Sin cliente')
+                + '<br>' + mapaEsc(formatoMonedaUSD(p.monto_total)) + (fecha ? ' · ' + mapaEsc(fecha) : '')
+                + (est ? '<br>Envío: ' + mapaEsc(est) : '')
+                + '<br><span class="mp-dir">' + mapaEsc(p.direccion_envio) + '</span>'
+                + '<br><a href="' + mapaEsc('https://www.google.com/maps/search/?api=1&query=' + g.lat + ',' + g.lng) + '" target="_blank" rel="noopener">Abrir en Google Maps</a></div>';
+        }).join('') + '</div>';
+        L.marker([g.lat, g.lng], { icon: mapaIconoPin(g.items.length) }).addTo(mapaCapaMarcadores).bindPopup(html, { maxWidth: 300 });
+        puntos.push([g.lat, g.lng]);
+    });
+
+    if (puntos.length === 1) mapaEntregas.setView(puntos[0], 16);
+    else if (puntos.length > 1) mapaEntregas.fitBounds(L.latLngBounds(puntos), { padding: [40, 40], maxZoom: 16 });
+
+    estado.innerHTML = '<strong>' + lista.length + '</strong> entregas con dirección · <strong>' + ubicados.length + '</strong> ubicadas en el mapa'
+        + (pendientes.length ? ' · <strong>' + pendientes.length + '</strong> sin ubicación exacta' : '')
+        + (canceladas ? ' · ' + canceladas + ' cancelada(s) omitida(s)' : '');
+
+    if (pendientes.length) {
+        pendientesEl.innerHTML = '<h4>Sin ubicación exacta en el mapa</h4>' + pendientes.map(x =>
+            '<div class="mp-row"><strong>#' + mapaEsc(x.pedido.numero_pedido) + '</strong> ' + mapaEsc(x.pedido.cliente_nombre || '')
+            + ' <span>' + mapaEsc(x.motivo) + '</span> <a href="' + mapaEsc(mapaEnlaceGoogle(x.pedido.direccion_envio)) + '" target="_blank" rel="noopener">Abrir en Google Maps</a></div>').join('');
+        pendientesEl.style.display = 'block';
+    }
+}
+</script>
+</body>
+</html>
