@@ -6,7 +6,7 @@
     <title>Brooklyn - Búho Electronics</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -14,12 +14,13 @@
     <style>
         :root {
             --turquesa: #19D3D3;
-            --turquesa-dark: #12b0b0;
-            --bg-body: #F8FAFC;
-            --bg-card: #FFFFFF;
-            --bg-sidebar: #FFFFFF;
+            --turquesa-dark: #24C7C7;
+            --turquesa-suave: #DFF5FF;
+            --bg-body: linear-gradient(135deg, #F4F8FA 0%, #E2F1F8 50%, #D4EBF6 100%);
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --bg-sidebar: rgba(255, 255, 255, 0.98);
             --bg-input: #FFFFFF;
-            --text-main: #0F172A;
+            --text-main: #1C2430;
             --text-muted: #64748B;
             --border-color: #E2E8F0;
             --badge-bg: #E0F2FE;
@@ -31,9 +32,9 @@
         }
 
         [data-theme="dark"] {
-            --bg-body: #0F172A;
-            --bg-card: #1E293B;
-            --bg-sidebar: #1E293B;
+            --bg-body: linear-gradient(135deg, #0F172A 0%, #17243B 50%, #1E2D4A 100%);
+            --bg-card: rgba(30, 41, 59, 0.95);
+            --bg-sidebar: rgba(30, 41, 59, 0.98);
             --bg-input: #1E293B;
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
@@ -48,11 +49,12 @@
         * { box-sizing: border-box; }
 
         body { 
-            font-family: 'Poppins', sans-serif; 
+            font-family: 'Inter', sans-serif; 
             margin: 0; padding: 0;
-            background-color: var(--bg-body);
+            background: var(--bg-body);
+            background-attachment: fixed;
             color: var(--text-main);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
         }
 
@@ -60,24 +62,48 @@
         .login-overlay {
             position: fixed; top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background-color: var(--bg-body);
+            background: var(--bg-body);
             z-index: 9999;
             display: flex; align-items: center; justify-content: center;
             padding: 20px;
+            overflow: hidden;
         }
+        [data-theme="dark"] .login-overlay {
+            background: var(--bg-body);
+        }
+        .login-blob {
+            position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.55; pointer-events: none;
+        }
+        .login-blob.b1 { width: 480px; height: 480px; background: var(--turquesa); top: -120px; left: -120px; }
+        .login-blob.b2 { width: 420px; height: 420px; background: var(--turquesa-suave); bottom: -100px; right: -80px; }
+        [data-theme="dark"] .login-blob.b2 { background: #0369A1; opacity: 0.2; }
+        .login-blob.b3 { width: 320px; height: 320px; background: var(--turquesa-dark); bottom: 10%; left: 8%; opacity: 0.35; }
 
         .login-card {
-            background: var(--bg-card);
-            padding: 36px 28px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-md);
-            width: 100%; max-width: 380px;
+            position: relative; z-index: 1;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 40px 32px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 20px 60px rgba(28, 36, 48, 0.12);
+            width: 100%; max-width: 400px;
             text-align: center;
         }
+        [data-theme="dark"] .login-card {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: rgba(255,255,255,0.1);
+        }
 
-        .login-card h2 { margin: 0 0 6px 0; font-size: 22px; font-weight: 800; }
-        .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+        .login-card .login-logo { width: 64px; height: 64px; margin: 0 auto 16px auto; display: block; border-radius: 12px; object-fit: contain; background: #fff; padding: 4px; }
+        .login-card h2 { margin: 0 0 6px 0; font-size: 24px; font-weight: 800; color: var(--text-main); }
+        .login-card p { font-size: 13.5px; color: var(--text-muted); margin-bottom: 24px; }
+        .login-card label { text-align: left; display: block; font-size: 12.5px; font-weight: 600; color: var(--text-main); margin: 14px 0 5px 2px; }
+        .login-card input { background: #F4F7F9; border: 1px solid var(--border-color); border-radius: 12px; }
+        [data-theme="dark"] .login-card input { background: var(--bg-input); }
+        .login-card .btn-copy { background: var(--text-main); }
+        .login-card .btn-copy:hover { background: var(--turquesa-dark); }
         .login-error { color: #ef4444 !important; font-weight: 600; margin-top: 12px; font-size: 13px; }
 
         /* LAYOUT PRINCIPAL CON SIDEBAR PERMANENTE */
@@ -172,6 +198,33 @@
 
         .header-actions { display: flex; align-items: center; gap: 10px; }
 
+        /* THEME SWITCH */
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+            margin: 0 4px;
+        }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .theme-slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--border-color);
+            transition: .3s; border-radius: 26px;
+        }
+        .theme-slider:before {
+            position: absolute; content: "";
+            height: 20px; width: 20px; left: 3px; bottom: 3px;
+            background-color: #FFF;
+            transition: .3s; border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        input:checked + .theme-slider { background-color: var(--turquesa-dark); }
+        input:checked + .theme-slider:before { transform: translateX(22px); }
+
         .btn-pill {
             background: var(--bg-input); color: var(--text-main);
             border: 1px solid var(--border-color); padding: 8px 14px;
@@ -206,6 +259,25 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow-sm);
+        }
+
+        /* GRID PARA 3 COLUMNAS EN CHECKOUT */
+        .checkout-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 900px) {
+            .checkout-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+        .checkout-grid-3 .checkout-card-section {
+            margin-bottom: 0; 
+            display: flex; 
+            flex-direction: column;
+            height: 100%;
         }
 
         .checkout-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
@@ -249,34 +321,46 @@
         .badge-gap { color: var(--badge-text); background: var(--badge-bg); padding: 2px 8px; border-radius: 12px; display: inline-block; }
         .market-time { font-size: 11px; opacity: 0.6; text-align: center; margin-top: 14px; }
 
-        /* Estilos modificados para Visibilidad y Sticky Header/Column de la Tabla */
+        /* REFINAMIENTO VISUAL DE TABLA */
         .table-container { overflow-x: auto; margin-top: 16px; border-radius: 10px; border: 1px solid var(--border-color); position: relative; }
         .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-        .data-table th, .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
-        .data-table th { background: var(--bg-input); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        .data-table tr:hover { background-color: var(--border-color); }
+        .data-table th { background: transparent; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; padding: 16px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .data-table td { padding: 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; white-space: nowrap; }
+        .data-table tr:hover { background-color: rgba(0,0,0,0.02); }
+        [data-theme="dark"] .data-table tr:hover { background-color: rgba(255,255,255,0.03); }
         
-        /* Asegurar que el botón de Modificar siempre sea visible al hacer scroll */
         .data-table th:last-child, .data-table td:last-child { position: sticky; right: 0; background-color: var(--bg-card); z-index: 2; box-shadow: -3px 0px 5px rgba(0,0,0,0.03); }
-        .data-table th:last-child { background: var(--bg-input); }
-        .data-table tr:hover td:last-child { background-color: var(--border-color); }
+        .data-table tr:hover td:last-child { background-color: var(--bg-card); }
+        [data-theme="dark"] .data-table tr:hover td:last-child { background-color: #1E293B; }
 
         .pedidos-toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
         .pedidos-toolbar .modal-search-input-wrapper { flex-grow: 1; min-width: 220px; }
         .pedidos-toolbar select { width: auto; margin-top: 0; min-width: 160px; }
         .btn-pequeno { width: auto; padding: 8px 14px; font-size: 12px; margin: 0; white-space: nowrap; }
 
-        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: capitalize; display: inline-block; line-height: 1.3; }
-        .status-badge.st-ok { background: #DCFCE7; color: #15803D; }
-        .status-badge.st-warn { background: #FEF3C7; color: #B45309; }
-        .status-badge.st-bad { background: #FEE2E2; color: #B91C1C; }
-        .status-badge.st-neutral { background: var(--badge-bg); color: var(--badge-text); }
-
         .pedidos-empty { text-align: center; padding: 40px 16px; color: var(--text-muted); font-size: 13.5px; }
         .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .form-row-2 > div { min-width: 0; }
 
-        /* ESTILOS PARA ESTADOS DEL PEDIDO TIPO "PILL" COMPACTO */
+        /* NUEVOS ESTILOS DE ESTADOS (PILLS/BADGES) */
+        .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; line-height: 1.2; }
+        .status-badge.bg-solid-green { background: #10B981; color: #FFFFFF; border: 1px solid transparent; }
+        .status-badge.bg-light-green { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.2); }
+        [data-theme="dark"] .status-badge.bg-light-green { color: #34D399; }
+        .status-badge.bg-light-blue { background: rgba(59, 130, 246, 0.15); color: #2563EB; border: 1px solid rgba(59,130,246,0.2); }
+        [data-theme="dark"] .status-badge.bg-light-blue { color: #60A5FA; }
+        .status-badge.bg-light-red { background: rgba(239, 68, 68, 0.15); color: #DC2626; border: 1px solid rgba(239,68,68,0.2); }
+        [data-theme="dark"] .status-badge.bg-light-red { color: #F87171; }
+        .status-badge.bg-light-yellow { background: rgba(245, 158, 11, 0.15); color: #D97706; border: 1px solid rgba(245,158,11,0.2); }
+        [data-theme="dark"] .status-badge.bg-light-yellow { color: #FBBF24; }
+
+        /* BOTONES DE ACCIONES TABLA */
+        .btn-accion-link { background: transparent; border: none; color: var(--text-main); font-size: 12px; font-weight: 600; cursor: pointer; padding: 6px 10px; border-radius: 6px; transition: all 0.2s; margin:0; }
+        .btn-accion-link:hover { background: var(--border-color); }
+        .btn-accion-dots { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; margin:0; width: auto; height: 28px; line-height: 1; }
+        .btn-accion-dots:hover { background: var(--bg-input); color: var(--text-main); }
+
+        /* ESTILOS PARA ESTADOS DEL PEDIDO TIPO "PILL" COMPACTO (Checkout) */
         .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         @media (max-width: 600px) { .status-grid { grid-template-columns: 1fr; } }
         .status-pill-card {
@@ -294,7 +378,6 @@
 
         .inventario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
         .inventario-card { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-card); display: flex; flex-direction: column; }
-        .inventario-card img { width: 100%; height: 130px; object-fit: cover; background: var(--border-color); }
         .inventario-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
         .inventario-card-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
         .inventario-variante-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 4px 0; border-top: 1px dashed var(--border-color); gap: 8px; }
@@ -327,7 +410,7 @@
         .top-clientes-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border-color); font-size: 12.5px; }
         .top-clientes-row:last-child { border-bottom: none; }
 
-        /* SELECTOR TIPO PILL (dispara modal flotante) — mismo lenguaje visual que status-pill-card / header-stat-pill */
+        /* SELECTOR TIPO PILL */
         .selector-trigger-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         @media (max-width: 600px) { .selector-trigger-grid { grid-template-columns: 1fr; } }
         .selector-trigger {
@@ -341,14 +424,12 @@
         .selector-trigger .st-value { font-size: 13.5px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; gap: 6px; }
         .selector-trigger .st-value small { font-weight: 400; color: var(--text-muted); font-size: 11px; }
 
-        /* Fila de opción dentro del modal flotante de selección */
         .modal-option-pill { border: 1px solid var(--border-color); border-radius: 12px; padding: 13px 14px; margin: 6px 12px; cursor: pointer; transition: all .15s ease; }
         .modal-option-pill:hover { border-color: var(--turquesa); background: var(--border-color); }
         .modal-option-pill.selected { border-color: var(--turquesa-dark); background: rgba(25, 211, 211, 0.08); }
         .modal-option-pill .mop-title { font-weight: 700; font-size: 13.5px; color: var(--text-main); }
         .modal-option-pill .mop-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; margin-top: 2px; }
 
-        /* Barra de progreso dentro de las ventanas flotantes (modales) */
         .modal-progress-track { height: 4px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin: 0 24px 14px 24px; }
         .modal-progress-fill { height: 100%; width: 0%; background: var(--turquesa-dark); transition: width .25s ease; border-radius: 3px; }
         .modal-progress-label { font-size: 10.5px; color: var(--text-muted); margin: -8px 24px 12px 24px; text-align: right; }
@@ -377,16 +458,8 @@
         .modal-item-qty { font-size: 11px; color: var(--text-muted); }
         .modal-item-agotado { color: #ef4444; font-size: 11px; font-weight: 600; }
 
-        /* Radio Cards de Envío y Pago */
-        .shipping-option-card, .payment-option-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; background: var(--bg-card); transition: all 0.2s ease; }
-        .shipping-option-card:hover, .payment-option-card:hover { border-color: var(--turquesa); }
-        .shipping-option-card input[type="radio"], .payment-option-card input[type="radio"] { margin-top: 3px; width: auto; accent-color: var(--turquesa); cursor: pointer; }
-        .shipping-option-info, .payment-option-info { display: flex; flex-direction: column; gap: 2px; }
-        .shipping-option-title, .payment-option-title { font-weight: 700; font-size: 13.5px; color: var(--text-main); }
-        .shipping-option-desc, .payment-option-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
-
         /* CAPTURE CARD HIDDEN */
-        #captureCard { position: fixed; left: -9999px; top: 0; width: 450px; padding: 32px; background: linear-gradient(135deg, #E6E1F7 0%, #E0F5F6 50%, #D8F2F6 100%); font-family: 'Poppins', sans-serif; border-radius: 24px; }
+        #captureCard { position: fixed; left: -9999px; top: 0; width: 450px; padding: 32px; background: linear-gradient(135deg, #E6E1F7 0%, #E0F5F6 50%, #D8F2F6 100%); font-family: 'Inter', sans-serif; border-radius: 24px; }
         .shot-box { background: #FFFFFF; border-radius: 20px; padding: 28px 24px; box-shadow: 0 15px 35px rgba(28, 36, 48, 0.08); border: 1px solid rgba(25, 211, 211, 0.2); text-align: center; }
         .shot-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
         .shot-header img { max-width: 200px; max-height: 90px; object-fit: contain; }
@@ -404,13 +477,21 @@
 <body>
 
 <div id="loginOverlay" class="login-overlay">
+    <div class="login-blob b1"></div>
+    <div class="login-blob b2"></div>
+    <div class="login-blob b3"></div>
     <div class="login-card">
-        <h2>🔐 Acceso al Panel</h2>
-        <p>Ingresa tus credenciales</p>
+        <img class="login-logo" src="https://i.imgur.com/Adbyv1D.png" alt="Brooklyn">
+        <h2>Bienvenido de nuevo</h2>
+        <p>Inicia sesión en tu cuenta para continuar</p>
 
-        <input type="email" id="loginEmail" placeholder="Correo electrónico" autocomplete="off" autocapitalize="off" spellcheck="false">
-        <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="new-password" onkeydown="if(event.key === 'Enter') validarAcceso()">
-        <button type="button" class="btn-copy" style="margin-top: 16px;" onclick="validarAcceso()">Ingresar</button>
+        <label for="loginEmail">Correo electrónico</label>
+        <input type="email" id="loginEmail" placeholder="tucorreo@buhoelectronics.com" autocomplete="off" autocapitalize="off" spellcheck="false">
+
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="Ingresa tu contraseña" autocomplete="new-password" onkeydown="if(event.key === 'Enter') validarAcceso()">
+
+        <button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="validarAcceso()">Iniciar sesión</button>
         <p id="loginError" class="login-error"></p>
     </div>
 </div>
@@ -420,8 +501,8 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <div class="brand-logo" aria-label="Logo">
-                <img class="logo-light" src="https://i.imgur.com/1O4HWEq.png" alt="Logo Claro">
-                <img class="logo-dark" src="https://i.imgur.com/PO0XZ0g.png" alt="Logo Oscuro">
+                <img class="logo-light" src="https://i.imgur.com/Adbyv1D.png" alt="Logo Claro">
+                <img class="logo-dark" src="https://i.imgur.com/Oa9sDHg.png" alt="Logo Oscuro">
             </div>
             <div class="brand-info">
                 <span class="brand-name" id="brandNameAlias">Brooklyn - Búho Electronics</span>
@@ -431,26 +512,26 @@
         <ul class="sidebar-menu">
             <li class="menu-category">Accesos rápidos</li>
             <li class="nav-item active" data-module="mod-registrar-pedido" onclick="seleccionarModulo('mod-registrar-pedido')">
-                <span class="nav-icon">🛒</span> Registrar pedido
+                <span class="nav-icon"><re-icon icon=shopping-cart size=15></re-icon></span> Registrar pedido
             </li>
             <li class="menu-category">Catálogo</li>
             <li class="nav-item" data-module="mod-inventario" onclick="seleccionarModulo('mod-inventario'); cargarProductosInventario(true);">
-                <span class="nav-icon">🗂️</span> Inventario en tiempo real
+                <span class="nav-icon"><re-icon icon=archive size=15></re-icon></span> Inventario en tiempo real
             </li>
             <li class="menu-category">Pedidos y Envíos</li>
             <li class="nav-item" data-module="mod-gestion-pedidos" onclick="seleccionarModulo('mod-gestion-pedidos'); cargarGestionPedidos();">
-                <span class="nav-icon">📦</span> Gestión de Pedidos
+                <span class="nav-icon"><re-icon icon=package size=15></re-icon></span> Gestión de Pedidos
             </li>
             <li class="nav-item" data-module="mod-analiticas-pedidos" onclick="seleccionarModulo('mod-analiticas-pedidos'); cargarAnaliticasPedidos();">
-                <span class="nav-icon">📊</span> Analíticas de Pedidos
+                <span class="nav-icon"><re-icon icon=chart-column size=15></re-icon></span> Analíticas de Pedidos
             </li>
             <li class="menu-category">Herramientas</li>
             <li class="nav-item" data-module="mod-calc" onclick="seleccionarModulo('mod-calc')">
-                <span class="nav-icon">🧮</span> Calculadora
+                <span class="nav-icon"><re-icon icon=calculator size=15></re-icon></span> Calculadora
             </li>
             <li class="menu-category">Finanzas & Mercado</li>
             <li class="nav-item" data-module="mod-tasas" onclick="seleccionarModulo('mod-tasas')">
-                <span class="nav-icon">📊</span> Tasas y Brechas
+                <span class="nav-icon"><re-icon icon=chart-column size=15></re-icon></span> Tasas y Brechas
             </li>
         </ul>
     </aside>
@@ -458,8 +539,8 @@
     <div class="main-wrapper">
         <header class="top-header">
             <div class="header-left">
-                <button class="btn-sidebar-toggle" onclick="toggleSidebar()">☰</button>
-                <h1 class="welcome-title">Hola, <span id="welcomeUserName">Usuario</span> <span style="font-size: 18px;">⛅</span></h1>
+                <button class="btn-sidebar-toggle" onclick="toggleSidebar()"><re-icon icon=menu size=15></re-icon></button>
+                <h1 class="welcome-title">Hola, <span id="welcomeUserName">Usuario</span> <span style="font-size: 18px;"><re-icon icon=cloud-sun size=15></re-icon></span></h1>
             </div>
             <div class="header-stats">
                 <div class="header-stat-pill"><span class="header-stat-label">BCV Oficial</span><span class="header-stat-value" id="topStatBcv">-- Bs/$</span></div>
@@ -467,8 +548,11 @@
                 <div class="header-stat-pill"><span class="header-stat-label">Brecha</span><span class="header-stat-value" id="topStatBrecha">-- %</span></div>
             </div>
             <div class="header-actions">
-                <button type="button" class="btn-pill" id="themeToggle" onclick="toggleTheme()">🌙 Modo Oscuro</button>
-                <button type="button" class="btn-pill" id="btnLogout" onclick="cerrarSesion()" style="display:none;">🚪 Salir</button>
+                <label class="theme-switch" title="Cambiar tema">
+                    <input type="checkbox" id="themeToggleInput" onchange="toggleTheme()">
+                    <span class="theme-slider"></span>
+                </label>
+                <button type="button" class="btn-pill" id="btnLogout" onclick="cerrarSesion()" style="display:none;"><re-icon icon=log-out size=15></re-icon> Salir</button>
             </div>
         </header>
 
@@ -481,7 +565,7 @@
                             <div class="checkout-top-title">Checkout</div>
                             <h2 class="checkout-main-title">Búho Electronics</h2>
                         </div>
-                        <button type="button" class="btn-home-icon" onclick="seleccionarModulo('mod-notas')" title="Inicio">🏠</button>
+                        <button type="button" class="btn-home-icon" onclick="seleccionarModulo('mod-notas')" title="Inicio"><re-icon icon=home size=15></re-icon></button>
                     </div>
                     
                     <div class="checkout-card-section">
@@ -490,7 +574,7 @@
                         </div>
                         <button type="button" class="selector-trigger" onclick="abrirModalBuscarCliente()">
                             <span class="st-label">Cliente</span>
-                            <span class="st-value"><span id="resumenClienteSeleccionado">Buscar cliente</span> <small>Cambiar ▾</small></span>
+                            <span class="st-value"><span id="resumenClienteSeleccionado">Buscar cliente</span> <small>Cambiar <re-icon icon=chevron-down size=11></re-icon></small></span>
                         </button>
                         <input type="hidden" id="pedidoClienteNombre">
                         <label>Número de WhatsApp <span style="color:#ef4444;">*</span></label>
@@ -511,18 +595,18 @@
                         <div class="modal-card" style="max-height: 90vh; overflow-y: auto;">
                             <div class="modal-header">
                                 <h3 class="modal-title" id="tituloModalCliente">Buscar cliente</h3>
-                                <button type="button" class="modal-close-btn" onclick="cerrarModalBuscarCliente()">✕</button>
+                                <button type="button" class="modal-close-btn" onclick="cerrarModalBuscarCliente()"><re-icon icon=x size=15></re-icon></button>
                             </div>
 
                             <div id="vistaBuscarCliente">
                                 <div class="modal-search-box">
                                     <div class="modal-search-input-wrapper">
-                                        <span>🔍</span>
+                                        <span><re-icon icon=search size=15></re-icon></span>
                                         <input type="text" id="inputBuscarCliente" class="modal-search-input" placeholder="Buscar por nombre o teléfono..." oninput="filtrarClientesModal()" autocomplete="off">
                                     </div>
                                 </div>
                                 <div style="padding: 0 24px 8px 24px;">
-                                    <button type="button" class="btn-pill" style="width:100%; justify-content:center;" onclick="mostrarVistaRegistrarCliente()">➕ Registrar cliente</button>
+                                    <button type="button" class="btn-pill" style="width:100%; justify-content:center;" onclick="mostrarVistaRegistrarCliente()"><re-icon icon=plus size=15></re-icon> Registrar cliente</button>
                                 </div>
                                 <div class="modal-items-list" id="listaClientesEncontrados"></div>
                             </div>
@@ -530,7 +614,7 @@
                             <div id="vistaRegistrarCliente" style="display:none; padding: 4px 24px 20px 24px;">
                                 <button type="button" class="btn-pill" style="width:auto; padding: 6px 12px; font-size:12px; margin-bottom:12px;" onclick="mostrarVistaBuscarCliente()">‹ Volver a buscar</button>
                                 <label style="margin-top: 0;">Nombre y Apellido:</label>
-                                <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" oninput="formatearCliente()">
+                                <input type="text" id="clientFullName" placeholder="Ejemplo: Diego Vergara" onblur="formatearCliente()">
                                 <label>Nro. de Identificación:</label>
                                 <div class="id-container">
                                     <select id="clientNac" class="select-nac" onchange="formatearCliente()"><option value="V">V</option><option value="E">E</option><option value="J">J</option><option value="G">G</option></select>
@@ -546,8 +630,8 @@
                                 <div class="preview" style="margin-top: 16px;">
                                     <strong>Formato de nombre</strong>
                                     <p id="previewClientText">Ingresa los datos del cliente...</p>
-                                    <button type="button" class="btn-copy" id="btnCopyCliente" onclick="registrarNombreCheckout()">💾 Registrar cliente</button>
-                                    <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()">📥 Pegar Datos</button>
+                                    <button type="button" class="btn-copy" id="btnCopyCliente" onclick="registrarNombreCheckout()"><re-icon icon=save size=15></re-icon> Registrar cliente</button>
+                                    <button type="button" class="btn-copy btn-paste" id="btnPasteCliente" onclick="pegarDatosCliente()"><re-icon icon=download size=15></re-icon> Pegar Datos</button>
                                 </div>
                             </div>
                         </div>
@@ -556,10 +640,9 @@
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Artículos</h3>
-                            <button type="button" class="checkout-section-action" onclick="abrirModalArticulos()">Añadir artículo</button>
                         </div>
-                        <div style="text-align: center; padding: 20px 0;" id="placeholderSinArticulos">
-                            <p style="color: var(--text-muted); font-size: 13.5px; margin: 0 0 16px 0;" id="textoSinArticulos">No se añadieron artículos</p>
+                        <div style="text-align: center; padding: 24px 0;" id="placeholderSinArticulos">
+                            <button type="button" class="btn-accion-link" style="font-size: 13.5px; color: var(--turquesa-dark);" onclick="abrirModalArticulos()">+ Agregar productos</button>
                         </div>
                         <div class="table-container" id="tablaArticulosContainer" style="display:none;">
                             <table class="data-table" id="tablaArticulosPedido">
@@ -574,77 +657,93 @@
 
                     <div id="contenedorArticulosPersonalizados"></div>
 
-                    <div class="checkout-card-section">
-                        <div class="checkout-section-header">
-                            <h3 class="checkout-section-title">Método de Envíos <span style="color:#ef4444;">*</span></h3>
-                        </div>
-                        <button type="button" class="selector-trigger" onclick="abrirModalMetodoEnvio()">
-                            <span class="st-label">Envío seleccionado</span>
-                            <span class="st-value"><span id="resumenMetodoEnvio">📦 Delivery GRATIS</span> <small>Cambiar ▾</small></span>
-                        </button>
-                        <input type="radio" name="metodoEnvioRadio" id="radioEnvioDelivery" value="delivery" checked style="display:none;">
-                        <input type="radio" name="metodoEnvioRadio" id="radioEnvioNacional" value="nacional" style="display:none;">
+                    <!-- INICIO: GRID 3 COLUMNAS PARA ENVÍOS, PAGOS Y OBSERVACIÓN -->
+                    <div class="checkout-grid-3">
+                        
+                        <!-- Tarjeta Método de envíos -->
+                        <div class="checkout-card-section">
+                            <div class="checkout-section-header">
+                                <h3 class="checkout-section-title">Método de Envíos <span style="color:#ef4444;">*</span></h3>
+                            </div>
+                            <button type="button" class="selector-trigger" onclick="abrirModalMetodoEnvio()">
+                                <span class="st-label">Envío seleccionado</span>
+                                <span class="st-value"><span id="resumenMetodoEnvio"><re-icon icon=package size=15></re-icon> Delivery GRATIS</span> <small>Cambiar <re-icon icon=chevron-down size=11></re-icon></small></span>
+                            </button>
+                            <input type="radio" name="metodoEnvioRadio" id="radioEnvioDelivery" value="delivery" checked style="display:none;">
+                            <input type="radio" name="metodoEnvioRadio" id="radioEnvioNacional" value="nacional" style="display:none;">
 
-                        <div id="envioDeliveryContainer" style="margin-top:14px;">
-                            <button type="button" class="btn-pill" style="width: 100%; justify-content: center; padding: 12px; border-radius: 10px; background: var(--bg-card);" onclick="abrirModalDireccionDelivery()">📍 Introduzca la dirección</button>
-                            <div id="previewDireccionDelivery" class="preview" style="display:none; margin-top:10px;">
-                                <strong>Dirección de Envío:</strong>
-                                <p id="textoDireccionDelivery" style="margin:4px 0 10px 0;"></p>
-                                <div id="mapPreviewContainer" class="map-preview-container"><iframe id="googleMapIframe" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                            <div id="envioDeliveryContainer" style="margin-top:14px;">
+                                <button type="button" class="btn-pill" style="width: 100%; justify-content: center; padding: 12px; border-radius: 10px; background: var(--bg-card);" onclick="abrirModalDireccionDelivery()"><re-icon icon=map-pin size=15></re-icon> Introduzca la dirección</button>
+                                <div id="previewDireccionDelivery" class="preview" style="display:none; margin-top:10px;">
+                                    <strong>Dirección de Envío:</strong>
+                                    <p id="textoDireccionDelivery" style="margin:4px 0 10px 0;"></p>
+                                    <div id="mapPreviewContainer" class="map-preview-container"><iframe id="googleMapIframe" src="" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                                </div>
+                            </div>
+                            <div id="envioNacionalContainer" style="display:none; margin-top:14px;">
+                                <label>Agencia de envío:</label>
+                                <select id="envioNacionalAgencia">
+                                    <option value="MRW GRATIS">MRW GRATIS</option>
+                                    <option value="Zoom">Zoom</option>
+                                    <option value="Tealca">Tealca</option>
+                                    <option value="Domesa">Domesa</option>
+                                    <option value="LibertyExpress">LibertyExpress</option>
+                                </select>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div><label>Nombre (Receptor):</label><input type="text" id="envioNacNombre" placeholder="Nombre"></div>
+                                    <div><label>Apellido (Receptor):</label><input type="text" id="envioNacApellido" placeholder="Apellido"></div>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div><label>Nro. de contacto:</label><input type="text" id="envioNacTelefono" placeholder="Teléfono"></div>
+                                    <div><label>Nro. de Cédula:</label><input type="text" id="envioNacCedula" placeholder="Cédula"></div>
+                                </div>
                             </div>
                         </div>
-                        <div id="envioNacionalContainer" style="display:none; margin-top:14px;">
-                            <label>Agencia de envío:</label>
-                            <select id="envioNacionalAgencia">
-                                <option value="MRW GRATIS">MRW GRATIS</option>
-                                <option value="Zoom">Zoom</option>
-                                <option value="Tealca">Tealca</option>
-                                <option value="Domesa">Domesa</option>
-                                <option value="LibertyExpress">LibertyExpress</option>
-                            </select>
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <div><label>Nombre (Receptor):</label><input type="text" id="envioNacNombre" placeholder="Nombre"></div>
-                                <div><label>Apellido (Receptor):</label><input type="text" id="envioNacApellido" placeholder="Apellido"></div>
-                            </div>
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <div><label>Nro. de contacto:</label><input type="text" id="envioNacTelefono" placeholder="Teléfono"></div>
-                                <div><label>Nro. de Cédula:</label><input type="text" id="envioNacCedula" placeholder="Cédula"></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="checkout-card-section">
-                        <div class="checkout-section-header">
-                            <h3 class="checkout-section-title">Método de Pago <span style="color:#ef4444;">*</span></h3>
+                        <!-- Tarjeta Método de Pago -->
+                        <div class="checkout-card-section">
+                            <div class="checkout-section-header">
+                                <h3 class="checkout-section-title">Método de Pago <span style="color:#ef4444;">*</span></h3>
+                            </div>
+                            <button type="button" class="selector-trigger" onclick="abrirModalMetodoPago()">
+                                <span class="st-label">Pago seleccionado</span>
+                                <span class="st-value"><span id="resumenMetodoPago"><re-icon icon=banknote size=15></re-icon> Pago móvil</span> <small>Cambiar <re-icon icon=chevron-down size=11></re-icon></small></span>
+                            </button>
+                            <input type="radio" name="metodoPagoRadio" id="radioPagoMovil" value="pago_movil" checked style="display:none;">
+                            <input type="radio" name="metodoPagoRadio" id="radioEfectivoUSD" value="efectivo_usd" style="display:none;">
+                            <input type="radio" name="metodoPagoRadio" id="radioBinance" value="binance" style="display:none;">
+                            <input type="radio" name="metodoPagoRadio" id="radioZelle" value="zelle" style="display:none;">
+                            <input type="radio" name="metodoPagoRadio" id="radioZinli" value="zinli" style="display:none;">
+                            <div id="previewPagoMovilVesWrap" style="margin-top:10px; font-size:12.5px; color: var(--text-muted);">Monto exacto a transferir: <strong id="previewPagoMovilVes" style="color:var(--turquesa-dark);">Bs. 0,00</strong></div>
                         </div>
-                        <button type="button" class="selector-trigger" onclick="abrirModalMetodoPago()">
-                            <span class="st-label">Pago seleccionado</span>
-                            <span class="st-value"><span id="resumenMetodoPago">💵 Pago móvil</span> <small>Cambiar ▾</small></span>
-                        </button>
-                        <input type="radio" name="metodoPagoRadio" id="radioPagoMovil" value="pago_movil" checked style="display:none;">
-                        <input type="radio" name="metodoPagoRadio" id="radioEfectivoUSD" value="efectivo_usd" style="display:none;">
-                        <input type="radio" name="metodoPagoRadio" id="radioBinance" value="binance" style="display:none;">
-                        <input type="radio" name="metodoPagoRadio" id="radioZelle" value="zelle" style="display:none;">
-                        <input type="radio" name="metodoPagoRadio" id="radioZinli" value="zinli" style="display:none;">
-                        <div id="previewPagoMovilVesWrap" style="margin-top:10px; font-size:12.5px; color: var(--text-muted);">Monto exacto a transferir: <strong id="previewPagoMovilVes" style="color:var(--turquesa-dark);">Bs. 0,00</strong></div>
+
+                        <!-- Tarjeta Observación -->
+                        <div class="checkout-card-section">
+                            <div class="checkout-section-header">
+                                <h3 class="checkout-section-title">Observación (Visible para los clientes)</h3>
+                            </div>
+                            <textarea id="pedidoObservacion" placeholder="Nota de la venta..." style="margin-top:0; resize:vertical; flex-grow:1;"></textarea>
+                        </div>
+                        
                     </div>
+                    <!-- FIN: GRID 3 COLUMNAS -->
 
                     <!-- MODAL FLOTANTE: MÉTODO DE ENVÍOS -->
                     <div id="modalMetodoEnvio" class="modal-overlay" onclick="if(event.target === this) cerrarModalMetodoEnvio()">
                         <div class="modal-card">
                             <div class="modal-header">
                                 <h3 class="modal-title">Método de Envíos</h3>
-                                <button type="button" class="modal-close-btn" onclick="cerrarModalMetodoEnvio()">✕</button>
+                                <button type="button" class="modal-close-btn" onclick="cerrarModalMetodoEnvio()"><re-icon icon=x size=15></re-icon></button>
                             </div>
                             <div class="modal-progress-track"><div class="modal-progress-fill" id="progresoModalEnvio"></div></div>
                             <div class="modal-progress-label" id="progresoModalEnvioLabel">Progreso del pedido</div>
                             <div style="padding-bottom: 14px;">
                                 <div class="modal-option-pill" id="opcionEnvioDelivery" onclick="seleccionarMetodoEnvio('delivery')">
-                                    <div class="mop-title">📦 Delivery GRATIS</div>
+                                    <div class="mop-title"><re-icon icon=package size=15></re-icon> Delivery GRATIS</div>
                                     <div class="mop-desc">Aplica solo para Valencia, Naguanagua, San Diego, Libertador, Guacara y Los Guayos.</div>
                                 </div>
                                 <div class="modal-option-pill" id="opcionEnvioNacional" onclick="seleccionarMetodoEnvio('nacional')">
-                                    <div class="mop-title">🚚 Envío Nacional GRATIS</div>
+                                    <div class="mop-title"><re-icon icon=truck size=15></re-icon> Envío Nacional GRATIS</div>
                                     <div class="mop-desc">Envíos GRATIS únicamente por MRW.<br>Zoom, Tealca, Domesa y LibertyExpress cobro a destino.</div>
                                 </div>
                             </div>
@@ -656,7 +755,7 @@
                         <div class="modal-card">
                             <div class="modal-header">
                                 <h3 class="modal-title">Método de Pago</h3>
-                                <button type="button" class="modal-close-btn" onclick="cerrarModalMetodoPago()">✕</button>
+                                <button type="button" class="modal-close-btn" onclick="cerrarModalMetodoPago()"><re-icon icon=x size=15></re-icon></button>
                             </div>
                             <div class="modal-progress-track"><div class="modal-progress-fill" id="progresoModalPago"></div></div>
                             <div class="modal-progress-label" id="progresoModalPagoLabel">Progreso del pedido</div>
@@ -683,13 +782,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="checkout-card-section">
-                        <div class="checkout-section-header">
-                            <h3 class="checkout-section-title">Observación (Visible para los clientes)</h3>
-                        </div>
-                        <textarea id="pedidoObservacion" rows="3" placeholder="Nota de la venta..." style="margin-top:0; resize:vertical;"></textarea>
                     </div>
 
                     <!-- ESTADOS DE PEDIDO TIPO "PILLS" COMPACTAS -->
@@ -742,10 +834,10 @@
                             <div class="market-item" style="margin:0;"><div class="market-label">Monto del pedido en USD</div><div class="market-value" id="pedidoTotalUsdVal">$0.00</div></div>
                             <div class="market-item" style="margin:0;"><div class="market-label">Monto del pedido en VES</div><div class="market-value" id="pedidoTotalVesVal">Bs. 0,00</div></div>
                         </div>
-                        <button type="button" class="btn-copy" id="btnCrearPedidoTakeApp" style="margin-top: 20px; width: 100%; background: var(--turquesa-dark); color: #fff;" onclick="crearNuevoPedido()">🧾 Crear nuevo pedido</button>
-                        <button type="button" class="btn-pill" id="btnGuardarBorrador" style="margin-top: 10px; width: 100%; justify-content: center; padding: 12px;" onclick="crearNuevoPedido(true)">📝 Guardar como borrador</button>
-                        <p id="crearPedidoFeedback" style="margin-top:8px; font-size:12.5px; min-height:14px;"></p>
-                        <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 10px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()">🚀 Realizar pedido (Copiar captura)</button>
+                        <button type="button" class="btn-copy" id="btnCrearPedidoTakeApp" style="margin-top: 20px; width: 100%; background: var(--turquesa-dark); color: #fff;" onclick="crearNuevoPedido()"><re-icon icon=receipt size=15></re-icon> Crear nuevo pedido</button>
+                        <button type="button" class="btn-pill" id="btnGuardarBorrador" style="margin-top: 10px; width: 100%; justify-content: center; padding: 12px;" onclick="crearNuevoPedido(true)"><re-icon icon=file-text size=15></re-icon> Guardar como borrador</button>
+                        <p id="crearPedidoFeedback" style="margin-top:8px; font-size:12.5px; min-height:14px; text-align:center;"></p>
+                        <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 10px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()"><re-icon icon=rocket size=15></re-icon> Realizar pedido (Copiar captura)</button>
                     </div>
 
                 </div>
@@ -757,24 +849,38 @@
                     <div class="checkout-header">
                         <div>
                             <div class="checkout-top-title">Pedidos y envíos</div>
-                            <h2 class="checkout-main-title">📦 Gestión de Pedidos</h2>
+                            <h2 class="checkout-main-title"><re-icon icon=package size=15></re-icon> Gestión de Pedidos</h2>
                         </div>
-                        <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarGestionPedidos()">🔄</button>
+                        <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarGestionPedidos(true)"><re-icon icon=refresh-cw size=15></re-icon></button>
                     </div>
-                    <div class="pedidos-toolbar">
-                        <div class="modal-search-input-wrapper">
-                            <span>🔎</span><input type="text" id="pedidosBuscador" class="modal-search-input" placeholder="Buscar por cliente, teléfono o N° de pedido..." oninput="renderTablaGestionPedidos()">
+                    <div class="pedidos-toolbar" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-bottom: 20px;">
+                        <div class="modal-search-input-wrapper" style="flex: 1; min-width: 250px; max-width: 400px;">
+                            <span><re-icon icon=search size=15></re-icon></span><input type="text" id="pedidosBuscador" class="modal-search-input" placeholder="Buscar por cliente, teléfono o N° de pedido..." oninput="renderTablaGestionPedidos()" style="margin: 0; background: var(--bg-card); border-color: var(--border-color);">
                         </div>
-                        <select id="pedidosFiltroEstadoEnvio" onchange="renderTablaGestionPedidos()">
-                            <option value="">Envío: todos</option><option value="unfulfilled">Incumplido / Sin enviar</option><option value="ready">Listo para enviar</option><option value="in_transit">En camino</option><option value="fulfilled">Enviado / entregado</option><option value="cancelled">Cancelado</option>
-                        </select>
-                        <select id="pedidosFiltroPago" onchange="renderTablaGestionPedidos()">
-                            <option value="">Pago: todos</option><option value="unpaid">Sin pagar</option><option value="paid">Pagado</option><option value="pending">Pendiente</option><option value="refunded">Reembolsado</option>
-                        </select>
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                            <select id="pedidosFiltroEstadoEnvio" onchange="renderTablaGestionPedidos()" style="margin: 0; background: var(--bg-card); width: auto; font-size:12px; padding: 8px 14px;">
+                                <option value="">Envío: todos</option><option value="unfulfilled">Incumplido / Sin enviar</option><option value="ready">Listo para enviar</option><option value="in_transit">En camino</option><option value="fulfilled">Enviado / entregado</option><option value="cancelled">Cancelado</option>
+                            </select>
+                            <select id="pedidosFiltroPago" onchange="renderTablaGestionPedidos()" style="margin: 0; background: var(--bg-card); width: auto; font-size:12px; padding: 8px 14px;">
+                                <option value="">Pago: todos</option><option value="unpaid">Sin pagar</option><option value="paid">Pagado</option><option value="pending">Pendiente</option><option value="refunded">Reembolsado</option>
+                            </select>
+                            <button type="button" class="btn-copy" style="margin: 0; padding: 8px 16px; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-color); font-weight: 600; font-size: 12px;" onclick="seleccionarModulo('mod-registrar-pedido')">Añadir Pedido</button>
+                        </div>
                     </div>
                     <div class="table-container">
                         <table class="data-table">
-                            <thead><tr><th>N° Pedido</th><th>Cliente</th><th>Total</th><th>Pago</th><th>Estado pedido</th><th>Envío</th><th>Fecha</th><th></th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>N° Pedido <re-icon icon=chevrons-up-down size=15></re-icon></th>
+                                    <th>Cliente <re-icon icon=chevrons-up-down size=15></re-icon></th>
+                                    <th>Total <re-icon icon=chevrons-up-down size=15></re-icon></th>
+                                    <th>Estado de Pago</th>
+                                    <th>Estado del Pedido <re-icon icon=chevrons-up-down size=15></re-icon></th>
+                                    <th>Envío <re-icon icon=chevrons-up-down size=15></re-icon></th>
+                                    <th>Fecha <re-icon icon=chevrons-up-down size=15></re-icon></th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
                             <tbody id="tbodyGestionPedidos"><tr><td colspan="8" class="pedidos-empty">Cargando pedidos...</td></tr></tbody>
                         </table>
                     </div>
@@ -787,28 +893,108 @@
                     <div class="checkout-header">
                         <div>
                             <div class="checkout-top-title">Pedidos y envíos</div>
-                            <h2 class="checkout-main-title">📊 Analíticas de Pedidos</h2>
+                            <h2 class="checkout-main-title"><re-icon icon=chart-column size=15></re-icon> Analíticas de Pedidos</h2>
                         </div>
-                        <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarAnaliticasPedidos(true)">🔄</button>
+                        <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarAnaliticasPedidos(true)"><re-icon icon=refresh-cw size=15></re-icon></button>
                     </div>
 
                     <div class="pedidos-toolbar">
-                        <select id="analiticasRangoFecha" onchange="renderAnaliticas()">
-                            <option value="7">Últimos 7 días</option>
-                            <option value="30" selected>Últimos 30 días</option>
-                            <option value="90">Últimos 90 días</option>
-                            <option value="0">Todo el historial</option>
-                        </select>
-                        <select id="analiticasFiltroEstadoPago" onchange="renderAnaliticas()">
-                            <option value="">Pago: todos</option>
-                            <option value="paid">Pagado</option>
-                            <option value="pending">Sin pagar</option>
-                            <option value="confirming">Confirmando pago</option>
-                            <option value="partial">Parc. pagado</option>
-                            <option value="refunded">Reembolsado</option>
-                            <option value="voided">Anulado</option>
-                        </select>
-                        <button type="button" class="btn-pill btn-pequeno" onclick="exportarCSVAnaliticas()">⬇️ Exportar CSV</button>
+                        <button type="button" class="selector-trigger" style="width: auto; min-width: 140px; margin-right: 8px;" onclick="abrirModalFiltro('modalFiltroRango')">
+                            <span class="st-label">Rango</span>
+                            <span class="st-value"><span id="lblFiltroRango">Últimos 30 días</span> <small><re-icon icon=chevron-down size=11></re-icon></small></span>
+                        </button>
+                        <button type="button" class="selector-trigger" style="width: auto; min-width: 140px; margin-right: 8px;" onclick="abrirModalFiltro('modalFiltroPedido')">
+                            <span class="st-label">Estado</span>
+                            <span class="st-value"><span id="lblFiltroPedido">Todos</span> <small><re-icon icon=chevron-down size=11></re-icon></small></span>
+                        </button>
+                        <button type="button" class="selector-trigger" style="width: auto; min-width: 140px; margin-right: 8px;" onclick="abrirModalFiltro('modalFiltroPago')">
+                            <span class="st-label">Pago</span>
+                            <span class="st-value"><span id="lblFiltroPago">Todos</span> <small><re-icon icon=chevron-down size=11></re-icon></small></span>
+                        </button>
+                        <button type="button" class="selector-trigger" style="width: auto; min-width: 140px; margin-right: 8px;" onclick="abrirModalFiltro('modalFiltroEnvio')">
+                            <span class="st-label">Envío</span>
+                            <span class="st-value"><span id="lblFiltroEnvio">Todos</span> <small><re-icon icon=chevron-down size=11></re-icon></small></span>
+                        </button>
+                        <button type="button" class="selector-trigger" style="width: auto; min-width: 140px; margin-right: 8px;" onclick="abrirModalFiltro('modalFiltroEntrega')">
+                            <span class="st-label">Método</span>
+                            <span class="st-value"><span id="lblFiltroEntrega">Todos</span> <small><re-icon icon=chevron-down size=11></re-icon></small></span>
+                        </button>
+                        <button type="button" class="btn-pill btn-pequeno" onclick="exportarCSVAnaliticas()" style="margin-left: auto;"><re-icon icon=download size=15></re-icon> Exportar CSV</button>
+                    </div>
+
+                    <div id="analiticasRangoPersonalizado" style="display:none; gap:12px; align-items:center; margin-bottom: 20px; background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <label style="margin:0; font-size:11.5px; color:var(--text-muted);">Desde:</label>
+                        <input type="date" id="analiticasFechaDesde" onchange="renderAnaliticas()" style="margin:0; width:auto; padding: 8px 12px;">
+                        <label style="margin:0; font-size:11.5px; color:var(--text-muted);">Hasta:</label>
+                        <input type="date" id="analiticasFechaHasta" onchange="renderAnaliticas()" style="margin:0; width:auto; padding: 8px 12px;">
+                    </div>
+
+                    <!-- Modales Flotantes para los Filtros -->
+                    <div id="modalFiltroRango" class="modal-overlay" onclick="if(event.target === this) cerrarModalFiltro('modalFiltroRango')">
+                        <div class="modal-card">
+                            <div class="modal-header"><h3 class="modal-title">Rango de fechas</h3><button class="modal-close-btn" onclick="cerrarModalFiltro('modalFiltroRango')"><re-icon icon=x size=15></re-icon></button></div>
+                            <div style="padding-bottom:14px;">
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('rango', '7', 'Últimos 7 días')"><div class="mop-title">Últimos 7 días</div></div>
+                                <div class="modal-option-pill selected" id="opt-rango-30" onclick="seleccionarFiltro('rango', '30', 'Últimos 30 días')"><div class="mop-title">Últimos 30 días</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('rango', '90', 'Últimos 90 días')"><div class="mop-title">Últimos 90 días</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('rango', '0', 'Historial completo')"><div class="mop-title">Historial completo</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('rango', 'custom', 'Personalizado')"><div class="mop-title">Rango personalizado</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="modalFiltroPedido" class="modal-overlay" onclick="if(event.target === this) cerrarModalFiltro('modalFiltroPedido')">
+                        <div class="modal-card">
+                            <div class="modal-header"><h3 class="modal-title">Estado del pedido</h3><button class="modal-close-btn" onclick="cerrarModalFiltro('modalFiltroPedido')"><re-icon icon=x size=15></re-icon></button></div>
+                            <div style="padding-bottom:14px;">
+                                <div class="modal-option-pill selected" onclick="seleccionarFiltro('pedido', '', 'Todos')"><div class="mop-title">Todos</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pedido', 'pending', 'Pendiente')"><div class="mop-title">Pendiente</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pedido', 'confirmed', 'Confirmado')"><div class="mop-title">Confirmado</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pedido', 'completed', 'Completado')"><div class="mop-title">Completado</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pedido', 'cancelled', 'Cancelado')"><div class="mop-title">Cancelado</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="modalFiltroPago" class="modal-overlay" onclick="if(event.target === this) cerrarModalFiltro('modalFiltroPago')">
+                        <div class="modal-card">
+                            <div class="modal-header"><h3 class="modal-title">Estado de pago</h3><button class="modal-close-btn" onclick="cerrarModalFiltro('modalFiltroPago')"><re-icon icon=x size=15></re-icon></button></div>
+                            <div style="padding-bottom:14px;">
+                                <div class="modal-option-pill selected" onclick="seleccionarFiltro('pago', '', 'Todos')"><div class="mop-title">Todos</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pago', 'paid', 'Pagado')"><div class="mop-title">Pagado</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pago', 'pending', 'Sin pagar')"><div class="mop-title">Sin pagar</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pago', 'confirming', 'Confirmando')"><div class="mop-title">Confirmando pago</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pago', 'partial', 'Parcial')"><div class="mop-title">Pagado parcialmente</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pago', 'refunded', 'Reembolsado')"><div class="mop-title">Reembolsado</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('pago', 'voided', 'Anulado')"><div class="mop-title">Anulado</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="modalFiltroEnvio" class="modal-overlay" onclick="if(event.target === this) cerrarModalFiltro('modalFiltroEnvio')">
+                        <div class="modal-card">
+                            <div class="modal-header"><h3 class="modal-title">Estado de envío</h3><button class="modal-close-btn" onclick="cerrarModalFiltro('modalFiltroEnvio')"><re-icon icon=x size=15></re-icon></button></div>
+                            <div style="padding-bottom:14px;">
+                                <div class="modal-option-pill selected" onclick="seleccionarFiltro('envio', '', 'Todos')"><div class="mop-title">Todos</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'unfulfilled', 'No cumplido')"><div class="mop-title">No cumplido</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'ready', 'Listo')"><div class="mop-title">Listo</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'in_transit', 'En camino')"><div class="mop-title">En camino</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'fulfilled', 'Cumplido')"><div class="mop-title">Cumplido</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'partially_fulfilled', 'Parcial')"><div class="mop-title">Parcialmente cumplido</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="modalFiltroEntrega" class="modal-overlay" onclick="if(event.target === this) cerrarModalFiltro('modalFiltroEntrega')">
+                        <div class="modal-card">
+                            <div class="modal-header"><h3 class="modal-title">Método de entrega</h3><button class="modal-close-btn" onclick="cerrarModalFiltro('modalFiltroEntrega')"><re-icon icon=x size=15></re-icon></button></div>
+                            <div style="padding-bottom:14px;">
+                                <div class="modal-option-pill selected" onclick="seleccionarFiltro('entrega', '', 'Todos')"><div class="mop-title">Todas</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('entrega', 'Delivery', 'Delivery')"><div class="mop-title">Delivery</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('entrega', 'Nacional', 'Nacional')"><div class="mop-title">Envío Nacional</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('entrega', 'Retiro', 'Retiro en tienda')"><div class="mop-title">Retiro en tienda</div></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="analiticasContenido">
@@ -823,23 +1009,41 @@
                     <div class="checkout-header">
                         <div>
                             <div class="checkout-top-title">Catálogo</div>
-                            <h2 class="checkout-main-title">🗂️ Inventario en tiempo real</h2>
+                            <h2 class="checkout-main-title"><re-icon icon=archive size=15></re-icon> Inventario en tiempo real</h2>
                         </div>
-                        <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarProductosInventario(true)">🔄</button>
+                        <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarProductosInventario(true)"><re-icon icon=refresh-cw size=15></re-icon></button>
                     </div>
                     <div class="pedidos-toolbar">
-                        <div class="modal-search-input-wrapper"><span>🔎</span><input type="text" id="inventarioBuscador" class="modal-search-input" placeholder="Buscar producto o variante..." oninput="renderInventarioModulo()"></div>
+                        <div class="modal-search-input-wrapper"><span><re-icon icon=search size=15></re-icon></span><input type="text" id="inventarioBuscador" class="modal-search-input" placeholder="Buscar producto o variante..." oninput="renderInventarioModulo()"></div>
                     </div>
                     <div id="inventarioGrid" class="inventario-grid"><div class="pedidos-empty">Cargando inventario...</div></div>
                 </div>
             </div>
 
             <!-- MODAL: ACTUALIZAR ESTADO DE PEDIDO -->
+            <div class="modal-overlay" id="modalEliminarPedido">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Eliminar pedido <span id="modalEliminarPedidoNumero"></span></h3>
+                        <button type="button" class="modal-close-btn" onclick="cerrarModalEliminarPedido()"><re-icon icon=x size=15></re-icon></button>
+                    </div>
+                    <div style="padding: 20px 24px;">
+                        <p style="font-size:13px; color: var(--text-muted); margin-top:0;">Esta acción borra el pedido de Brooklyn de forma permanente. Como el proveedor de envíos no permite eliminar pedidos, no volverá a sincronizarse aunque siga existiendo allá.</p>
+                        <label style="display:flex; align-items:center; gap:8px; margin-top:14px; cursor:pointer;">
+                            <input type="checkbox" id="checkCancelarEnProveedor" style="width:auto; margin:0;">
+                            <span style="font-size:12.5px; color:var(--text-main);">También cancelarlo en el proveedor de envíos</span>
+                        </label>
+                        <p id="modalEliminarPedidoError" class="login-error" style="margin-top:10px; min-height: 14px;"></p>
+                        <button type="button" class="btn-copy" id="btnConfirmarEliminarPedido" style="margin-top: 10px; background:#ef4444;" onclick="confirmarEliminarPedido()"><re-icon icon=trash-2 size=15></re-icon> Eliminar definitivamente</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal-overlay" id="modalEstadoPedido">
                 <div class="modal-card">
                     <div class="modal-header">
                         <h3 class="modal-title">Modificar pedido <span id="modalEstadoPedidoNumero"></span></h3>
-                        <button type="button" class="modal-close-btn" onclick="cerrarModalEstadoPedido()">✕</button>
+                        <button type="button" class="modal-close-btn" onclick="cerrarModalEstadoPedido()"><re-icon icon=x size=15></re-icon></button>
                     </div>
                     <div style="padding: 20px 24px;">
                         <div id="modalEstadoPedidoCliente" style="font-size:13px; color: var(--text-muted); margin-bottom: 4px;"></div>
@@ -864,33 +1068,33 @@
                         <label>Nota interna (no visible para el cliente)</label>
                         <textarea id="inputNotaInternaPedido" rows="2" placeholder="Ej: Esperando repuesto en almacén..." style="margin-top:6px; resize:vertical;"></textarea>
                         <p id="modalEstadoPedidoError" class="login-error" style="margin-top:10px; min-height: 14px;"></p>
-                        <button type="button" class="btn-copy" id="btnGuardarEstadoPedido" style="margin-top: 14px;" onclick="guardarEstadoPedido()">💾 Guardar cambios</button>
+                        <button type="button" class="btn-copy" id="btnGuardarEstadoPedido" style="margin-top: 14px;" onclick="guardarEstadoPedido()"><re-icon icon=save size=15></re-icon> Guardar cambios</button>
                     </div>
                 </div>
             </div>
 
             <!-- LOS OTROS MÓDULOS PERMANECEN IGUAL (NOTAS, CALCULADORA, TASAS, ETC.) -->
-            <div class="module-pane" id="mod-notas"><div class="card"><h2>💳 Redactar notas de pago</h2><label>Tasa BCV VES</label><div class="tasa-container"><input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="sincronizarTasa('main')"><button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa">🔄</button></div><label>Monto total de la orden ($)</label><input type="number" step="0.01" id="totalUSD" placeholder="0.00" oninput="calcularNota()"><label>Método de Pago:</label><select id="paymentMethod" onchange="toggleCampos(); calcularNota();"><option value="pago_movil">Pago móvil</option><option value="cuotas">Pago en Cuotas / Crédito</option><option value="divisas">Divisas (Efectivo)</option></select><div id="campoDivisas" style="display:none;"><label>¿Con cuánto cancela el cliente ($)?</label><input type="number" id="billete" placeholder="0.00" oninput="calcularNota()"></div><div id="campoCuotas" style="display:none;"><label>Monto de Inicial ($):</label><input type="number" step="0.01" id="montoInicial" placeholder="0.00" oninput="calcularNota()"><label>Número de Cuotas:</label><select id="numCuotas" onchange="generarCamposFechas(); calcularNota();"><option value="1">1 Cuota</option><option value="2">2 Cuotas</option><option value="3">3 Cuotas</option><option value="4">4 Cuotas</option><option value="5">5 Cuotas</option></select><div id="contenedorFechasCuotas"></div></div><div class="preview"><strong>Nota generada:</strong><p id="previewText">Ingresa los datos del pedido...</p><button type="button" class="btn-copy" id="btnCopyNota" onclick="copiarTexto('previewText', 'btnCopyNota')">📋 Copiar Texto</button></div></div></div>
-            <div class="module-pane" id="mod-calc"><div class="card"><h2>🧮 Calculadora de Montos (VES / USD)</h2><label>Tasa BCV Aplicada (Bs/USD):</label><input type="number" step="0.01" id="modalTasaInput" placeholder="0.00" oninput="sincronizarTasa('modal')"><label>Monto en USD ($):</label><input type="number" step="0.01" id="calcUSD" placeholder="0.00" oninput="convertirDesdeUSD()"><label>Monto en Bolívares (Bs. S):</label><input type="number" step="0.01" id="calcVES" placeholder="0.00" oninput="convertirDesdeVES()"><div class="preview"><strong>Monto del pedido en Bolívares:</strong><p id="calcResumen" style="margin-bottom: 0;">Ingresa un monto para convertir...</p></div><button type="button" class="btn-copy" style="margin-top: 14px;" onclick="copiarTexto('calcResumen', this)">📋 Copiar Texto</button><button type="button" class="btn-copy btn-shot" id="btnCopyImage" onclick="generarYCopiarImagen()">📸 Copiar Captura (Imagen)</button></div></div>
-            <div class="module-pane" id="mod-tasas"><div class="card"><h2>📊 Tasas y Brechas Cambiarias</h2><div class="market-grid"><div class="market-item"><div class="market-label">Dólar BCV</div><div class="market-value" id="mBcvUsd">Cargando...</div></div><div class="market-item"><div class="market-label">Euro BCV</div><div class="market-value" id="mBcvEur">Cargando...</div></div><div class="market-item full-width"><div class="market-label">USDT Binance</div><div class="market-value" id="mUsdt">Cargando...</div></div><div class="market-item"><div class="market-label">Brecha USDT/BCV</div><div class="market-value badge-gap" id="mBrechaUsdt">--%</div></div><div class="market-item"><div class="market-label">Brecha EUR/USD</div><div class="market-value badge-gap" id="mBrechaEur">--%</div></div></div><div class="market-time" id="mTime">Sincronizando mercado...</div></div></div>
+            <div class="module-pane" id="mod-notas"><div class="card"><h2><re-icon icon=credit-card size=15></re-icon> Redactar notas de pago</h2><label>Tasa BCV VES</label><div class="tasa-container"><input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="sincronizarTasa('main')"><button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa"><re-icon icon=refresh-cw size=15></re-icon></button></div><label>Monto total de la orden ($)</label><input type="number" step="0.01" id="totalUSD" placeholder="0.00" oninput="calcularNota()"><label>Método de Pago:</label><select id="paymentMethod" onchange="toggleCampos(); calcularNota();"><option value="pago_movil">Pago móvil</option><option value="cuotas">Pago en Cuotas / Crédito</option><option value="divisas">Divisas (Efectivo)</option></select><div id="campoDivisas" style="display:none;"><label>¿Con cuánto cancela el cliente ($)?</label><input type="number" id="billete" placeholder="0.00" oninput="calcularNota()"></div><div id="campoCuotas" style="display:none;"><label>Monto de Inicial ($):</label><input type="number" step="0.01" id="montoInicial" placeholder="0.00" oninput="calcularNota()"><label>Número de Cuotas:</label><select id="numCuotas" onchange="generarCamposFechas(); calcularNota();"><option value="1">1 Cuota</option><option value="2">2 Cuotas</option><option value="3">3 Cuotas</option><option value="4">4 Cuotas</option><option value="5">5 Cuotas</option></select><div id="contenedorFechasCuotas"></div></div><div class="preview"><strong>Nota generada:</strong><p id="previewText">Ingresa los datos del pedido...</p><button type="button" class="btn-copy" id="btnCopyNota" onclick="copiarTexto('previewText', 'btnCopyNota')"><re-icon icon=clipboard size=15></re-icon> Copiar Texto</button></div></div></div>
+            <div class="module-pane" id="mod-calc"><div class="card"><h2><re-icon icon=calculator size=15></re-icon> Calculadora de Montos (VES / USD)</h2><label>Tasa BCV Aplicada (Bs/USD):</label><input type="number" step="0.01" id="modalTasaInput" placeholder="0.00" oninput="sincronizarTasa('modal')"><label>Monto en USD ($):</label><input type="number" step="0.01" id="calcUSD" placeholder="0.00" oninput="convertirDesdeUSD()"><label>Monto en Bolívares (Bs. S):</label><input type="number" step="0.01" id="calcVES" placeholder="0.00" oninput="convertirDesdeVES()"><div class="preview"><strong>Monto del pedido en Bolívares:</strong><p id="calcResumen" style="margin-bottom: 0;">Ingresa un monto para convertir...</p></div><button type="button" class="btn-copy" style="margin-top: 14px;" onclick="copiarTexto('calcResumen', this)"><re-icon icon=clipboard size=15></re-icon> Copiar Texto</button><button type="button" class="btn-copy btn-shot" id="btnCopyImage" onclick="generarYCopiarImagen()"><re-icon icon=camera size=15></re-icon> Copiar Captura (Imagen)</button></div></div>
+            <div class="module-pane" id="mod-tasas"><div class="card"><h2><re-icon icon=chart-column size=15></re-icon> Tasas y Brechas Cambiarias</h2><div class="market-grid"><div class="market-item"><div class="market-label">Dólar BCV</div><div class="market-value" id="mBcvUsd">Cargando...</div></div><div class="market-item"><div class="market-label">Euro BCV</div><div class="market-value" id="mBcvEur">Cargando...</div></div><div class="market-item full-width"><div class="market-label">USDT Binance</div><div class="market-value" id="mUsdt">Cargando...</div></div><div class="market-item"><div class="market-label">Brecha USDT/BCV</div><div class="market-value badge-gap" id="mBrechaUsdt">--%</div></div><div class="market-item"><div class="market-label">Brecha EUR/USD</div><div class="market-value badge-gap" id="mBrechaEur">--%</div></div></div><div class="market-time" id="mTime">Sincronizando mercado...</div></div></div>
         </main>
     </div>
 </div>
 
 <!-- MODAL FLOTANTE "AÑADIR ARTÍCULO" Y RESTO DE HTML... -->
-<div id="modalAnadirArticulo" class="modal-overlay" onclick="if(event.target === this) cerrarModalArticulos()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Añadir artículo del inventario</h3><div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn-home-icon" title="Actualizar inventario" onclick="refrescarInventarioModal()" id="btnRefrescarInventarioModal">🔄</button><button type="button" class="modal-close-btn" onclick="cerrarModalArticulos()">✕</button></div></div><div class="modal-progress-track"><div class="modal-progress-fill" id="progresoModalArticulo"></div></div><div class="modal-progress-label" id="progresoModalArticuloLabel">Progreso del pedido</div><div class="modal-search-box"><div class="modal-search-input-wrapper"><span>🔍</span><input type="text" id="inputModalBuscadorArticulo" class="modal-search-input" placeholder="Buscar por producto, variante o SKU..." oninput="filtrarProductosModal()" autocomplete="off"></div></div><div class="modal-items-list" id="modalListaItemsContainer"></div></div></div>
+<div id="modalAnadirArticulo" class="modal-overlay" onclick="if(event.target === this) cerrarModalArticulos()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Añadir artículo del inventario</h3><div style="display:flex; align-items:center; gap:8px;"><button type="button" class="btn-home-icon" title="Actualizar inventario" onclick="refrescarInventarioModal()" id="btnRefrescarInventarioModal"><re-icon icon=refresh-cw size=15></re-icon></button><button type="button" class="modal-close-btn" onclick="cerrarModalArticulos()"><re-icon icon=x size=15></re-icon></button></div></div><div class="modal-progress-track"><div class="modal-progress-fill" id="progresoModalArticulo"></div></div><div class="modal-progress-label" id="progresoModalArticuloLabel">Progreso del pedido</div><div class="modal-search-box"><div class="modal-search-input-wrapper"><span><re-icon icon=search size=15></re-icon></span><input type="text" id="inputModalBuscadorArticulo" class="modal-search-input" placeholder="Buscar por producto, variante o SKU..." oninput="filtrarProductosModal()" autocomplete="off"></div></div><div class="modal-items-list" id="modalListaItemsContainer"></div></div></div>
 
 <div id="modalProductosSinSku" class="modal-overlay" onclick="if(event.target === this) cerrarModalProductosSinSku()">
     <div class="modal-card">
         <div class="modal-header">
             <h3 class="modal-title">Productos sin SKU</h3>
-            <button type="button" class="modal-close-btn" onclick="cerrarModalProductosSinSku()">✕</button>
+            <button type="button" class="modal-close-btn" onclick="cerrarModalProductosSinSku()"><re-icon icon=x size=15></re-icon></button>
         </div>
         <div id="listaProductosSinSku" style="padding-bottom: 14px;"></div>
     </div>
 </div>
 
-<div id="modalEfectivoUSD" class="modal-overlay" onclick="if(event.target === this) cerrarModalEfectivoUSD()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Efectivo USD</h3><button type="button" class="modal-close-btn" onclick="cerrarModalEfectivoUSD()">✕</button></div><div style="padding: 20px 24px;"><label style="margin-top: 0;">¿Con qué billete paga el cliente ($)?</label><input type="number" step="0.01" id="inputBilleteUSD" placeholder="Ej: 20, 50, 100..." oninput="calcularCambioUSDModal()" onkeydown="if(event.key === 'Enter') confirmarBilleteUSD()"><div class="preview" style="margin-top: 16px;"><strong>Monto de Cambio a llevar en efectivo</strong><p id="previewCambioUSDText" style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: var(--turquesa-dark);">$0.00</p></div><button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="confirmarBilleteUSD()">Confirmar y Guardar</button></div></div></div>
+<div id="modalEfectivoUSD" class="modal-overlay" onclick="if(event.target === this) cerrarModalEfectivoUSD()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Efectivo USD</h3><button type="button" class="modal-close-btn" onclick="cerrarModalEfectivoUSD()"><re-icon icon=x size=15></re-icon></button></div><div style="padding: 20px 24px;"><label style="margin-top: 0;">¿Con qué billete paga el cliente ($)?</label><input type="number" step="0.01" id="inputBilleteUSD" placeholder="Ej: 20, 50, 100..." oninput="calcularCambioUSDModal()" onkeydown="if(event.key === 'Enter') confirmarBilleteUSD()"><div class="preview" style="margin-top: 16px;"><strong>Monto de Cambio a llevar en efectivo</strong><p id="previewCambioUSDText" style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: var(--turquesa-dark);">$0.00</p></div><button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="confirmarBilleteUSD()">Confirmar y Guardar</button></div></div></div>
 <div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://i.imgur.com/6iqT3wE.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto Total del Pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa Oficial BCV Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa Oficial</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
 
 <script>
@@ -906,11 +1110,33 @@ let listaArticulosPedido = []; let inventarioProductosCache = []; let billeteUSD
 function actualizarInterfazUsuario(email) { let perfil = PERFILES_CORREOS[email]; if (!perfil) { const parts = email.split('@')[0]; const nombreGenerico = parts.charAt(0).toUpperCase() + parts.slice(1); perfil = { nombreUsuario: nombreGenerico, alias: "Brooklyn - Búho Electronics" }; } document.getElementById('welcomeUserName').innerText = perfil.nombreUsuario; document.getElementById('brandNameAlias').innerText = perfil.alias; }
 function seleccionarModulo(idModulo) { document.querySelectorAll('.module-pane').forEach(pane => pane.classList.remove('active')); document.getElementById(idModulo).classList.add('active'); document.querySelectorAll('.nav-item').forEach(item => { item.classList.toggle('active', item.dataset.module === idModulo); }); }
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
-function toggleTheme() { const html = document.documentElement; const btn = document.getElementById('themeToggle'); if (html.getAttribute('data-theme') === 'dark') { html.removeAttribute('data-theme'); if (btn) btn.innerHTML = '🌙 Modo Oscuro'; localStorage.setItem('theme', 'light'); } else { html.setAttribute('data-theme', 'dark'); if (btn) btn.innerHTML = '☀️ Modo Claro'; localStorage.setItem('theme', 'dark'); } }
-(function initTheme() { if (localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); const btn = document.getElementById('themeToggle'); if (btn) btn.innerHTML = '☀️ Modo Claro'; } })();
 
-async function validarAcceso() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPassword').value; const error = document.getElementById('loginError'); if (!email || !password) { error.innerText = "Por favor ingresa correo y contraseña."; return; } error.innerText = "Verificando..."; const { data, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password }); if (authError) { error.innerText = "❌ Credenciales incorrectas"; } else { document.getElementById('loginOverlay').style.display = 'none'; document.getElementById('btnLogout').style.display = 'inline-flex'; error.innerText = ""; actualizarInterfazUsuario(email); cargarProductosInventario(); } }
-async function comprobarSesion() { const { data: { session } } = await supabaseClient.auth.getSession(); if (session && session.user) { document.getElementById('loginOverlay').style.display = 'none'; document.getElementById('btnLogout').style.display = 'inline-flex'; actualizarInterfazUsuario(session.user.email); cargarProductosInventario(); } }
+function toggleTheme() { 
+    const html = document.documentElement; 
+    const cb = document.getElementById('themeToggleInput');
+    if (html.getAttribute('data-theme') === 'dark') { 
+        html.removeAttribute('data-theme'); 
+        localStorage.setItem('theme', 'light'); 
+        if(cb) cb.checked = false;
+    } else { 
+        html.setAttribute('data-theme', 'dark'); 
+        localStorage.setItem('theme', 'dark'); 
+        if(cb) cb.checked = true;
+    } 
+}
+
+(function initTheme() { 
+    if (localStorage.getItem('theme') === 'dark') { 
+        document.documentElement.setAttribute('data-theme', 'dark'); 
+        window.addEventListener('DOMContentLoaded', () => {
+            const cb = document.getElementById('themeToggleInput');
+            if(cb) cb.checked = true;
+        });
+    } 
+})();
+
+async function validarAcceso() { const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPassword').value; const error = document.getElementById('loginError'); if (!email || !password) { error.innerText = "Por favor ingresa correo y contraseña."; return; } error.innerText = "Verificando..."; const { data, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password }); if (authError) { error.innerHTML = "<re-icon icon=x-circle size=15></re-icon> Credenciales incorrectas"; } else { document.getElementById('loginOverlay').style.display = 'none'; document.getElementById('btnLogout').style.display = 'inline-flex'; error.innerText = ""; actualizarInterfazUsuario(email); cargarProductosInventario(); cargarAnaliticasPedidos(); } }
+async function comprobarSesion() { const { data: { session } } = await supabaseClient.auth.getSession(); if (session && session.user) { document.getElementById('loginOverlay').style.display = 'none'; document.getElementById('btnLogout').style.display = 'inline-flex'; actualizarInterfazUsuario(session.user.email); cargarProductosInventario(); cargarAnaliticasPedidos(); } }
 async function cerrarSesion() { await supabaseClient.auth.signOut(); location.reload(); }
 comprobarSesion();
 
@@ -925,9 +1151,27 @@ const ETIQUETAS_ESTADO_PEDIDO = { pending: 'Pendiente', confirmed: 'Confirmado',
 const ETIQUETAS_ESTADO_PAGO = { pending: 'Pendiente', confirming: 'Confirmando pago', partial: 'Parcial. pagado', paid: 'Pagado', refunded: 'Reembolsado', voided: 'Anulado' };
 const ETIQUETAS_ESTADO_ENVIO = { unfulfilled: 'Incumplido', ready: 'Listo', in_transit: 'En camino', out_for_delivery: 'Saliendo para entrega', partially_fulfilled: 'Parcial. cumplido', fulfilled: 'Enviado' };
 
-function claseBadgePago(estado) { if (estado === 'paid') return 'st-ok'; if (estado === 'refunded' || estado === 'voided') return 'st-bad'; return 'st-warn'; }
-function claseBadgeEnvio(estado) { if (estado === 'fulfilled' || estado === 'delivered') return 'st-ok'; if (estado === 'cancelled') return 'st-bad'; return 'st-warn'; }
-function claseBadgePedido(estado) { if (estado === 'completed' || estado === 'confirmed') return 'st-ok'; if (estado === 'cancelled') return 'st-bad'; return 'st-neutral'; }
+function getBadgePago(estado) {
+    const label = ETIQUETAS_ESTADO_PAGO[estado] || estado || '—';
+    if (estado === 'paid') return `<span class="status-badge bg-solid-green"><re-icon icon=check size=15></re-icon> ${label}</span>`;
+    if (estado === 'refunded' || estado === 'voided') return `<span class="status-badge bg-light-red"><re-icon icon=x-circle size=15></re-icon> ${label}</span>`;
+    return `<span class="status-badge bg-light-yellow"><re-icon icon=loader-2 size=15 class=spin-icon></re-icon> ${label}</span>`;
+}
+
+function getBadgePedido(estado) {
+    const label = ETIQUETAS_ESTADO_PEDIDO[estado] || estado || '—';
+    if (estado === 'completed' || estado === 'confirmed') return `<span class="status-badge bg-light-green"><re-icon icon=check size=15></re-icon> ${label}</span>`;
+    if (estado === 'cancelled') return `<span class="status-badge bg-light-red"><re-icon icon=x-circle size=15></re-icon> ${label}</span>`;
+    return `<span class="status-badge bg-light-yellow"><re-icon icon=loader-2 size=15 class=spin-icon></re-icon> ${label}</span>`;
+}
+
+function getBadgeEnvio(estado) {
+    const label = ETIQUETAS_ESTADO_ENVIO[estado] || estado || '—';
+    if (estado === 'fulfilled' || estado === 'delivered') return `<span class="status-badge bg-light-blue"><re-icon icon=truck size=15></re-icon> ${label}</span>`;
+    if (estado === 'in_transit' || estado === 'ready' || estado === 'out_for_delivery') return `<span class="status-badge bg-light-blue"><re-icon icon=package size=15></re-icon> ${label}</span>`;
+    if (estado === 'cancelled') return `<span class="status-badge bg-light-red"><re-icon icon=x-circle size=15></re-icon> ${label}</span>`;
+    return `<span class="status-badge bg-light-yellow"><re-icon icon=loader-2 size=15 class=spin-icon></re-icon> ${label}</span>`;
+}
 
 async function cargarGestionPedidos(forzar = false) {
     if (pedidosGestionCargados && !forzar) { renderTablaGestionPedidos(); return; }
@@ -956,14 +1200,22 @@ function renderTablaGestionPedidos() {
     tbody.innerHTML = lista.map(p => {
         return `
         <tr>
-            <td><strong>#${p.numero_pedido || '—'}</strong></td>
-            <td>${p.cliente_nombre || 'Sin nombre'}${p.cliente_telefono ? `<br><span style="color:var(--text-muted); font-size:11px;">${p.cliente_telefono}</span>` : ''}</td>
-            <td>${formatoMonedaUSD(p.monto_total)}</td>
-            <td><span class="status-badge ${claseBadgePago(p.estado_pago)}">${ETIQUETAS_ESTADO_PAGO[p.estado_pago] || p.estado_pago || '—'}</span></td>
-            <td><span class="status-badge ${claseBadgePedido(p.estado_pedido)}">${ETIQUETAS_ESTADO_PEDIDO[p.estado_pedido] || p.estado_pedido || '—'}</span></td>
-            <td><span class="status-badge ${claseBadgeEnvio(p.estado_envio)}">${ETIQUETAS_ESTADO_ENVIO[p.estado_envio] || p.estado_envio || '—'}</span></td>
-            <td>${formatoFechaCorta(p.fecha_pedido)}</td>
-            <td><button type="button" class="btn-pill btn-pequeno" onclick="abrirModalEstadoPedido('${p.id}')">Modificar</button></td>
+            <td style="font-weight:700;">${p.enlace_recibo ? `<a href="${p.enlace_recibo}" target="_blank" style="color: var(--text-main); text-decoration: none;" title="Ver Nota de Entrega">#${p.numero_pedido || '—'}</a>` : `#${p.numero_pedido || '—'}`}</td>
+            <td>
+                <div style="font-weight:600; color:var(--text-main);">${p.cliente_nombre || 'Sin nombre'}</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${p.cliente_telefono || ''}</div>
+            </td>
+            <td style="font-weight:600;">${formatoMonedaUSD(p.monto_total)}</td>
+            <td>${getBadgePago(p.estado_pago)}</td>
+            <td>${getBadgePedido(p.estado_pedido)}</td>
+            <td>${getBadgeEnvio(p.estado_envio)}</td>
+            <td style="color:var(--text-muted); font-size:12px;">${formatoFechaCorta(p.fecha_pedido)}</td>
+            <td>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" class="btn-accion-link" onclick="abrirModalEstadoPedido('${p.id}')">Modificar</button>
+                    <button type="button" class="btn-accion-dots" title="Opciones (Eliminar)" onclick="abrirModalEliminarPedido('${p.id}')">•••</button>
+                </div>
+            </td>
         </tr>
     `}).join('');
 }
@@ -972,6 +1224,13 @@ function renderTablaGestionPedidos() {
 let analiticasPedidosCache = [];
 let analiticasCargadas = false;
 let analiticasCargando = false;
+let analiticasPaginacionTop = 50;
+
+let currentFiltroRango = '30';
+let currentFiltroPedido = '';
+let currentFiltroPago = '';
+let currentFiltroEnvio = '';
+let currentFiltroEntrega = '';
 
 async function cargarAnaliticasPedidos(forzar = false) {
     if (analiticasCargando) return;
@@ -1001,27 +1260,65 @@ async function cargarAnaliticasPedidos(forzar = false) {
         renderAnaliticas();
     } catch (err) {
         console.warn('Error cargando analíticas:', err);
-        if (cont) cont.innerHTML = `<div class="pedidos-empty">❌ No se pudieron cargar las analíticas: ${err.message}</div>`;
+        if (cont) cont.innerHTML = `<div class="pedidos-empty"><re-icon icon=x-circle size=15></re-icon> No se pudieron cargar las analíticas: ${err.message}</div>`;
     } finally {
         analiticasCargando = false;
     }
 }
 
-function analiticasListaFiltrada() {
-    const rango = parseInt(document.getElementById('analiticasRangoFecha')?.value || '30');
-    const filtroPago = document.getElementById('analiticasFiltroEstadoPago')?.value || '';
+function abrirModalFiltro(idModal) { document.getElementById(idModal).style.display = 'flex'; }
+function cerrarModalFiltro(idModal) { document.getElementById(idModal).style.display = 'none'; }
+function seleccionarFiltro(tipo, valor, labelText) {
+    if(tipo === 'rango') { currentFiltroRango = valor; document.getElementById('lblFiltroRango').innerText = labelText; alCambiarRangoAnaliticas(); }
+    if(tipo === 'pedido') { currentFiltroPedido = valor; document.getElementById('lblFiltroPedido').innerText = labelText; renderAnaliticas(); }
+    if(tipo === 'pago') { currentFiltroPago = valor; document.getElementById('lblFiltroPago').innerText = labelText; renderAnaliticas(); }
+    if(tipo === 'envio') { currentFiltroEnvio = valor; document.getElementById('lblFiltroEnvio').innerText = labelText; renderAnaliticas(); }
+    if(tipo === 'entrega') { currentFiltroEntrega = valor; document.getElementById('lblFiltroEntrega').innerText = labelText; renderAnaliticas(); }
 
-    let corte = null;
-    if (rango > 0) {
-        corte = new Date();
-        corte.setDate(corte.getDate() - rango);
+    const modalMap = { rango: 'modalFiltroRango', pedido: 'modalFiltroPedido', pago: 'modalFiltroPago', envio: 'modalFiltroEnvio', entrega: 'modalFiltroEntrega' };
+    const modal = document.getElementById(modalMap[tipo]);
+    const pills = modal.querySelectorAll('.modal-option-pill');
+    pills.forEach(p => p.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+
+    cerrarModalFiltro(modalMap[tipo]);
+}
+
+function alCambiarRangoAnaliticas() {
+    const esPersonalizado = currentFiltroRango === 'custom';
+    document.getElementById('analiticasRangoPersonalizado').style.display = esPersonalizado ? 'flex' : 'none';
+    if (esPersonalizado) {
+        const hasta = document.getElementById('analiticasFechaHasta');
+        const desde = document.getElementById('analiticasFechaDesde');
+        if (!hasta.value) hasta.value = new Date().toISOString().slice(0, 10);
+        if (!desde.value) { const d = new Date(); d.setDate(d.getDate() - 30); desde.value = d.toISOString().slice(0, 10); }
+    }
+    analiticasPaginacionTop = 50; 
+    renderAnaliticas();
+}
+
+function analiticasListaFiltrada() {
+    let corteDesde = null; let corteHasta = null;
+    if (currentFiltroRango === 'custom') {
+        const desdeVal = document.getElementById('analiticasFechaDesde')?.value;
+        const hastaVal = document.getElementById('analiticasFechaHasta')?.value;
+        if (desdeVal) corteDesde = new Date(desdeVal + 'T00:00:00');
+        if (hastaVal) corteHasta = new Date(hastaVal + 'T23:59:59');
+    } else {
+        const rango = parseInt(currentFiltroRango);
+        if (rango > 0) { corteDesde = new Date(); corteDesde.setDate(corteDesde.getDate() - rango); }
     }
 
     return analiticasPedidosCache.filter(p => {
-        if (filtroPago && p.estado_pago !== filtroPago) return false;
-        if (corte) {
+        if (currentFiltroPago && p.estado_pago !== currentFiltroPago) return false;
+        if (currentFiltroPedido && p.estado_pedido !== currentFiltroPedido) return false;
+        if (currentFiltroEnvio && p.estado_envio !== currentFiltroEnvio) return false;
+        if (currentFiltroEntrega && !(p.metodo_entrega || '').toLowerCase().includes(currentFiltroEntrega.toLowerCase())) return false;
+        if (corteDesde || corteHasta) {
             const f = new Date(p.fecha_pedido);
-            if (isNaN(f.getTime()) || f < corte) return false;
+            if (isNaN(f.getTime())) return false;
+            if (corteDesde && f < corteDesde) return false;
+            if (corteHasta && f > corteHasta) return false;
         }
         return true;
     });
@@ -1051,6 +1348,11 @@ function renderBloqueDistribucion(titulo, entradas, etiquetas, total) {
     return `<div class="analiticas-bloque"><h3>${titulo}</h3>${filas}</div>`;
 }
 
+function cargarMasPedidosAnaliticas() {
+    analiticasPaginacionTop += 50;
+    renderAnaliticas();
+}
+
 function renderAnaliticas() {
     const cont = document.getElementById('analiticasContenido');
     if (!cont) return;
@@ -1062,16 +1364,18 @@ function renderAnaliticas() {
         return;
     }
 
-    // --- KPIs ---
-    const totalPedidos = lista.length;
-    const totalFacturado = lista.reduce((s, p) => s + (Number(p.monto_total) || 0), 0);
-    const totalPendiente = lista.reduce((s, p) => s + (Number(p.monto_pendiente) || 0), 0);
-    const totalCobrado = totalFacturado - totalPendiente;
-    const ticketPromedio = totalPedidos > 0 ? totalFacturado / totalPedidos : 0;
+    const listaFacturable = lista.filter(p => p.estado_pedido !== 'cancelled');
 
+    const totalPedidos = lista.length;
+    const totalFacturado = listaFacturable.reduce((s, p) => s + (Number(p.monto_total) || 0), 0);
+    const totalPendiente = listaFacturable.reduce((s, p) => s + (Number(p.monto_pendiente) || 0), 0);
+    const totalCobrado = totalFacturado - totalPendiente;
+    const ticketPromedio = listaFacturable.length > 0 ? totalFacturado / listaFacturable.length : 0;
+
+    const cancelados = totalPedidos - listaFacturable.length;
     const kpiHtml = `
         <div class="kpi-grid">
-            <div class="kpi-card"><div class="kpi-label">Total de pedidos</div><div class="kpi-value">${totalPedidos}</div></div>
+            <div class="kpi-card"><div class="kpi-label">Total de pedidos</div><div class="kpi-value">${totalPedidos}</div>${cancelados > 0 ? `<div class="kpi-sub">${cancelados} cancelado(s) excluidos de $</div>` : ''}</div>
             <div class="kpi-card"><div class="kpi-label">Total facturado</div><div class="kpi-value">${formatoMonedaUSD(totalFacturado)}</div></div>
             <div class="kpi-card"><div class="kpi-label">Cobrado</div><div class="kpi-value">${formatoMonedaUSD(totalCobrado)}</div><div class="kpi-sub">${totalFacturado > 0 ? Math.round((totalCobrado / totalFacturado) * 100) : 0}% del total</div></div>
             <div class="kpi-card"><div class="kpi-label">Pendiente por cobrar</div><div class="kpi-value">${formatoMonedaUSD(totalPendiente)}</div></div>
@@ -1079,15 +1383,13 @@ function renderAnaliticas() {
         </div>
     `;
 
-    // --- Distribuciones ---
     const distPedido = renderBloqueDistribucion('Estado del pedido', agruparConteo(lista, 'estado_pedido'), ETIQUETAS_ESTADO_PEDIDO, totalPedidos);
     const distPago = renderBloqueDistribucion('Estado de pago', agruparConteo(lista, 'estado_pago'), ETIQUETAS_ESTADO_PAGO, totalPedidos);
     const distEnvio = renderBloqueDistribucion('Estado de envío', agruparConteo(lista, 'estado_envio'), ETIQUETAS_ESTADO_ENVIO, totalPedidos);
     const distMetodoPago = renderBloqueDistribucion('Método de pago', agruparConteo(lista, 'metodo_pago'), null, totalPedidos);
 
-    // --- Tendencia diaria (últimos 30 días con datos, o todo el rango si es más corto) ---
     const porDia = {};
-    lista.forEach(p => {
+    listaFacturable.forEach(p => {
         const f = new Date(p.fecha_pedido);
         if (isNaN(f.getTime())) return;
         const clave = f.toISOString().slice(0, 10);
@@ -1108,9 +1410,8 @@ function renderAnaliticas() {
         </div>
     ` : '';
 
-    // --- Top clientes ---
     const porCliente = {};
-    lista.forEach(p => {
+    listaFacturable.forEach(p => {
         const key = p.cliente_id || p.cliente_nombre || 'Sin nombre';
         if (!porCliente[key]) porCliente[key] = { nombre: p.cliente_nombre || 'Sin nombre', total: 0, pedidos: 0 };
         porCliente[key].total += (Number(p.monto_total) || 0);
@@ -1129,37 +1430,44 @@ function renderAnaliticas() {
         </div>
     `;
 
-    // --- Informe detallado (tabla, con tope visual de 200 filas más recientes) ---
-    const TOPE_TABLA = 200;
     const listaOrdenada = [...lista].sort((a, b) => new Date(b.fecha_pedido) - new Date(a.fecha_pedido));
-    const listaTabla = listaOrdenada.slice(0, TOPE_TABLA);
-    const notaTope = lista.length > TOPE_TABLA ? `<p style="font-size:11.5px; color:var(--text-muted); margin:8px 0 0 0;">Mostrando los ${TOPE_TABLA} pedidos más recientes de ${lista.length} en el rango seleccionado. El CSV exportado incluye todos.</p>` : '';
+    const listaTabla = listaOrdenada.slice(0, analiticasPaginacionTop);
+    
+    let botonCargarMas = '';
+    if (listaOrdenada.length > analiticasPaginacionTop) {
+        botonCargarMas = `
+            <div style="text-align:center; padding: 20px 0;">
+                <button type="button" class="btn-accion-link" style="font-size: 13.5px; color: var(--turquesa-dark);" onclick="cargarMasPedidosAnaliticas()">+ Cargar más pedidos (${listaOrdenada.length - analiticasPaginacionTop} restantes)</button>
+            </div>
+        `;
+    }
 
     const filasTabla = listaTabla.map(p => `
         <tr>
-            <td><strong>#${p.numero_pedido || '—'}</strong></td>
-            <td>${p.cliente_nombre || 'Sin nombre'}</td>
-            <td>${formatoMonedaUSD(p.monto_total)}</td>
-            <td><span class="status-badge ${claseBadgePago(p.estado_pago)}">${ETIQUETAS_ESTADO_PAGO[p.estado_pago] || p.estado_pago || '—'}</span></td>
-            <td><span class="status-badge ${claseBadgePedido(p.estado_pedido)}">${ETIQUETAS_ESTADO_PEDIDO[p.estado_pedido] || p.estado_pedido || '—'}</span></td>
-            <td><span class="status-badge ${claseBadgeEnvio(p.estado_envio)}">${ETIQUETAS_ESTADO_ENVIO[p.estado_envio] || p.estado_envio || '—'}</span></td>
-            <td>${p.metodo_pago || '—'}</td>
-            <td>${formatoFechaCorta(p.fecha_pedido)}</td>
+            <td style="font-weight:700;">#${p.numero_pedido || '—'}</td>
+            <td style="font-weight:600; color:var(--text-main);">${p.cliente_nombre || 'Sin nombre'}</td>
+            <td style="font-weight:600;">${formatoMonedaUSD(p.monto_total)}</td>
+            <td>${getBadgePago(p.estado_pago)}</td>
+            <td>${getBadgePedido(p.estado_pedido)}</td>
+            <td>${getBadgeEnvio(p.estado_envio)}</td>
+            <td style="color:var(--text-muted); font-size:12px;">${p.metodo_pago || '—'}</td>
+            <td style="color:var(--text-muted); font-size:12px;">${formatoFechaCorta(p.fecha_pedido)}</td>
+            <td>${p.enlace_recibo ? `<a href="${p.enlace_recibo}" target="_blank" title="Ver recibo" style="text-decoration:none; font-size:15px;"><re-icon icon=receipt size=15></re-icon></a>` : '—'}</td>
         </tr>
     `).join('');
 
     const informeHtml = `
-        <div class="analiticas-bloque">
-            <h3>Informe detallado</h3>
-            <div class="table-container">
+        <div class="analiticas-bloque" style="padding: 0;">
+            <h3 style="padding: 24px 24px 8px 24px;">Informe detallado</h3>
+            <div class="table-container" style="border:none; margin:0; border-radius:0;">
                 <table class="data-table">
                     <thead>
-                        <tr><th>N° Pedido</th><th>Cliente</th><th>Total</th><th>Pago</th><th>Estado</th><th>Envío</th><th>Método pago</th><th>Fecha</th></tr>
+                        <tr><th>N° Pedido <re-icon icon=chevrons-up-down size=15></re-icon></th><th>Cliente <re-icon icon=chevrons-up-down size=15></re-icon></th><th>Total <re-icon icon=chevrons-up-down size=15></re-icon></th><th>Pago</th><th>Estado <re-icon icon=chevrons-up-down size=15></re-icon></th><th>Envío <re-icon icon=chevrons-up-down size=15></re-icon></th><th>Método pago</th><th>Fecha <re-icon icon=chevrons-up-down size=15></re-icon></th><th>Recibo</th></tr>
                     </thead>
                     <tbody>${filasTabla}</tbody>
                 </table>
             </div>
-            ${notaTope}
+            ${botonCargarMas}
         </div>
     `;
 
@@ -1177,7 +1485,7 @@ function exportarCSVAnaliticas() {
     const lista = analiticasListaFiltrada();
     if (lista.length === 0) { alert('No hay pedidos para exportar en el rango seleccionado.'); return; }
 
-    const encabezados = ['Numero de pedido', 'Cliente', 'Telefono', 'Total USD', 'Pendiente USD', 'Estado pedido', 'Estado pago', 'Estado envio', 'Metodo de pago', 'Metodo de entrega', 'Fecha'];
+    const encabezados = ['Numero de pedido', 'Cliente', 'Telefono', 'Total USD', 'Pendiente USD', 'Estado pedido', 'Estado pago', 'Estado envio', 'Metodo de pago', 'Metodo de entrega', 'Fecha', 'Enlace del recibo'];
     const filas = lista.map(p => [
         p.numero_pedido || '',
         (p.cliente_nombre || '').replace(/"/g, "'"),
@@ -1190,6 +1498,7 @@ function exportarCSVAnaliticas() {
         (p.metodo_pago || '').replace(/"/g, "'"),
         (p.metodo_entrega || '').replace(/"/g, "'"),
         p.fecha_pedido ? new Date(p.fecha_pedido).toISOString().slice(0, 10) : '',
+        p.enlace_recibo || '',
     ]);
 
     const csv = [encabezados, ...filas].map(fila => fila.map(v => `"${v}"`).join(',')).join('\n');
@@ -1200,6 +1509,37 @@ function exportarCSVAnaliticas() {
     link.download = `Informe-Pedidos-Brooklyn-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
     URL.revokeObjectURL(url);
+}
+
+let pedidoAEliminarId = null;
+function abrirModalEliminarPedido(pedidoId) {
+    const pedido = gestionPedidosCache.find(p => String(p.id) === String(pedidoId));
+    if (!pedido) return;
+    pedidoAEliminarId = pedido.id;
+    document.getElementById('modalEliminarPedidoNumero').innerText = `#${pedido.numero_pedido || ''}`;
+    document.getElementById('checkCancelarEnProveedor').checked = false;
+    document.getElementById('modalEliminarPedidoError').innerText = '';
+    document.getElementById('modalEliminarPedido').style.display = 'flex';
+}
+function cerrarModalEliminarPedido() { document.getElementById('modalEliminarPedido').style.display = 'none'; pedidoAEliminarId = null; }
+async function confirmarEliminarPedido() {
+    if (!pedidoAEliminarId) return;
+    const btn = document.getElementById('btnConfirmarEliminarPedido');
+    const errorEl = document.getElementById('modalEliminarPedidoError');
+    errorEl.innerText = ''; btn.disabled = true; const original = btn.innerHTML; btn.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Eliminando...';
+    try {
+        const cancelar = document.getElementById('checkCancelarEnProveedor').checked;
+        const { data, error } = await supabaseClient.functions.invoke('brooklyn-orders', { body: { action: 'delete_order', pedidoId: pedidoAEliminarId, cancelarEnProveedor: cancelar } });
+        if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo eliminar el pedido.');
+        gestionPedidosCache = gestionPedidosCache.filter(p => String(p.id) !== String(pedidoAEliminarId));
+        renderTablaGestionPedidos();
+        cerrarModalEliminarPedido();
+        pedidosGestionCargados = true; 
+    } catch (err) {
+        errorEl.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${err.message || 'Error al eliminar el pedido.'}`;
+    } finally {
+        btn.disabled = false; btn.innerHTML = original;
+    }
 }
 
 function abrirModalEstadoPedido(pedidoId) {
@@ -1223,7 +1563,7 @@ async function guardarEstadoPedido() {
     const btn = document.getElementById('btnGuardarEstadoPedido');
     const errorEl = document.getElementById('modalEstadoPedidoError');
     errorEl.innerText = ''; btn.disabled = true;
-    const textoOriginal = btn.innerText; btn.innerText = '⏳ Guardando...';
+    const textoOriginal = btn.innerHTML; btn.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando...';
     const cambios = { orderStatus: document.getElementById('selectEstadoPedido').value, paymentStatus: document.getElementById('selectEstadoPago').value, fulfillmentStatus: document.getElementById('selectEstadoEnvio').value, };
     const nota = document.getElementById('inputNotaInternaPedido').value.trim();
     if (nota) cambios.internalNote = nota;
@@ -1233,7 +1573,7 @@ async function guardarEstadoPedido() {
         const idx = gestionPedidosCache.findIndex(p => String(p.id) === String(pedidoSeleccionadoId));
         if (idx !== -1) { gestionPedidosCache[idx].estado_pedido = data.pedido.estado_pedido; gestionPedidosCache[idx].estado_pago = data.pedido.estado_pago; gestionPedidosCache[idx].estado_envio = data.pedido.estado_envio; }
         renderTablaGestionPedidos(); cerrarModalEstadoPedido();
-    } catch (err) { errorEl.innerText = `❌ ${err.message || 'Error al guardar los cambios.'}`; } finally { btn.disabled = false; btn.innerText = textoOriginal; }
+    } catch (err) { errorEl.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${err.message || 'Error al guardar los cambios.'}`; } finally { btn.disabled = false; btn.innerHTML = textoOriginal; }
 }
 
 let catalogoProductosCache = []; let catalogoCargando = false; let catalogoCargadoUnaVez = false;
@@ -1246,7 +1586,7 @@ async function cargarProductosInventario(forzar = false) {
         if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo cargar el inventario.');
         catalogoProductosCache = data.productos || [];
         catalogoCargadoUnaVez = true;
-    } catch (err) { console.warn('Error cargando el inventario:', err); catalogoProductosCache = []; if (grid) grid.innerHTML = `<div class="pedidos-empty">❌ No se pudo cargar el inventario: ${err.message}</div>`; } finally { catalogoCargando = false; if (catalogoCargadoUnaVez) renderInventarioModulo(); }
+    } catch (err) { console.warn('Error cargando el inventario:', err); catalogoProductosCache = []; if (grid) grid.innerHTML = `<div class="pedidos-empty"><re-icon icon=x-circle size=15></re-icon> No se pudo cargar el inventario: ${err.message}</div>`; } finally { catalogoCargando = false; if (catalogoCargadoUnaVez) renderInventarioModulo(); }
 }
 
 function renderInventarioModulo() {
@@ -1258,7 +1598,7 @@ function renderInventarioModulo() {
     const tarjetaSinSku = sinSku.length > 0 ? `
         <div class="inventario-card" style="cursor:pointer; border-color:#f59e0b;" onclick="abrirModalProductosSinSku()">
             <div class="inventario-card-body">
-                <div class="inventario-card-title">⚠️ Productos sin SKU</div>
+                <div class="inventario-card-title"><re-icon icon=alert-triangle size=15></re-icon> Productos sin SKU</div>
                 <div class="inventario-variante-row" style="border-top:none;">
                     <span class="inventario-variante-nombre">Toca para asignarles un SKU</span>
                     <span class="inventario-variante-precio" style="color:#f59e0b;">${sinSku.length}</span>
@@ -1292,14 +1632,13 @@ function renderInventarioModulo() {
                     <div class="inventario-card-title">${p.nombre}</div>
                     <div style="font-size:11px; color:var(--text-muted);">SKU: ${p.sku || '<span style="color:#f59e0b;">Sin SKU</span>'}</div>
                     ${cuerpoVariantes}
-                    ${p.enlace ? `<a href="${p.enlace}" target="_blank" style="font-size:11.5px; color:var(--turquesa-dark); margin-top:6px; display:inline-block;">🔗 Ver en la tienda</a>` : ''}
+                    ${p.enlace ? `<a href="${p.enlace}" target="_blank" style="font-size:11.5px; color:var(--turquesa-dark); margin-top:6px; display:inline-block;"><re-icon icon=link size=15></re-icon> Ver en la tienda</a>` : ''}
                 </div>
             </div>
         `;
     }).join('');
 }
 
-// --- MODAL: PRODUCTOS SIN SKU ---
 function abrirModalProductosSinSku() {
     const modal = document.getElementById('modalProductosSinSku');
     modal.style.display = 'flex';
@@ -1309,7 +1648,7 @@ function cerrarModalProductosSinSku() { document.getElementById('modalProductosS
 function renderListaProductosSinSku() {
     const cont = document.getElementById('listaProductosSinSku');
     const sinSku = catalogoProductosCache.filter(p => !p.sku);
-    if (sinSku.length === 0) { cont.innerHTML = '<div class="pedidos-empty">Todos tus productos tienen SKU. 🎉</div>'; return; }
+    if (sinSku.length === 0) { cont.innerHTML = '<div class="pedidos-empty">Todos tus productos tienen SKU. <re-icon icon=sparkles size=15></re-icon></div>'; return; }
     cont.innerHTML = sinSku.map(p => `
         <div class="modal-option-pill" style="cursor:default;">
             <div class="mop-title">${p.nombre}</div>
@@ -1332,7 +1671,7 @@ async function guardarSkuProducto(productId) {
         renderListaProductosSinSku();
         renderInventarioModulo();
     } catch (err) {
-        alert('❌ ' + (err.message || 'Error al guardar el SKU.'));
+        alert('<re-icon icon=x-circle size=15></re-icon> ' + (err.message || 'Error al guardar el SKU.'));
     }
 }
 
@@ -1381,11 +1720,11 @@ function mostrarVariantesProductoModal(producto) {
 }
 
 function seleccionarArticuloDesdeModal(nombreCompleto, precio, productId = null, variantId = null) { listaArticulosPedido.push({ nombre: nombreCompleto, precio, productId, variantId }); cerrarModalArticulos(); actualizarTablaArticulosPedido(); }
-async function refrescarInventarioModal() { const btn = document.getElementById('btnRefrescarInventarioModal'); if (btn) btn.innerText = '⏳'; await cargarProductosInventario(true); filtrarProductosModal(); if (btn) btn.innerText = '🔄'; }
+async function refrescarInventarioModal() { const btn = document.getElementById('btnRefrescarInventarioModal'); if (btn) btn.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon>'; await cargarProductosInventario(true); filtrarProductosModal(); if (btn) btn.innerHTML = '<re-icon icon=refresh-cw size=15></re-icon>'; }
 function mostrarCampoArticuloPersonalizado() {
     const contenedor = document.getElementById('contenedorArticulosPersonalizados'); const idUnico = 'custom_group_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
     const div = document.createElement('div'); div.className = 'tasa-container'; div.style.marginBottom = '10px'; div.id = idUnico;
-    div.innerHTML = ` <input type="text" placeholder="Descripción del artículo..." class="custom-art-name" style="flex:2;"> <input type="number" step="0.01" placeholder="Precio ($)" class="custom-art-price" style="flex:1;"> <button type="button" class="btn-copy" style="margin-top:6px; flex:0 0 auto; width:auto; background-color:#ef4444; color:#fff;" onclick="eliminarFilaPersonalizada('${idUnico}')">❌</button> <button type="button" class="btn-copy" style="margin-top:6px; flex:0 0 auto; width:auto;" onclick="guardarArticuloPersonalizadoFila('${idUnico}')">➕ Agregar</button> `;
+    div.innerHTML = ` <input type="text" placeholder="Descripción del artículo..." class="custom-art-name" style="flex:2;"> <input type="number" step="0.01" placeholder="Precio ($)" class="custom-art-price" style="flex:1;"> <button type="button" class="btn-copy" style="margin-top:6px; flex:0 0 auto; width:auto; background-color:#ef4444; color:#fff;" onclick="eliminarFilaPersonalizada('${idUnico}')"><re-icon icon=x-circle size=15></re-icon></button> <button type="button" class="btn-copy" style="margin-top:6px; flex:0 0 auto; width:auto;" onclick="guardarArticuloPersonalizadoFila('${idUnico}')"><re-icon icon=plus size=15></re-icon> Agregar</button> `;
     contenedor.appendChild(div);
 }
 
@@ -1439,7 +1778,7 @@ function cerrarModalMetodoEnvio() { document.getElementById('modalMetodoEnvio').
 function seleccionarMetodoEnvio(valor) {
     document.getElementById('radioEnvioDelivery').checked = (valor === 'delivery');
     document.getElementById('radioEnvioNacional').checked = (valor === 'nacional');
-    document.getElementById('resumenMetodoEnvio').innerText = valor === 'delivery' ? '📦 Delivery GRATIS' : '🚚 Envío Nacional GRATIS';
+    document.getElementById('resumenMetodoEnvio').innerHTML = valor === 'delivery' ? '<re-icon icon=package size=15></re-icon> Delivery GRATIS' : '<re-icon icon=truck size=15></re-icon> Envío Nacional GRATIS';
     toggleCamposEnvio();
     cerrarModalMetodoEnvio();
     actualizarProgresoModales();
@@ -1460,7 +1799,7 @@ function seleccionarMetodoPago(valor) {
     const mapa = { pago_movil: 'radioPagoMovil', efectivo_usd: 'radioEfectivoUSD', binance: 'radioBinance', zelle: 'radioZelle', zinli: 'radioZinli' };
     Object.values(mapa).forEach(id => { document.getElementById(id).checked = false; });
     document.getElementById(mapa[valor]).checked = true;
-    const etiquetas = { pago_movil: '💵 Pago móvil', efectivo_usd: '💲 Efectivo USD', binance: '🟡 Binance', zelle: '🏦 Zelle', zinli: '🟣 Zinli' };
+    const etiquetas = { pago_movil: '<re-icon icon=banknote size=15></re-icon> Pago móvil', efectivo_usd: '<re-icon icon=dollar-sign size=15></re-icon> Efectivo USD', binance: '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#F0B90B;"></span> Binance', zelle: '<re-icon icon=landmark size=15></re-icon> Zelle', zinli: '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#7C3AED;"></span> Zinli' };
     document.getElementById('resumenMetodoPago').innerText = etiquetas[valor] || valor;
     alCambiarMetodoPago();
     cerrarModalMetodoPago();
@@ -1518,12 +1857,12 @@ async function crearNuevoPedido(esBorrador = false) {
     const codPais = document.getElementById('pedidoWpCod').value; 
     const numTel = document.getElementById('pedidoWpNum').value.trim();
 
-    if (!nombre) { feedback.innerText = '❌ Ingresa el nombre del cliente.'; return; } 
-    if (!numTel) { feedback.innerText = '❌ Ingresa el número de WhatsApp del cliente.'; return; } 
-    if (listaArticulosPedido.length === 0) { feedback.innerText = '❌ Añade al menos un artículo al pedido.'; return; }
+    if (!nombre) { feedback.innerHTML = '<re-icon icon=x-circle size=15></re-icon> Ingresa el nombre del cliente.'; return; } 
+    if (!numTel) { feedback.innerHTML = '<re-icon icon=x-circle size=15></re-icon> Ingresa el número de WhatsApp del cliente.'; return; } 
+    if (listaArticulosPedido.length === 0) { feedback.innerHTML = '<re-icon icon=x-circle size=15></re-icon> Añade al menos un artículo al pedido.'; return; }
 
     const envio = obtenerDatosEnvioPedido(); 
-    if (!envio.valido) { feedback.innerText = `❌ ${envio.mensaje}`; return; }
+    if (!envio.valido) { feedback.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${envio.mensaje}`; return; }
 
     let sumaArticulos = 0; 
     listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); 
@@ -1532,21 +1871,22 @@ async function crearNuevoPedido(esBorrador = false) {
     const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; 
     const totalVES = totalUSD * tasaBCV;
 
-    if (totalUSD <= 0) { feedback.innerText = '❌ El total del pedido debe ser mayor a 0.'; return; }
+    if (totalUSD <= 0) { feedback.innerHTML = '<re-icon icon=x-circle size=15></re-icon> El total del pedido debe ser mayor a 0.'; return; }
     
     const btn = document.getElementById(esBorrador ? 'btnGuardarBorrador' : 'btnCrearPedidoTakeApp'); 
     btn.disabled = true; 
     const textoOriginal = btn.innerText; 
-    btn.innerText = esBorrador ? '⏳ Guardando borrador...' : '⏳ Procesando pedido...';
+    btn.innerHTML = esBorrador ? '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando borrador...' : '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Procesando pedido...';
 
     // 1. Payload original SOLO con los datos de creación aceptados
     const payloadCreate = {
         action: 'create_order',
-        customer: { name: nombre, phone: `${codPais}${numTel.replace(/\D/g, '')}` },
+        customer: { name: nombre, phone: `${codPais.replace('+', '')}${numTel.replace(/\D/g, '')}` },
         currency: 'USD',
         totalAmount: totalUSD,
         lineItems: listaArticulosPedido.map(a => ({ name: a.nombre, quantity: 1, unit: 'unidad', price: a.precio, productId: a.productId || undefined, variantId: a.variantId || undefined, })),
-        remark: `Método de Envíos: ${envio.metodoEntrega}. ${(document.getElementById('pedidoObservacion').value || '').trim()}`.trim(),
+        remark: (document.getElementById('pedidoObservacion').value || '').trim(),
+        internalNote: `Cotización Brooklyn: $${totalUSD.toFixed(2)} USD | Tasa BCV: ${tasaBCV.toFixed(2)} Bs/USD | Equivalente: Bs. ${totalVES.toFixed(2)}`,
         paymentMethod: obtenerEtiquetaMetodoPago(),
         metodoEntrega: envio.metodoEntrega,
         direccionEnvio: envio.direccionEnvio,
@@ -1560,52 +1900,49 @@ async function crearNuevoPedido(esBorrador = false) {
         const { data, error } = await supabaseClient.functions.invoke('brooklyn-orders', { body: payloadCreate });
         if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo crear el pedido inicial.');
 
-        // PASO 2: Actualizar inmediatamente con los estados seleccionados usando el ID generado
+        // PASO 2: Actualizar inmediatamente con los estados seleccionados y la nota interna usando el ID generado
         const pedidoIdGenerado = data.pedido.id;
         const orderStatusVal = esBorrador ? 'draft' : document.getElementById('nuevoPedidoEstado').value;
         const paymentStatusVal = document.getElementById('nuevoPedidoPago').value;
         const fulfillmentStatusVal = document.getElementById('nuevoPedidoCumplimiento').value;
 
-        // Solo se hace la actualización si se cambió algún estado de las tarjetas (o si es borrador)
-        if (esBorrador || orderStatusVal !== 'pending' || paymentStatusVal !== 'pending' || fulfillmentStatusVal !== 'unfulfilled') {
-            const cambios = {
-                orderStatus: orderStatusVal,
-                paymentStatus: paymentStatusVal,
-                fulfillmentStatus: fulfillmentStatusVal
-            };
-            
-            await supabaseClient.functions.invoke('brooklyn-orders', { 
-                body: { action: 'update_order', pedidoId: pedidoIdGenerado, changes: cambios } 
-            });
-        }
+        const cambios = { internalNote: payloadCreate.internalNote };
+        if (esBorrador) cambios.orderStatus = orderStatusVal;
+        else if (orderStatusVal !== 'pending') cambios.orderStatus = orderStatusVal;
+        if (paymentStatusVal !== 'pending') cambios.paymentStatus = paymentStatusVal;
+        if (fulfillmentStatusVal !== 'unfulfilled') cambios.fulfillmentStatus = fulfillmentStatusVal;
+
+        await supabaseClient.functions.invoke('brooklyn-orders', {
+            body: { action: 'update_order', pedidoId: pedidoIdGenerado, changes: cambios }
+        });
 
         feedback.style.color = 'var(--turquesa-dark)'; 
         feedback.innerText = esBorrador
-            ? `📝 Pedido #${data.pedido.numero_pedido} guardado como borrador en TakeApp.`
-            : `✅ Pedido #${data.pedido.numero_pedido} creado y actualizado correctamente.`; 
+            ? `<re-icon icon=file-text size=15></re-icon> Pedido #${data.pedido.numero_pedido} guardado como borrador en TakeApp.`
+            : `<re-icon icon=check-circle size=15></re-icon> Pedido #${data.pedido.numero_pedido} creado y actualizado correctamente.`; 
         
         // Forzamos la actualización de la tabla de Gestión de pedidos automáticamente
         pedidosGestionCargados = false;
         cargarGestionPedidos(true); 
 
     } catch (err) { 
-        feedback.innerText = `❌ ${err.message || 'Error al procesar el pedido.'}`; 
+        feedback.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${err.message || 'Error al procesar el pedido.'}`; 
     } finally { 
         btn.disabled = false; 
-        btn.innerText = textoOriginal; 
+        btn.innerHTML = textoOriginal; 
     }
 }
 
 async function realizarPedidoYCopiarCaptura() {
     let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; const totalVES = totalUSD * tasaBCV;
     if (totalUSD <= 0) { alert("El total del pedido debe ser mayor a 0 para generar la captura."); return; }
-    const btn = document.getElementById('btnRealizarPedido'); const originalText = btn.innerText; btn.innerText = "⏳ Generando captura del pedido...";
+    const btn = document.getElementById('btnRealizarPedido'); const originalText = btn.innerHTML; btn.innerHTML = "<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Generando captura del pedido...";
     document.getElementById('shotVES').innerText = `Bs. S ${totalVES.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; document.getElementById('shotUSD').innerText = `$${totalUSD.toFixed(2)}`; document.getElementById('shotTasa').innerText = `${tasaBCV.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`; document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
     const captureCard = document.getElementById('captureCard');
     try {
         const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true });
-        canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerText = "✅ ¡Pedido realizado e imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerText = "📥 ¡Pedido realizado e imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerText = "📥 ¡Pedido realizado e imagen descargada!"; } setTimeout(() => { btn.innerText = originalText; }, 3000); }, 'image/png');
-    } catch (e) { alert("Error al capturar la imagen."); btn.innerText = originalText; }
+        canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Pedido realizado e imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Pedido realizado e imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Pedido realizado e imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 3000); }, 'image/png');
+    } catch (e) { alert("Error al capturar la imagen."); btn.innerHTML = originalText; }
 }
 
 function sincronizarTasa(origen) { const mainTasa = document.getElementById('tasaInput'); const calcTasa = document.getElementById('modalTasaInput'); if (origen === 'main') { calcTasa.value = mainTasa.value; } else if (origen === 'modal') { mainTasa.value = calcTasa.value; } calcularNota(); convertirDesdeUSD(); calcularTotalesPedido(); }
@@ -1656,9 +1993,20 @@ function mostrarVistaRegistrarCliente() {
     formatearCliente();
 }
 function filtrarClientesModal() {
-    const q = (document.getElementById('inputBuscarCliente').value || '').toLowerCase().trim();
+    const raw = (document.getElementById('inputBuscarCliente').value || '').trim();
+    const q = raw.toLowerCase();
+    const soloDigitos = raw.replace(/\D/g, '');
     const cont = document.getElementById('listaClientesEncontrados');
-    const filtrados = !q ? clientesCache.slice(0, 50) : clientesCache.filter(c => (c.nombre_completo || '').toLowerCase().includes(q) || (c.telefono || '').includes(q.replace(/\D/g, '')));
+    const filtrados = !q ? clientesCache.slice(0, 50) : clientesCache.filter(c => {
+        const nombre = (c.nombre_completo || '').toLowerCase();
+        if (nombre.includes(q)) return true;
+        if (soloDigitos) {
+            const telefono = c.telefono || '';
+            const nombreSoloDigitos = (c.nombre_completo || '').replace(/\D/g, ''); // permite buscar la cédula aunque tenga puntos (12.345.678)
+            if (telefono.includes(soloDigitos) || nombreSoloDigitos.includes(soloDigitos)) return true;
+        }
+        return false;
+    });
     if (filtrados.length === 0) { cont.innerHTML = '<div class="pedidos-empty">No se encontraron clientes. Prueba "Registrar cliente".</div>'; return; }
     cont.innerHTML = filtrados.map(c => `
         <div class="modal-item-row" onclick="seleccionarClienteEncontrado('${c.id}')">
@@ -1703,7 +2051,7 @@ async function registrarNombreCheckout() {
     const numTel = document.getElementById('clientPhoneNum').value.replace(/\D/g, '');
     const telefonoCompleto = numTel ? `${cod}${numTel}` : '';
 
-    const btnNode = document.getElementById('btnCopyCliente'); const originalText = btnNode.innerText; btnNode.innerText = '⏳ Guardando...'; btnNode.disabled = true;
+    const btnNode = document.getElementById('btnCopyCliente'); const originalText = btnNode.innerHTML; btnNode.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando...'; btnNode.disabled = true;
     try {
         if (telefonoCompleto) {
             const existente = await supabaseClient.from('clientes').select('id').eq('telefono', telefonoCompleto.replace('+', '')).maybeSingle();
@@ -1715,20 +2063,20 @@ async function registrarNombreCheckout() {
         document.getElementById('pedidoClienteNombre').value = nombreFormateado;
         document.getElementById('resumenClienteSeleccionado').innerText = nombreFormateado;
         if (numTel) { document.getElementById('pedidoWpCod').value = cod; document.getElementById('pedidoWpNum').value = numTel; }
-        btnNode.innerText = '✅ ¡Registrado!';
-        setTimeout(() => { btnNode.innerText = originalText; btnNode.disabled = false; cerrarModalBuscarCliente(); actualizarProgresoModales(); }, 700);
+        btnNode.innerHTML = '<re-icon icon=check-circle size=15></re-icon> ¡Registrado!';
+        setTimeout(() => { btnNode.innerHTML = originalText; btnNode.disabled = false; cerrarModalBuscarCliente(); actualizarProgresoModales(); }, 700);
     } catch (err) {
-        btnNode.innerText = originalText; btnNode.disabled = false;
-        alert('❌ No se pudo registrar el cliente: ' + (err.message || 'error desconocido'));
+        btnNode.innerHTML = originalText; btnNode.disabled = false;
+        alert('<re-icon icon=x-circle size=15></re-icon> No se pudo registrar el cliente: ' + (err.message || 'error desconocido'));
     }
 }
-async function copiarTexto(elementId, btnElement) { const texto = document.getElementById(elementId).innerText; if (texto.includes("Ingresa los datos")) return; try { await navigator.clipboard.writeText(texto); let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement; const originalText = btnNode.innerText; btnNode.innerText = "✅ ¡Copiado!"; setTimeout(() => { btnNode.innerText = originalText; }, 2000); } catch (err) { alert("Error al copiar texto."); } }
+async function copiarTexto(elementId, btnElement) { const texto = document.getElementById(elementId).innerText; if (texto.includes("Ingresa los datos")) return; try { await navigator.clipboard.writeText(texto); let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement; const originalText = btnNode.innerHTML; btnNode.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Copiado!"; setTimeout(() => { btnNode.innerHTML = originalText; }, 2000); } catch (err) { alert("Error al copiar texto."); } }
 async function generarYCopiarImagen() {
     const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value) || 0; const btn = document.getElementById('btnCopyImage');
     if (ves <= 0 || usd <= 0) { alert("Ingresa un monto válido para generar la imagen."); return; }
     document.getElementById('shotVES').innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; document.getElementById('shotUSD').innerText = `$${usd.toFixed(2)}`; document.getElementById('shotTasa').innerText = `${tasa.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`; document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-    const captureCard = document.getElementById('captureCard'); const originalText = btn.innerText; btn.innerText = "⏳ Generando imagen...";
-    try { const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true }); canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerText = "✅ ¡Imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerText = "📥 ¡Imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerText = "📥 ¡Imagen descargada!"; } setTimeout(() => { btn.innerText = originalText; }, 2500); }, 'image/png'); } catch (e) { alert("Error al capturar la imagen."); btn.innerText = originalText; }
+    const captureCard = document.getElementById('captureCard'); const originalText = btn.innerHTML; btn.innerHTML = "<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Generando imagen...";
+    try { const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true }); canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 2500); }, 'image/png'); } catch (e) { alert("Error al capturar la imagen."); btn.innerHTML = originalText; }
 }
 function descargarImagenFallback(canvas) { const link = document.createElement('a'); link.download = `Cotizacion-Brooklyn-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }
 
