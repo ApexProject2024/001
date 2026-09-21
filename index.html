@@ -8,11 +8,73 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Librerías de Mapas (Leaflet) y Base de datos -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+
+    <!-- Íconos: el HTML usa <re-icon icon="nombre" size="15">. Este elemento nunca estaba definido,
+         por eso los íconos no se dibujaban. Aquí se define con SVG en línea (estilo Lucide/Feather). -->
+    <script>
+    (function () {
+        const ICONOS = {
+            'x': '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+            'check': '<polyline points="20 6 9 17 4 12"/>',
+            'plus': '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+            'chevron-down': '<polyline points="6 9 12 15 18 9"/>',
+            'chevrons-up-down': '<path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>',
+            'search': '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+            'menu': '<line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>',
+            'refresh-cw': '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
+            'download': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+            'save': '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
+            'x-circle': '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+            'check-circle': '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+            'loader-2': '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>',
+            'trash-2': '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+            'map-pin': '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+            'truck': '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+            'package': '<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+            'users': '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+            'home': '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+            'log-out': '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+            'shopping-cart': '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+            'archive': '<polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>',
+            'chart-column': '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+            'file-text': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>',
+            'clipboard': '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>',
+            'credit-card': '<rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>',
+            'dollar-sign': '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+            'link': '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+            'camera': '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+            'alert-triangle': '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+            'calculator': '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/>',
+            'cloud-sun': '<path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>',
+            'banknote': '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+            'landmark': '<line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/>',
+            'receipt': '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/>',
+            'sparkles': '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>',
+            'rocket': '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>'
+        };
+        window.RE_ICONOS = ICONOS;
+        class ReIcon extends HTMLElement {
+            static get observedAttributes() { return ['icon', 'size']; }
+            connectedCallback() { this.dibujar(); }
+            attributeChangedCallback() { if (this.isConnected) this.dibujar(); }
+            dibujar() {
+                const nombre = this.getAttribute('icon');
+                const tam = parseInt(this.getAttribute('size'), 10) || 16;
+                const cuerpo = ICONOS[nombre];
+                if (!cuerpo) { this.innerHTML = ''; if (nombre) console.warn('re-icon: ícono desconocido "' + nombre + '"'); return; }
+                this.style.width = tam + 'px';
+                this.style.height = tam + 'px';
+                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="' + tam + '" height="' + tam + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + cuerpo + '</svg>';
+            }
+        }
+        if (!customElements.get('re-icon')) customElements.define('re-icon', ReIcon);
+    })();
+    </script>
 
     <style>
         :root {
@@ -485,11 +547,39 @@
         .shot-detail-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; }
         .shot-detail-value { font-size: 15px; font-weight: 700; color: #1C2430; margin-top: 2px; }
         .shot-footer { margin-top: 18px; font-size: 11px; color: #94A3B8; font-weight: 500; }
-        
-        /* RE-ICON */
-        re-icon { display: inline-flex; align-items: center; justify-content: center; }
-        .spin-icon { animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* ÍCONOS <re-icon> */
+        re-icon { display: inline-flex; align-items: center; justify-content: center; vertical-align: -0.2em; flex-shrink: 0; line-height: 1; }
+        re-icon svg { display: block; }
+        @keyframes reSpin { to { transform: rotate(360deg); } }
+        .spin-icon { animation: reSpin 0.9s linear infinite; }
+
+        /* LOGIN: el texto del botón usaba el mismo color que el fondo */
+        .login-card .btn-copy { background: var(--text-main); color: #FFFFFF; font-size: 14px; padding: 13px; }
+        .login-card .btn-copy:hover { background: var(--turquesa); color: #0B1A1E; }
+        [data-theme="dark"] .login-card .btn-copy { background: var(--turquesa); color: #0B1A1E; }
+        [data-theme="dark"] .login-card .btn-copy:hover { background: #FFFFFF; color: #0B1A1E; }
+
+        /* MAPA DE ENTREGAS */
+        .mapa-modal-card { max-width: 1040px; height: min(90vh, 760px); }
+        .mapa-estado { padding: 10px 24px; font-size: 12.5px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 40px; }
+        .mapa-estado strong { color: var(--text-main); }
+        #mapaEntregasCanvas { flex: 1; min-height: 300px; position: relative; z-index: 0; isolation: isolate; background: var(--bg-input); }
+        [data-theme="dark"] #mapaEntregasCanvas .leaflet-tile-pane { filter: brightness(0.72) contrast(1.05) saturate(0.85); }
+        .mapa-pin-wrap { background: transparent; border: 0; }
+        .mapa-pin { position: relative; width: 34px; height: 34px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35)); }
+        .mapa-pin svg { width: 34px; height: 34px; display: block; }
+        .mapa-pin-n { position: absolute; top: 5px; left: 0; width: 100%; text-align: center; font: 800 11px Inter, sans-serif; color: #0B1A1E; }
+        .mapa-popup { font-family: Inter, sans-serif; font-size: 12.5px; line-height: 1.45; min-width: 210px; color: #1C2430; }
+        .mapa-popup .mp-item { padding: 6px 0; border-top: 1px solid #E2E8F0; }
+        .mapa-popup .mp-item:first-child { border-top: 0; padding-top: 0; }
+        .mapa-popup .mp-num { font-weight: 800; }
+        .mapa-popup .mp-dir { color: #64748B; word-break: break-word; }
+        .mapa-popup a { color: #0E7490; font-weight: 700; text-decoration: none; }
+        .mapa-pendientes { border-top: 1px solid var(--border-color); padding: 10px 24px 14px; max-height: 140px; overflow-y: auto; font-size: 12px; color: var(--text-muted); }
+        .mapa-pendientes h4 { margin: 0 0 6px 0; font-size: 12px; color: var(--text-main); }
+        .mapa-pendientes .mp-row { padding: 4px 0; border-top: 1px dashed var(--border-color); display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+        .mapa-pendientes a { color: var(--turquesa-dark); font-weight: 700; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -548,13 +638,9 @@
                 <span class="nav-icon"><re-icon icon=users size=15></re-icon></span> Clientes
             </li>
 
-            <li class="menu-category">Herramientas</li>
-            <li class="nav-item" data-module="mod-calc" onclick="seleccionarModulo('mod-calc')">
-                <span class="nav-icon"><re-icon icon=calculator size=15></re-icon></span> Calculadora
-            </li>
             <li class="menu-category">Finanzas & Mercado</li>
             <li class="nav-item" data-module="mod-tasas" onclick="seleccionarModulo('mod-tasas')">
-                <span class="nav-icon"><re-icon icon=trending-up size=15></re-icon></span> Tasas y Brechas
+                <span class="nav-icon"><re-icon icon=chart-column size=15></re-icon></span> Tasas y Brechas
             </li>
         </ul>
     </aside>
@@ -862,7 +948,7 @@
                             <button type="button" class="btn-pill" id="btnGuardarBorrador" style="width: 100%; margin: 0; justify-content: center; padding: 12px;" onclick="crearNuevoPedido(true)"><re-icon icon=file-text size=15></re-icon> Guardar como borrador</button>
                         </div>
                         <p id="crearPedidoFeedback" style="margin-top:8px; font-size:12.5px; min-height:14px; text-align:center;"></p>
-                        <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 0px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()"><re-icon icon=rocket size=15></re-icon> Realizar pedido (Copiar captura)</button>
+                        <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 10px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()"><re-icon icon=rocket size=15></re-icon> Realizar pedido (Copiar captura)</button>
                     </div>
 
                 </div>
@@ -1057,11 +1143,8 @@
                             <span class="st-label">Método</span>
                             <span class="st-value"><span id="lblFiltroEntrega">Todos</span> <small><re-icon icon=chevron-down size=11></re-icon></small></span>
                         </button>
-                        
-                        <div style="margin-left: auto; display: flex; gap: 8px;">
-                            <button type="button" class="btn-pill btn-pequeno" onclick="abrirModalMapa()"><re-icon icon=map size=15></re-icon> Ver mapa</button>
-                            <button type="button" class="btn-pill btn-pequeno" onclick="exportarCSVAnaliticas()"><re-icon icon=download size=15></re-icon> Exportar CSV</button>
-                        </div>
+                        <button type="button" class="btn-pill btn-pequeno" onclick="abrirMapaEntregas()" style="margin-left: auto;"><re-icon icon=map-pin size=15></re-icon> Mapa de entregas</button>
+                        <button type="button" class="btn-pill btn-pequeno" onclick="exportarCSVAnaliticas()" style="margin-left: 8px;"><re-icon icon=download size=15></re-icon> Exportar CSV</button>
                     </div>
 
                     <div id="analiticasRangoPersonalizado" style="display:none; gap:12px; align-items:center; margin-bottom: 20px; background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
@@ -1141,20 +1224,6 @@
 
                     <div id="analiticasContenido">
                         <div class="pedidos-empty">Cargando analíticas...</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MODAL: MAPA DE ENTREGAS (DELIVERY) -->
-            <div id="modalMapaEntregas" class="modal-overlay" onclick="if(event.target === this) cerrarModalMapa()">
-                <div class="modal-card" style="max-width: 800px; width: 95%;">
-                    <div class="modal-header">
-                        <h3 class="modal-title"><re-icon icon=map size=18></re-icon> Mapa de Entregas (Delivery)</h3>
-                        <button type="button" class="modal-close-btn" onclick="cerrarModalMapa()"><re-icon icon=x size=15></re-icon></button>
-                    </div>
-                    <div style="padding: 16px 24px;">
-                        <div id="mapaEstadoCarga" style="font-size: 13px; font-weight: 600; color: var(--turquesa-dark); margin-bottom: 12px; display: none;">Cargando pines...</div>
-                        <div id="mapaDeliveryContainer" style="width: 100%; height: 60vh; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background: #e5e7eb;"></div>
                     </div>
                 </div>
             </div>
@@ -1251,61 +1320,20 @@
 </div>
 
 <div id="modalEfectivoUSD" class="modal-overlay" onclick="if(event.target === this) cerrarModalEfectivoUSD()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Efectivo USD</h3><button type="button" class="modal-close-btn" onclick="cerrarModalEfectivoUSD()"><re-icon icon=x size=15></re-icon></button></div><div style="padding: 20px 24px;"><label style="margin-top: 0;">¿Con qué billete paga el cliente ($)?</label><input type="number" step="0.01" id="inputBilleteUSD" placeholder="Ej: 20, 50, 100..." oninput="calcularCambioUSDModal()" onkeydown="if(event.key === 'Enter') confirmarBilleteUSD()"><div class="preview" style="margin-top: 16px;"><strong>Monto de Cambio a llevar en efectivo</strong><p id="previewCambioUSDText" style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: var(--turquesa-dark);">$0.00</p></div><button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="confirmarBilleteUSD()">Confirmar y Guardar</button></div></div></div>
-<div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://i.imgur.com/Adbyv1D.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto Total del Pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa Oficial BCV Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa Oficial</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
+<div id="modalMapaEntregas" class="modal-overlay" onclick="if(event.target === this) cerrarMapaEntregas()">
+    <div class="modal-card mapa-modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title"><re-icon icon=map-pin size=16></re-icon> Mapa de entregas</h3>
+            <button type="button" class="modal-close-btn" onclick="cerrarMapaEntregas()" title="Cerrar"><re-icon icon=x size=15></re-icon></button>
+        </div>
+        <div id="mapaEntregasEstado" class="mapa-estado"></div>
+        <div id="mapaEntregasCanvas"></div>
+        <div id="mapaEntregasPendientes" class="mapa-pendientes" style="display:none;"></div>
+    </div>
+</div>
+<div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://i.imgur.com/6iqT3wE.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto Total del Pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa Oficial BCV Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa Oficial</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
 
 <script>
-// Íconos Lucide integrados
-class ReIcon extends HTMLElement {
-    connectedCallback() {
-        const iconName = this.getAttribute('icon');
-        const size = this.getAttribute('size') || 24;
-        const color = this.getAttribute('color') || 'currentColor';
-        const icons = {
-            "shopping-cart": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`,
-            "archive": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>`,
-            "package": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
-            "chart-column": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`,
-            "users": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
-            "calculator": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><line x1="16" y1="10" x2="16" y2="10"></line><line x1="8" y1="10" x2="8" y2="10"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="8" y1="18" x2="8" y2="18"></line><line x1="12" y1="10" x2="12" y2="10"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="12" y1="18" x2="12" y2="18"></line></svg>`,
-            "trending-up": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>`,
-            "menu": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`,
-            "cloud-sun": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="M20 12h2"></path><path d="m19.07 4.93-1.41 1.41"></path><path d="M15.94 13A5.002 5.002 0 0 0 12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4"></path></svg>`,
-            "log-out": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>`,
-            "home": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`,
-            "chevron-down": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
-            "search": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
-            "plus": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`,
-            "x": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
-            "save": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>`,
-            "download": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
-            "map-pin": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`,
-            "truck": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>`,
-            "banknote": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>`,
-            "dollar-sign": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`,
-            "landmark": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"></line><line x1="6" y1="18" x2="6" y2="11"></line><line x1="10" y1="18" x2="10" y2="11"></line><line x1="14" y1="18" x2="14" y2="11"></line><line x1="18" y1="18" x2="18" y2="11"></line><polygon points="12 2 20 7 4 7"></polygon></svg>`,
-            "receipt": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 17V7"></path></svg>`,
-            "file-text": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
-            "rocket": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>`,
-            "refresh-cw": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`,
-            "chevrons-up-down": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 15 12 20 17 15"></polyline><polyline points="7 9 12 4 17 9"></polyline></svg>`,
-            "check": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
-            "x-circle": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`,
-            "check-circle": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
-            "loader-2": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>`,
-            "trash-2": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`,
-            "credit-card": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>`,
-            "clipboard": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>`,
-            "camera": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>`,
-            "alert-triangle": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
-            "link": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`,
-            "sparkles": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>`,
-            "map": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>`
-        };
-        this.innerHTML = icons[iconName] || '';
-    }
-}
-customElements.define('re-icon', ReIcon);
-
 const SUPABASE_URL = "https://okguzqyujdnubhllnamo.supabase.co"; 
 const SUPABASE_ANON_KEY = "sb_publishable_K6URdRchmZt3TqpWcO5fng_DHNhmOlr";
 
@@ -1406,10 +1434,9 @@ function renderTablaGestionPedidos() {
     if (lista.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">No se encontraron pedidos con esos filtros.</td></tr>'; return; }
 
     tbody.innerHTML = lista.map(p => {
-        const linkTakeApp = p.takeapp_url || p.url_pedido || `https://take.app/orders/${p.numero_pedido || ''}`;
         return `
         <tr>
-            <td style="font-weight:700;"><a href="${linkTakeApp}" target="_blank" style="color: var(--text-main); text-decoration: none;" title="Ver Nota de Entrega">#${p.numero_pedido || '—'}</a></td>
+            <td style="font-weight:700;">${p.enlace_recibo ? `<a href="${p.enlace_recibo}" target="_blank" style="color: var(--text-main); text-decoration: none;" title="Ver Nota de Entrega">#${p.numero_pedido || '—'}</a>` : `#${p.numero_pedido || '—'}`}</td>
             <td>
                 <div style="font-weight:600; color:var(--text-main);">${p.cliente_nombre || 'Sin nombre'}</div>
                 <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${p.cliente_telefono || ''}</div>
@@ -1422,7 +1449,6 @@ function renderTablaGestionPedidos() {
             <td>
                 <div style="display:flex; align-items:center; gap:8px;">
                     <button type="button" class="btn-accion-link" onclick="abrirModalEstadoPedido('${p.id}')">Modificar</button>
-                    ${p.enlace_recibo ? `<a href="${p.enlace_recibo}" target="_blank" title="Ver recibo" style="text-decoration:none; font-size:16px;">🧾</a>` : ''}
                     <button type="button" class="btn-accion-dots" title="Opciones (Eliminar)" onclick="abrirModalEliminarPedido('${p.id}')">•••</button>
                 </div>
             </td>
@@ -1566,11 +1592,6 @@ let currentFiltroPedido = '';
 let currentFiltroPago = '';
 let currentFiltroEnvio = '';
 let currentFiltroEntrega = '';
-
-// Map Delivery
-let mapaDelivery = null;
-let mapaMarkers = null;
-let abortMapLoading = false;
 
 async function cargarAnaliticasPedidos(forzar = false) {
     if (analiticasCargando) return;
@@ -1821,116 +1842,6 @@ function renderAnaliticas() {
     `;
 }
 
-// LOGICA MAPA DE ENTREGAS
-function cerrarModalMapa() {
-    document.getElementById('modalMapaEntregas').style.display = 'none';
-    abortMapLoading = true;
-}
-
-async function abrirModalMapa() {
-    document.getElementById('modalMapaEntregas').style.display = 'flex';
-    abortMapLoading = false;
-    
-    if (!mapaDelivery) {
-        mapaDelivery = L.map('mapaDeliveryContainer').setView([10.1983, -68.0033], 12); // Coordenadas genéricas Valencia, VE
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(mapaDelivery);
-        mapaMarkers = L.featureGroup().addTo(mapaDelivery);
-    }
-    
-    // Invalida tamaño para asegurar carga completa dentro de un modal
-    setTimeout(() => {
-        mapaDelivery.invalidateSize();
-    }, 300);
-
-    mapaMarkers.clearLayers();
-    
-    // Filtramos solo los pedidos que incluyan la palabra Delivery y posean una dirección escrita
-    const entregas = analiticasListaFiltrada().filter(p => (p.metodo_entrega || '').toLowerCase().includes('delivery') && p.direccion_envio);
-    
-    const estadoEl = document.getElementById('mapaEstadoCarga');
-    if (entregas.length === 0) {
-        estadoEl.style.display = 'block';
-        estadoEl.innerText = 'No hay pedidos de Delivery con dirección en los filtros actuales.';
-        estadoEl.style.color = 'var(--text-muted)';
-        return;
-    }
-
-    estadoEl.style.display = 'block';
-    estadoEl.style.color = 'var(--turquesa-dark)';
-    
-    let procesados = 0;
-    let encontrados = 0;
-
-    for (const p of entregas) {
-        if (abortMapLoading) break;
-        
-        estadoEl.innerText = `Procesando ubicaciones... ${procesados}/${entregas.length} (Encontrados: ${encontrados})`;
-        
-        const coords = await extraerCoordenadas(p.direccion_envio);
-        if (coords) {
-            const marker = L.marker(coords).addTo(mapaMarkers);
-            
-            const totalUSD = formatoMonedaUSD(p.monto_total);
-            const badgeEnvio = getBadgeEnvio(p.estado_envio);
-            
-            marker.bindPopup(`
-                <div style="font-family:'Inter',sans-serif; font-size:12px; line-height:1.5;">
-                    <strong style="font-size:14px; color:#1C2430;">#${p.numero_pedido || '—'}</strong><br>
-                    <b>Cliente:</b> ${p.cliente_nombre || 'Desconocido'}<br>
-                    <b>Teléfono:</b> ${p.cliente_telefono || '—'}<br>
-                    <b>Total:</b> ${totalUSD}<br>
-                    <b>Estado:</b> ${badgeEnvio}<br>
-                    <b>Dirección:</b> <span style="color:#64748B;">${p.direccion_envio.substring(0, 80)}...</span>
-                </div>
-            `);
-            encontrados++;
-        }
-        procesados++;
-    }
-    
-    if (!abortMapLoading) {
-        estadoEl.innerText = `Pines listos: ${encontrados} de ${entregas.length} deliveries.`;
-        if (encontrados > 0) {
-            mapaDelivery.fitBounds(mapaMarkers.getBounds(), { padding: [30, 30] });
-        }
-    }
-}
-
-async function extraerCoordenadas(texto) {
-    // 1. Extraer si hay coordenadas exactas escritas
-    const coordRegex = /(-?\d{1,2}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/;
-    const match = texto.match(coordRegex);
-    if (match) {
-        return [parseFloat(match[1]), parseFloat(match[2])];
-    }
-    
-    // 2. Si no, limpiar el texto para buscarlo por geocoding
-    let cleanText = texto.replace(/https?:\/\/[^\s]+/g, '').trim(); // quitar URLs
-    cleanText = cleanText.replace(/Receptor:.*?\|/g, '').trim(); // Eliminar basuras previas de formato
-    
-    if (cleanText.length < 5) return null;
-    
-    // Anexamos el contexto local a la búsqueda (Limitado a 50 chars de string base para que no falle)
-    let searchQuery = cleanText.substring(0, 50) + ", Valencia, Carabobo, Venezuela";
-    
-    try {
-        // Pausa preventiva de 1.2 segundos para no ser bloqueado por OpenStreetMap (Límite 1 req/sec)
-        await new Promise(r => setTimeout(r, 1200)); 
-        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(searchQuery)}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data && data.length > 0) {
-            return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
-        }
-    } catch(e) {
-        console.warn("Geocoding failed for: ", texto);
-    }
-    
-    return null;
-}
-
 function exportarCSVAnaliticas() {
     const lista = analiticasListaFiltrada();
     if (lista.length === 0) { alert('No hay pedidos para exportar en el rango seleccionado.'); return; }
@@ -2121,7 +2032,7 @@ async function guardarSkuProducto(productId) {
         renderListaProductosSinSku();
         renderInventarioModulo();
     } catch (err) {
-        alert('<re-icon icon=x-circle size=15></re-icon> ' + (err.message || 'Error al guardar el SKU.'));
+        alert('⚠️ ' + (err.message || 'Error al guardar el SKU.'));
     }
 }
 
@@ -2250,7 +2161,7 @@ function seleccionarMetodoPago(valor) {
     Object.values(mapa).forEach(id => { document.getElementById(id).checked = false; });
     document.getElementById(mapa[valor]).checked = true;
     const etiquetas = { pago_movil: '<re-icon icon=banknote size=15></re-icon> Pago móvil', efectivo_usd: '<re-icon icon=dollar-sign size=15></re-icon> Efectivo USD', binance: '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#F0B90B;"></span> Binance', zelle: '<re-icon icon=landmark size=15></re-icon> Zelle', zinli: '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#7C3AED;"></span> Zinli' };
-    document.getElementById('resumenMetodoPago').innerText = etiquetas[valor] || valor;
+    document.getElementById('resumenMetodoPago').innerHTML = etiquetas[valor] || valor;
     alCambiarMetodoPago();
     cerrarModalMetodoPago();
     actualizarProgresoModales();
@@ -2379,7 +2290,7 @@ async function crearNuevoPedido(esBorrador = false) {
         feedback.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${err.message || 'Error al procesar el pedido.'}`; 
     } finally { 
         btn.disabled = false; 
-        btn.innerText = textoOriginal; 
+        btn.innerHTML = textoOriginal; 
     }
 }
 
@@ -2391,54 +2302,276 @@ async function realizarPedidoYCopiarCaptura() {
     const captureCard = document.getElementById('captureCard');
     try {
         const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true });
-        canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 2500); }, 'image/png');
+        canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Pedido realizado e imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Pedido realizado e imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Pedido realizado e imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 3000); }, 'image/png');
     } catch (e) { alert("Error al capturar la imagen."); btn.innerHTML = originalText; }
 }
 
+function sincronizarTasa(origen) { const mainTasa = document.getElementById('tasaInput'); const calcTasa = document.getElementById('modalTasaInput'); if (origen === 'main') { calcTasa.value = mainTasa.value; } else if (origen === 'modal') { mainTasa.value = calcTasa.value; } calcularNota(); convertirDesdeUSD(); calcularTotalesPedido(); }
+function convertirDesdeUSD() { const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value); const vesInput = document.getElementById('calcVES'); const resumen = document.getElementById('calcResumen'); if (isNaN(usd) || usd <= 0) { vesInput.value = ""; resumen.innerText = "Ingresa un monto para convertir..."; return; } const totalVes = usd * tasa; vesInput.value = totalVes.toFixed(2); resumen.innerText = `$${usd.toFixed(2)} USD = Bs. S ${totalVes.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; }
+function convertirDesdeVES() { const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value); const usdInput = document.getElementById('calcUSD'); const resumen = document.getElementById('calcResumen'); if (isNaN(ves) || ves <= 0 || tasa <= 0) { usdInput.value = ""; resumen.innerText = "Ingresa un monto para convertir..."; return; } const totalUsd = ves / tasa; usdInput.value = totalUsd.toFixed(2); resumen.innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} = $${totalUsd.toFixed(2)} USD`; }
+function generarCamposFechas() {
+    const num = parseInt(document.getElementById('numCuotas').value) || 1; const container = document.getElementById('contenedorFechasCuotas'); container.innerHTML = ''; const hoy = new Date();
+    for (let i = 1; i <= num; i++) { const label = document.createElement('label'); label.innerText = `Fecha Cuota ${i}:`; const input = document.createElement('input'); input.type = 'date'; input.className = 'fecha-cuota-input'; input.onchange = calcularNota; const fechaSugerida = new Date(hoy); fechaSugerida.setDate(hoy.getDate() + (15 * i)); const yyyy = fechaSugerida.getFullYear(); const mm = String(fechaSugerida.getMonth() + 1).padStart(2, '0'); const dd = String(fechaSugerida.getDate()).padStart(2, '0'); input.value = `${yyyy}-${mm}-${dd}`; container.appendChild(label); container.appendChild(input); }
+}
+function formatearFecha(fechaStr) { if (!fechaStr) return ""; const [year, month, day] = fechaStr.split('-').map(Number); const fecha = new Date(year, month - 1, day); const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' }); const diaNum = String(fecha.getDate()).padStart(2, '0'); const mes = fecha.toLocaleDateString('es-ES', { month: 'long' }); return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} ${diaNum} ${mes.charAt(0).toUpperCase() + mes.slice(1)}`; }
 async function obtenerTasa() {
-    const tasaInput = document.getElementById('tasaInput');
-    tasaInput.placeholder = "Buscando...";
-    try {
-        const url = `https://corsproxy.io/?${encodeURIComponent('https://www.brecha-cambiaria.com/api/latest')}`;
-        const res = await fetch(url, { cache: 'no-store' });
-        if (res.ok) {
-            const data = await res.json();
-            if (data && data.bcv_usd) {
-                tasaInput.value = parseFloat(data.bcv_usd).toFixed(2);
-                sincronizarTasa('main');
-                
-                document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
-                document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
-                document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
-                document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`;
-                document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`;
-                
-                document.getElementById('topStatBcv').innerText = `${parseFloat(data.bcv_usd).toFixed(2)} Bs/$`;
-                document.getElementById('topStatUsdt').innerText = `${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs/$`;
-                document.getElementById('topStatBrecha').innerText = `+${data.brecha_usdt_usd}%`;
-                
-                if (data.timestamp) {
-                    const hora = new Date(data.timestamp).toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('mTime').innerText = `Actualizado a las ${hora}`;
-                }
-                return;
-            }
-        } else {
-            console.warn("La API respondió con error:", res.status);
-        }
-    } catch (e) {
-        console.warn("Error obteniendo tasa. Posible caída del servidor o bloqueo de CORS:", e);
-    }
-    
-    tasaInput.placeholder = "API Caída - Ingresa manual";
-    document.getElementById('topStatBcv').innerText = "Error API";
-    document.getElementById('topStatUsdt').innerText = "Error API";
-    document.getElementById('topStatBrecha').innerText = "--";
+    const tasaInput = document.getElementById('tasaInput'); tasaInput.placeholder = "Buscando...";
+    try { const res = await fetch(`https://www.brecha-cambiaria.com/api/latest?_=${Date.now()}`, { cache: 'no-store' }); if (res.ok) { const data = await res.json(); if (data && data.bcv_usd) { tasaInput.value = parseFloat(data.bcv_usd).toFixed(2); sincronizarTasa('main'); document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`; document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`; document.getElementById('topStatBcv').innerText = `${parseFloat(data.bcv_usd).toFixed(2)} Bs/$`; document.getElementById('topStatUsdt').innerText = `${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs/$`; document.getElementById('topStatBrecha').innerText = `+${data.brecha_usdt_usd}%`; if (data.timestamp) { const hora = new Date(data.timestamp).toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }); document.getElementById('mTime').innerText = `Actualizado a las ${hora}`; } return; } } } catch (e) { console.warn("Error obteniendo tasa", e); } tasaInput.placeholder = "Ingresa tasa a mano";
+}
+function toggleCampos() { const metodo = document.getElementById('paymentMethod').value; document.getElementById('campoDivisas').style.display = metodo === 'divisas' ? 'block' : 'none'; document.getElementById('campoCuotas').style.display = metodo === 'cuotas' ? 'block' : 'none'; if (metodo === 'cuotas') generarCamposFechas(); }
+function calcularNota() {
+    const usd = parseFloat(document.getElementById('totalUSD').value) || 0; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; const metodo = document.getElementById('paymentMethod').value; let nota = "";
+    if (metodo === 'pago_movil') { const totalBs = (usd * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`; } else if (metodo === 'cuotas') { const inicialVal = parseFloat(document.getElementById('montoInicial').value) || 0; const numCuotas = parseInt(document.getElementById('numCuotas').value) || 1; const restanteVal = usd - inicialVal; const montoPorCuota = (restanteVal > 0 ? restanteVal / numCuotas : 0).toFixed(2); const inputsFechas = document.querySelectorAll('.fecha-cuota-input'); const detalles = []; inputsFechas.forEach((input, index) => { if (input.value) detalles.push(`${index + 1}a (${formatearFecha(input.value)})`); }); nota = `Pago de inicial $${inicialVal} | ${numCuotas} cuotas de $${montoPorCuota} | ${detalles.join(', ')}`; } else if (metodo === 'divisas') { const billete = parseFloat(document.getElementById('billete').value) || 0; nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${(billete - usd).toFixed(2)}) de cambio.`; }
+    document.getElementById('previewText').innerText = nota;
 }
 
+let clientesCache = []; let clientesCargados = false;
+async function abrirModalBuscarCliente() {
+    document.getElementById('modalBuscarCliente').style.display = 'flex';
+    mostrarVistaBuscarCliente();
+    if (!clientesCargados) {
+        document.getElementById('listaClientesEncontrados').innerHTML = '<div class="pedidos-empty">Cargando clientes...</div>';
+        try {
+            const { data, error } = await supabaseClient.from('clientes').select('id,nombre_completo,telefono,email').order('nombre_completo', { ascending: true });
+            if (error) throw error;
+            clientesCache = data || [];
+            clientesCargados = true;
+        } catch (err) { console.warn('Error cargando clientes:', err); clientesCache = []; }
+    }
+    filtrarClientesModal();
+}
+function cerrarModalBuscarCliente() { document.getElementById('modalBuscarCliente').style.display = 'none'; }
+function mostrarVistaBuscarCliente() {
+    document.getElementById('tituloModalCliente').innerText = 'Buscar cliente';
+    document.getElementById('vistaBuscarCliente').style.display = 'block';
+    document.getElementById('vistaRegistrarCliente').style.display = 'none';
+}
+function mostrarVistaRegistrarCliente() {
+    document.getElementById('tituloModalCliente').innerText = 'Registrar cliente';
+    document.getElementById('vistaBuscarCliente').style.display = 'none';
+    document.getElementById('vistaRegistrarCliente').style.display = 'block';
+    document.getElementById('clientFullName').value = document.getElementById('inputBuscarCliente').value || '';
+    formatearCliente();
+}
+function filtrarClientesModal() {
+    const raw = (document.getElementById('inputBuscarCliente').value || '').trim();
+    const q = raw.toLowerCase();
+    const soloDigitos = raw.replace(/\D/g, '');
+    const cont = document.getElementById('listaClientesEncontrados');
+    const filtrados = !q ? clientesCache.slice(0, 50) : clientesCache.filter(c => {
+        const nombre = (c.nombre_completo || '').toLowerCase();
+        if (nombre.includes(q)) return true;
+        if (soloDigitos) {
+            const telefono = c.telefono || '';
+            const nombreSoloDigitos = (c.nombre_completo || '').replace(/\D/g, ''); // permite buscar la cédula aunque tenga puntos (12.345.678)
+            if (telefono.includes(soloDigitos) || nombreSoloDigitos.includes(soloDigitos)) return true;
+        }
+        return false;
+    });
+    if (filtrados.length === 0) { cont.innerHTML = '<div class="pedidos-empty">No se encontraron clientes. Prueba "Registrar cliente".</div>'; return; }
+    cont.innerHTML = filtrados.map(c => `
+        <div class="modal-item-row" onclick="seleccionarClienteEncontrado('${c.id}')">
+            <div class="modal-item-info"><span class="modal-item-name">${c.nombre_completo || 'Sin nombre'}</span><span class="modal-item-sub">${c.telefono || 'Sin teléfono'}</span></div>
+        </div>
+    `).join('');
+}
+function seleccionarClienteEncontrado(id) {
+    const c = clientesCache.find(x => String(x.id) === String(id));
+    if (!c) return;
+    document.getElementById('pedidoClienteNombre').value = c.nombre_completo || '';
+    document.getElementById('resumenClienteSeleccionado').innerText = c.nombre_completo || 'Cliente';
+    const tel = (c.telefono || '').replace(/\D/g, '');
+    const codigos = ['+58', '+1', '+34', '+57', '+54'];
+    let cod = '+58'; let resto = tel;
+    for (const c2 of codigos) { const digitos = c2.replace('+', ''); if (tel.startsWith(digitos)) { cod = c2; resto = tel.slice(digitos.length); break; } }
+    document.getElementById('pedidoWpCod').value = cod;
+    document.getElementById('pedidoWpNum').value = resto;
+    cerrarModalBuscarCliente();
+    actualizarProgresoModales();
+}
+function formatearCliente() {
+    const rawNameInput = document.getElementById('clientFullName'); if (!rawNameInput) return;
+    const rawName = rawNameInput.value; const nac = document.getElementById('clientNac').value; const clientIdNumEl = document.getElementById('clientIdNum'); const rawId = clientIdNumEl ? clientIdNumEl.value.replace(/\D/g, '') : '';
+    const nameFormatted = rawName.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' '); const idFormatted = rawId ? parseInt(rawId, 10).toLocaleString('es-VE') : '';
+    let res = "Ingresa los datos del cliente..."; if (nameFormatted && idFormatted) res = `${nameFormatted} | ${nac}-${idFormatted}`; else if (nameFormatted) res = nameFormatted; else if (idFormatted) res = `${nac}-${idFormatted}`;
+    document.getElementById('previewClientText').innerText = res;
+}
+async function pegarDatosCliente() {
+    let texto = ""; try { texto = await navigator.clipboard.readText(); } catch (err) { texto = prompt("Pega aquí los datos del cliente:"); }
+    if (!texto || !texto.trim()) return; let textClean = texto.replace(/(?:nombre y apellido|nombres|apellidos|nombre|cédula|cedula|c\.i\.?|ci|rif|dni|cliente)[:\-]?/gi, ' '); const matchId = textClean.match(/([VEJGvejg])[\s\.\-]*(\d[\d\.\s]{5,10}\d|\d{6,9})/);
+    let nac = "V"; let idNum = ""; let namePart = textClean;
+    if (matchId) { nac = matchId[1].toUpperCase(); idNum = matchId[2].replace(/\D/g, ''); namePart = textClean.replace(matchId[0], ' '); }
+    let nameFormatted = namePart.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (nameFormatted) document.getElementById('clientFullName').value = nameFormatted; if (idNum) { document.getElementById('clientNac').value = nac; document.getElementById('clientIdNum').value = idNum; }
+    formatearCliente();
+}
+async function registrarNombreCheckout() {
+    const nombreFormateado = document.getElementById('clientFullName').value.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' ');
+    if (!nombreFormateado) { alert('Ingresa el nombre del cliente.'); return; }
+    const cod = document.getElementById('clientPhoneCod').value;
+    const numTel = document.getElementById('clientPhoneNum').value.replace(/\D/g, '');
+    const telefonoCompleto = numTel ? `${cod}${numTel}` : '';
+
+    const btnNode = document.getElementById('btnCopyCliente'); const originalText = btnNode.innerHTML; btnNode.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando...'; btnNode.disabled = true;
+    try {
+        if (telefonoCompleto) {
+            const existente = await supabaseClient.from('clientes').select('id').eq('telefono', telefonoCompleto.replace('+', '')).maybeSingle();
+            if (!existente.data) {
+                await supabaseClient.from('clientes').insert({ nombre_completo: nombreFormateado, telefono: telefonoCompleto.replace('+', '') });
+                clientesCargados = false; // fuerza refresco de la lista la próxima vez
+            }
+        }
+        document.getElementById('pedidoClienteNombre').value = nombreFormateado;
+        document.getElementById('resumenClienteSeleccionado').innerText = nombreFormateado;
+        if (numTel) { document.getElementById('pedidoWpCod').value = cod; document.getElementById('pedidoWpNum').value = numTel; }
+        btnNode.innerHTML = '<re-icon icon=check-circle size=15></re-icon> ¡Registrado!';
+        setTimeout(() => { btnNode.innerHTML = originalText; btnNode.disabled = false; cerrarModalBuscarCliente(); actualizarProgresoModales(); }, 700);
+    } catch (err) {
+        btnNode.innerHTML = originalText; btnNode.disabled = false;
+        alert('⚠️ No se pudo registrar el cliente: ' + (err.message || 'error desconocido'));
+    }
+}
+async function copiarTexto(elementId, btnElement) { const texto = document.getElementById(elementId).innerText; if (texto.includes("Ingresa los datos")) return; try { await navigator.clipboard.writeText(texto); let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement; const originalText = btnNode.innerHTML; btnNode.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Copiado!"; setTimeout(() => { btnNode.innerHTML = originalText; }, 2000); } catch (err) { alert("Error al copiar texto."); } }
+async function generarYCopiarImagen() {
+    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value) || 0; const btn = document.getElementById('btnCopyImage');
+    if (ves <= 0 || usd <= 0) { alert("Ingresa un monto válido para generar la imagen."); return; }
+    document.getElementById('shotVES').innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; document.getElementById('shotUSD').innerText = `$${usd.toFixed(2)}`; document.getElementById('shotTasa').innerText = `${tasa.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`; document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+    const captureCard = document.getElementById('captureCard'); const originalText = btn.innerHTML; btn.innerHTML = "<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Generando imagen...";
+    try { const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true }); canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 2500); }, 'image/png'); } catch (e) { alert("Error al capturar la imagen."); btn.innerHTML = originalText; }
+}
 function descargarImagenFallback(canvas) { const link = document.createElement('a'); link.download = `Cotizacion-Brooklyn-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }
 
 obtenerTasa();
-</script>
-</body>
-</html>
+
+/* =====================================================================
+   MAPA DE ENTREGAS (módulo Analíticas)
+   Lee direccion_envio de los pedidos filtrados y ubica: coordenadas,
+   Plus Codes (completos o cortos con ciudad) y enlaces de Google Maps
+   que contengan coordenadas. Lo que no se pueda ubicar queda listado
+   debajo con un enlace para abrirlo en Google Maps.
+   ===================================================================== */
+const OLC_ALFABETO = '23456789CFGHJMPQRVWX';
+
+function olcDecodificarCentro(codigo) {
+    const c = codigo.toUpperCase().replace('+', '');
+    const nPares = Math.min(c.length, 10) / 2;
+    let lat = -90, lng = -180, tam = 20, alto = 20;
+    for (let k = 0; k < nPares; k++) {
+        lat += OLC_ALFABETO.indexOf(c[2 * k]) * tam;
+        lng += OLC_ALFABETO.indexOf(c[2 * k + 1]) * tam;
+        alto = tam;
+        tam /= 20;
+    }
+    let latTam = alto, lngTam = alto;
+    for (let i = 10; i < c.length; i++) {
+        const d = OLC_ALFABETO.indexOf(c[i]);
+        latTam /= 5; lngTam /= 4;
+        lat += Math.floor(d / 4) * latTam;
+        lng += (d % 4) * lngTam;
+    }
+    return [lat + latTam / 2, lng + lngTam / 2];
+}
+
+function olcPrefijoReferencia(lat, lng, n) {
+    let la = Math.min(Math.max(lat, -90), 89.999999) + 90;
+    let ln = (((lng + 180) % 360) + 360) % 360;
+    let tam = 20, out = '';
+    for (let k = 0; k < 2; k++) {
+        const a = Math.floor(la / tam), b = Math.floor(ln / tam);
+        out += OLC_ALFABETO[a] + OLC_ALFABETO[b];
+        la -= a * tam; ln -= b * tam; tam /= 20;
+    }
+    return out.substr(0, n);
+}
+
+function olcRecuperarCercano(corto, refLat, refLng) {
+    const c = corto.toUpperCase();
+    const relleno = 8 - c.indexOf('+');
+    const resol = Math.pow(20, 2 - relleno / 2);
+    const borde = resol / 2;
+    let [lat, lng] = olcDecodificarCentro(olcPrefijoReferencia(refLat, refLng, relleno) + c);
+    const dLat = lat - refLat, dLng = lng - refLng;
+    if (dLat > borde) lat -= resol; else if (dLat < -borde) lat += resol;
+    if (dLng > borde) lng -= resol; else if (dLng < -borde) lng += resol;
+    return [lat, lng];
+}
+
+function mapaEsc(t) {
+    return String(t == null ? '' : t).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+function mapaParsearUbicacion(texto) {
+    const t = (texto || '').trim();
+    if (!t) return null;
+
+    let m = t.match(/^\(?\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)\s*\)?$/);
+    if (m) {
+        const lat = parseFloat(m[1]), lng = parseFloat(m[2]);
+        if (Math.abs(lat) <= 90 && Math.abs(lng) <= 180) return { tipo: 'Coordenadas', lat, lng };
+    }
+
+    const link = t.match(/https?:\/\/\S+/i);
+    if (link) {
+        let url = link[0];
+        try { url = decodeURIComponent(url); } catch (e) { /* se usa tal cual */ }
+        m = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
+            || url.match(/[?&](?:q|query|ll|destination|daddr)=(-?\d+\.\d+)[,+\s]+(-?\d+\.\d+)/)
+            || url.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+        if (m) return { tipo: 'Enlace de Google Maps', lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+        return { tipo: 'link' };
+    }
+
+    m = t.match(/(?:^|[\s,(])([23456789CFGHJMPQRVWX]{2,8})\+([23456789CFGHJMPQRVWX]{2,3})(?:[\s,]+(.+))?$/i);
+    if (m) {
+        const previo = m[1].toUpperCase();
+        const codigo = previo + '+' + m[2].toUpperCase();
+        if (previo.length === 8) return { tipo: 'pluscode_completo', codigo };
+        if (previo.length === 4 || previo.length === 6) return { tipo: 'pluscode_corto', codigo, localidad: (m[3] || '').trim() };
+    }
+    return { tipo: 'texto' };
+}
+
+let mapaGeoCache = {};
+try { mapaGeoCache = JSON.parse(localStorage.getItem('brooklyn_geo_localidades_v1') || '{}') || {}; } catch (e) { mapaGeoCache = {}; }
+function mapaGuardarGeoCache() { try { localStorage.setItem('brooklyn_geo_localidades_v1', JSON.stringify(mapaGeoCache)); } catch (e) { /* sin almacenamiento */ } }
+
+let mapaUltimaConsultaNominatim = 0;
+async function mapaGeocodificarLocalidad(localidad) {
+    const clave = localidad.toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(mapaGeoCache, clave)) return mapaGeoCache[clave];
+    const espera = 1100 - (Date.now() - mapaUltimaConsultaNominatim);
+    if (espera > 0) await new Promise(r => setTimeout(r, espera));
+    mapaUltimaConsultaNominatim = Date.now();
+    const resp = await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=es&q=' + encodeURIComponent(localidad));
+    if (!resp.ok) throw new Error('Nominatim ' + resp.status);
+    const j = await resp.json();
+    let res = null;
+    if (Array.isArray(j) && j[0]) {
+        const bb = (j[0].boundingbox || []).map(Number);
+        const alto = bb.length === 4 ? bb[1] - bb[0] : 99;
+        const ancho = bb.length === 4 ? bb[3] - bb[2] : 99;
+        // El Plus Code corto solo se recupera bien si el punto de referencia está a menos de ~0.5° del lugar real.
+        res = { lat: parseFloat(j[0].lat), lng: parseFloat(j[0].lon), ok: alto <= 0.9 && ancho <= 0.9 };
+    }
+    mapaGeoCache[clave] = res;
+    mapaGuardarGeoCache();
+    return res;
+}
+
+async function mapaResolverUbicacion(direccion) {
+    const p = mapaParsearUbicacion(direccion);
+    if (!p) return { ok: false, motivo: 'Sin dirección' };
+    if (p.lat != null) return { ok: true, lat: p.lat, lng: p.lng, tipo: p.tipo };
+    if (p.tipo === 'pluscode_completo') {
+        const [lat, lng] = olcDecodificarCentro(p.codigo);
+        return { ok: true, lat, lng, tipo: 'Plus Code' };
+    }
+    if (p.tipo === 'pluscode_corto') {
+        if (!p.localidad) return { ok: false, motivo: 'Plus Code corto sin ciudad o localidad' };
+        let ref;
+        try { ref = await mapaGeocodificarLocalidad(p.localidad); }
+        catch (e) { return { ok: false, motivo: 'No se pudo consultar la localidad (sin conexión al servicio de mapas)' }; }
+        if (!ref) return { ok: false, motivo: 'No se encontró la localidad "' + p.localidad + '"' };
+        if (!ref.ok) return { ok: false, motivo: 'Localidad demasiado amplia para ubicar el Plus Code' };
+        const [lat, lng] = olcRecuperarCercano(p.codigo, ref.lat, ref.lng);
+        return { ok: true, lat
