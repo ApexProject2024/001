@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Librerías de Mapas (Leaflet) y Base de datos -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -23,8 +26,8 @@
             --text-main: #1C2430;
             --text-muted: #64748B;
             --border-color: #E2E8F0;
-            --badge-bg: #E0F2FE;
-            --badge-text: #0284C7;
+            --badge-bg: #DFF5FF;
+            --badge-text: #0E7490;
             --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
             --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
             --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -32,15 +35,15 @@
         }
 
         [data-theme="dark"] {
-            --bg-body: linear-gradient(135deg, #0F172A 0%, #17243B 50%, #1E2D4A 100%);
-            --bg-card: rgba(30, 41, 59, 0.95);
-            --bg-sidebar: rgba(30, 41, 59, 0.98);
-            --bg-input: #1E293B;
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --border-color: #334155;
-            --badge-bg: #0369A1;
-            --badge-text: #E0F2FE;
+            --bg-body: linear-gradient(135deg, #0B1A1E 0%, #123236 50%, #163938 100%);
+            --bg-card: rgba(20, 40, 42, 0.92);
+            --bg-sidebar: rgba(16, 34, 36, 0.97);
+            --bg-input: #16302F;
+            --text-main: #F1FBFB;
+            --text-muted: #8FB4B2;
+            --border-color: #29504E;
+            --badge-bg: rgba(36, 199, 199, 0.18);
+            --badge-text: #6FE9E9;
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
             --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
@@ -56,7 +59,17 @@
             color: var(--text-main);
             transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
+            position: relative;
         }
+        body::before, body::after {
+            content: ''; position: fixed; border-radius: 50%; filter: blur(90px);
+            pointer-events: none; z-index: 0; opacity: 0.16;
+        }
+        body::before { width: 520px; height: 520px; background: var(--turquesa); top: -180px; right: -160px; }
+        body::after { width: 460px; height: 460px; background: var(--turquesa-suave, var(--turquesa)); bottom: -160px; left: -140px; opacity: 0.14; }
+        [data-theme="dark"] body::before { opacity: 0.10; }
+        [data-theme="dark"] body::after { background: var(--turquesa-dark); opacity: 0.08; }
+        .app-layout, .sidebar, .content-body { position: relative; z-index: 1; }
 
         /* LOGIN OVERLAY */
         .login-overlay {
@@ -472,6 +485,11 @@
         .shot-detail-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; }
         .shot-detail-value { font-size: 15px; font-weight: 700; color: #1C2430; margin-top: 2px; }
         .shot-footer { margin-top: 18px; font-size: 11px; color: #94A3B8; font-weight: 500; }
+        
+        /* RE-ICON */
+        re-icon { display: inline-flex; align-items: center; justify-content: center; }
+        .spin-icon { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -525,13 +543,18 @@
             <li class="nav-item" data-module="mod-analiticas-pedidos" onclick="seleccionarModulo('mod-analiticas-pedidos'); cargarAnaliticasPedidos();">
                 <span class="nav-icon"><re-icon icon=chart-column size=15></re-icon></span> Analíticas de Pedidos
             </li>
+            <li class="menu-category">Clientes</li>
+            <li class="nav-item" data-module="mod-clientes" onclick="seleccionarModulo('mod-clientes'); cargarClientesModulo();">
+                <span class="nav-icon"><re-icon icon=users size=15></re-icon></span> Clientes
+            </li>
+
             <li class="menu-category">Herramientas</li>
             <li class="nav-item" data-module="mod-calc" onclick="seleccionarModulo('mod-calc')">
                 <span class="nav-icon"><re-icon icon=calculator size=15></re-icon></span> Calculadora
             </li>
             <li class="menu-category">Finanzas & Mercado</li>
             <li class="nav-item" data-module="mod-tasas" onclick="seleccionarModulo('mod-tasas')">
-                <span class="nav-icon"><re-icon icon=chart-column size=15></re-icon></span> Tasas y Brechas
+                <span class="nav-icon"><re-icon icon=trending-up size=15></re-icon></span> Tasas y Brechas
             </li>
         </ul>
     </aside>
@@ -834,10 +857,12 @@
                             <div class="market-item" style="margin:0;"><div class="market-label">Monto del pedido en USD</div><div class="market-value" id="pedidoTotalUsdVal">$0.00</div></div>
                             <div class="market-item" style="margin:0;"><div class="market-label">Monto del pedido en VES</div><div class="market-value" id="pedidoTotalVesVal">Bs. 0,00</div></div>
                         </div>
-                        <button type="button" class="btn-copy" id="btnCrearPedidoTakeApp" style="margin-top: 20px; width: 100%; background: var(--turquesa-dark); color: #fff;" onclick="crearNuevoPedido()"><re-icon icon=receipt size=15></re-icon> Crear nuevo pedido</button>
-                        <button type="button" class="btn-pill" id="btnGuardarBorrador" style="margin-top: 10px; width: 100%; justify-content: center; padding: 12px;" onclick="crearNuevoPedido(true)"><re-icon icon=file-text size=15></re-icon> Guardar como borrador</button>
+                        <div style="display:flex; gap:10px; margin-top: 20px;">
+                            <button type="button" class="btn-copy" id="btnCrearPedidoTakeApp" style="width: 100%; margin: 0; background: var(--turquesa-dark); color: #fff;" onclick="crearNuevoPedido()"><re-icon icon=receipt size=15></re-icon> Crear nuevo pedido</button>
+                            <button type="button" class="btn-pill" id="btnGuardarBorrador" style="width: 100%; margin: 0; justify-content: center; padding: 12px;" onclick="crearNuevoPedido(true)"><re-icon icon=file-text size=15></re-icon> Guardar como borrador</button>
+                        </div>
                         <p id="crearPedidoFeedback" style="margin-top:8px; font-size:12.5px; min-height:14px; text-align:center;"></p>
-                        <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 10px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()"><re-icon icon=rocket size=15></re-icon> Realizar pedido (Copiar captura)</button>
+                        <button type="button" class="btn-copy btn-shot" id="btnRealizarPedido" style="margin-top: 0px; width: 100%;" onclick="realizarPedidoYCopiarCaptura()"><re-icon icon=rocket size=15></re-icon> Realizar pedido (Copiar captura)</button>
                     </div>
 
                 </div>
@@ -887,6 +912,119 @@
                 </div>
             </div>
 
+            <!-- MÓDULO: CLIENTES -->
+            <div class="module-pane" id="mod-clientes">
+                <div class="card card-wide">
+                    <div class="checkout-header">
+                        <div>
+                            <div class="checkout-top-title">Clientes</div>
+                            <h2 class="checkout-main-title"><re-icon icon=users size=18></re-icon> Clientes registrados</h2>
+                        </div>
+                        <button type="button" class="btn-home-icon" title="Actualizar" onclick="cargarClientesModulo(true)"><re-icon icon=refresh-cw size=15></re-icon></button>
+                    </div>
+
+                    <div class="pedidos-toolbar">
+                        <div class="modal-search-input-wrapper">
+                            <span><re-icon icon=search size=15></re-icon></span>
+                            <input type="text" id="clientesBuscador" class="modal-search-input" placeholder="Buscar por nombre, teléfono, cédula o email..." oninput="renderTablaClientesModulo()">
+                        </div>
+                        <select id="clientesFiltroTipo" onchange="renderTablaClientesModulo()">
+                            <option value="">Todos</option>
+                            <option value="mayorista">Mayoristas</option>
+                            <option value="deuda">Con cuentas por cobrar</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Teléfono</th>
+                                    <th>Documento</th>
+                                    <th>Pedidos</th>
+                                    <th>Ventas totales</th>
+                                    <th>Por cobrar</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyClientesModulo">
+                                <tr><td colspan="7" class="pedidos-empty">Cargando clientes...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: DETALLE / EDICIÓN DE CLIENTE -->
+            <div class="modal-overlay" id="modalDetalleCliente">
+                <div class="modal-card" style="max-height: 90vh; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Detalle del cliente</h3>
+                        <button type="button" class="modal-close-btn" onclick="cerrarModalDetalleCliente()"><re-icon icon=x size=15></re-icon></button>
+                    </div>
+                    <div style="padding: 4px 24px 20px 24px;">
+                        <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 18px;">
+                            <div class="kpi-card"><div class="kpi-label">Pedidos</div><div class="kpi-value" id="dcTotalPedidos">—</div></div>
+                            <div class="kpi-card"><div class="kpi-label">Ventas totales</div><div class="kpi-value" id="dcVentasTotales">—</div></div>
+                            <div class="kpi-card"><div class="kpi-label">Por cobrar</div><div class="kpi-value" id="dcPorCobrar">—</div></div>
+                        </div>
+
+                        <label style="margin-top:0;">Nombre completo</label>
+                        <input type="text" id="dcNombre">
+
+                        <div class="form-row-2">
+                            <div>
+                                <label>Tipo de documento</label>
+                                <select id="dcTipoDocumento">
+                                    <option value="V">V</option><option value="E">E</option><option value="J">J</option><option value="G">G</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Número de documento</label>
+                                <input type="text" id="dcNumeroDocumento">
+                            </div>
+                        </div>
+
+                        <div class="form-row-2">
+                            <div>
+                                <label>Teléfono</label>
+                                <input type="text" id="dcTelefono">
+                            </div>
+                            <div>
+                                <label>Email</label>
+                                <input type="email" id="dcEmail">
+                            </div>
+                        </div>
+
+                        <label>Código de referencia</label>
+                        <input type="text" id="dcCodigoReferencia">
+
+                        <div class="form-row-2">
+                            <div>
+                                <label>Crédito en tienda ($)</label>
+                                <input type="number" step="0.01" id="dcCredito">
+                            </div>
+                            <div>
+                                <label>Etiquetas (separadas por coma)</label>
+                                <input type="text" id="dcEtiquetas" placeholder="frecuente, mayorista...">
+                            </div>
+                        </div>
+
+                        <label style="display:flex; align-items:center; gap:8px; margin-top:14px; cursor:pointer;">
+                            <input type="checkbox" id="dcEsMayorista" style="width:auto; margin:0;">
+                            <span style="font-size:12.5px;">Es mayorista</span>
+                        </label>
+
+                        <label>Nota interna</label>
+                        <textarea id="dcNota" rows="3" style="resize:vertical;"></textarea>
+
+                        <p id="modalDetalleClienteError" class="login-error" style="margin-top:10px; min-height: 14px;"></p>
+                        <button type="button" class="btn-copy" id="btnGuardarCliente" style="margin-top: 10px;" onclick="guardarClienteDetalle()"><re-icon icon=save size=15></re-icon> Guardar cambios</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- MÓDULO: ANALÍTICAS DE PEDIDOS -->
             <div class="module-pane" id="mod-analiticas-pedidos">
                 <div class="card card-wide">
@@ -919,7 +1057,11 @@
                             <span class="st-label">Método</span>
                             <span class="st-value"><span id="lblFiltroEntrega">Todos</span> <small><re-icon icon=chevron-down size=11></re-icon></small></span>
                         </button>
-                        <button type="button" class="btn-pill btn-pequeno" onclick="exportarCSVAnaliticas()" style="margin-left: auto;"><re-icon icon=download size=15></re-icon> Exportar CSV</button>
+                        
+                        <div style="margin-left: auto; display: flex; gap: 8px;">
+                            <button type="button" class="btn-pill btn-pequeno" onclick="abrirModalMapa()"><re-icon icon=map size=15></re-icon> Ver mapa</button>
+                            <button type="button" class="btn-pill btn-pequeno" onclick="exportarCSVAnaliticas()"><re-icon icon=download size=15></re-icon> Exportar CSV</button>
+                        </div>
                     </div>
 
                     <div id="analiticasRangoPersonalizado" style="display:none; gap:12px; align-items:center; margin-bottom: 20px; background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
@@ -999,6 +1141,20 @@
 
                     <div id="analiticasContenido">
                         <div class="pedidos-empty">Cargando analíticas...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: MAPA DE ENTREGAS (DELIVERY) -->
+            <div id="modalMapaEntregas" class="modal-overlay" onclick="if(event.target === this) cerrarModalMapa()">
+                <div class="modal-card" style="max-width: 800px; width: 95%;">
+                    <div class="modal-header">
+                        <h3 class="modal-title"><re-icon icon=map size=18></re-icon> Mapa de Entregas (Delivery)</h3>
+                        <button type="button" class="modal-close-btn" onclick="cerrarModalMapa()"><re-icon icon=x size=15></re-icon></button>
+                    </div>
+                    <div style="padding: 16px 24px;">
+                        <div id="mapaEstadoCarga" style="font-size: 13px; font-weight: 600; color: var(--turquesa-dark); margin-bottom: 12px; display: none;">Cargando pines...</div>
+                        <div id="mapaDeliveryContainer" style="width: 100%; height: 60vh; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); background: #e5e7eb;"></div>
                     </div>
                 </div>
             </div>
@@ -1095,9 +1251,61 @@
 </div>
 
 <div id="modalEfectivoUSD" class="modal-overlay" onclick="if(event.target === this) cerrarModalEfectivoUSD()"><div class="modal-card"><div class="modal-header"><h3 class="modal-title">Efectivo USD</h3><button type="button" class="modal-close-btn" onclick="cerrarModalEfectivoUSD()"><re-icon icon=x size=15></re-icon></button></div><div style="padding: 20px 24px;"><label style="margin-top: 0;">¿Con qué billete paga el cliente ($)?</label><input type="number" step="0.01" id="inputBilleteUSD" placeholder="Ej: 20, 50, 100..." oninput="calcularCambioUSDModal()" onkeydown="if(event.key === 'Enter') confirmarBilleteUSD()"><div class="preview" style="margin-top: 16px;"><strong>Monto de Cambio a llevar en efectivo</strong><p id="previewCambioUSDText" style="margin: 8px 0 0 0; font-size: 16px; font-weight: 800; color: var(--turquesa-dark);">$0.00</p></div><button type="button" class="btn-copy" style="margin-top: 20px; width: 100%;" onclick="confirmarBilleteUSD()">Confirmar y Guardar</button></div></div></div>
-<div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://i.imgur.com/6iqT3wE.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto Total del Pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa Oficial BCV Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa Oficial</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
+<div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://i.imgur.com/Adbyv1D.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto Total del Pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa Oficial BCV Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa Oficial</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
 
 <script>
+// Íconos Lucide integrados
+class ReIcon extends HTMLElement {
+    connectedCallback() {
+        const iconName = this.getAttribute('icon');
+        const size = this.getAttribute('size') || 24;
+        const color = this.getAttribute('color') || 'currentColor';
+        const icons = {
+            "shopping-cart": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`,
+            "archive": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>`,
+            "package": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
+            "chart-column": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`,
+            "users": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
+            "calculator": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><line x1="16" y1="10" x2="16" y2="10"></line><line x1="8" y1="10" x2="8" y2="10"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="8" y1="18" x2="8" y2="18"></line><line x1="12" y1="10" x2="12" y2="10"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="12" y1="18" x2="12" y2="18"></line></svg>`,
+            "trending-up": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>`,
+            "menu": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`,
+            "cloud-sun": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="M20 12h2"></path><path d="m19.07 4.93-1.41 1.41"></path><path d="M15.94 13A5.002 5.002 0 0 0 12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4"></path></svg>`,
+            "log-out": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>`,
+            "home": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`,
+            "chevron-down": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
+            "search": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
+            "plus": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`,
+            "x": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+            "save": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>`,
+            "download": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
+            "map-pin": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`,
+            "truck": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>`,
+            "banknote": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>`,
+            "dollar-sign": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`,
+            "landmark": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"></line><line x1="6" y1="18" x2="6" y2="11"></line><line x1="10" y1="18" x2="10" y2="11"></line><line x1="14" y1="18" x2="14" y2="11"></line><line x1="18" y1="18" x2="18" y2="11"></line><polygon points="12 2 20 7 4 7"></polygon></svg>`,
+            "receipt": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 17V7"></path></svg>`,
+            "file-text": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
+            "rocket": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>`,
+            "refresh-cw": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`,
+            "chevrons-up-down": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 15 12 20 17 15"></polyline><polyline points="7 9 12 4 17 9"></polyline></svg>`,
+            "check": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+            "x-circle": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`,
+            "check-circle": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
+            "loader-2": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>`,
+            "trash-2": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`,
+            "credit-card": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>`,
+            "clipboard": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>`,
+            "camera": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>`,
+            "alert-triangle": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
+            "link": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`,
+            "sparkles": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>`,
+            "map": `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>`
+        };
+        this.innerHTML = icons[iconName] || '';
+    }
+}
+customElements.define('re-icon', ReIcon);
+
 const SUPABASE_URL = "https://okguzqyujdnubhllnamo.supabase.co"; 
 const SUPABASE_ANON_KEY = "sb_publishable_K6URdRchmZt3TqpWcO5fng_DHNhmOlr";
 
@@ -1198,9 +1406,10 @@ function renderTablaGestionPedidos() {
     if (lista.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">No se encontraron pedidos con esos filtros.</td></tr>'; return; }
 
     tbody.innerHTML = lista.map(p => {
+        const linkTakeApp = p.takeapp_url || p.url_pedido || `https://take.app/orders/${p.numero_pedido || ''}`;
         return `
         <tr>
-            <td style="font-weight:700;">${p.enlace_recibo ? `<a href="${p.enlace_recibo}" target="_blank" style="color: var(--text-main); text-decoration: none;" title="Ver Nota de Entrega">#${p.numero_pedido || '—'}</a>` : `#${p.numero_pedido || '—'}`}</td>
+            <td style="font-weight:700;"><a href="${linkTakeApp}" target="_blank" style="color: var(--text-main); text-decoration: none;" title="Ver Nota de Entrega">#${p.numero_pedido || '—'}</a></td>
             <td>
                 <div style="font-weight:600; color:var(--text-main);">${p.cliente_nombre || 'Sin nombre'}</div>
                 <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${p.cliente_telefono || ''}</div>
@@ -1213,11 +1422,137 @@ function renderTablaGestionPedidos() {
             <td>
                 <div style="display:flex; align-items:center; gap:8px;">
                     <button type="button" class="btn-accion-link" onclick="abrirModalEstadoPedido('${p.id}')">Modificar</button>
+                    ${p.enlace_recibo ? `<a href="${p.enlace_recibo}" target="_blank" title="Ver recibo" style="text-decoration:none; font-size:16px;">🧾</a>` : ''}
                     <button type="button" class="btn-accion-dots" title="Opciones (Eliminar)" onclick="abrirModalEliminarPedido('${p.id}')">•••</button>
                 </div>
             </td>
         </tr>
     `}).join('');
+}
+
+// --- LÓGICA MÓDULO CLIENTES ---
+let clientesModuloCache = [];
+let clientesModuloCargados = false;
+let clienteSeleccionadoIdModulo = null;
+
+async function cargarClientesModulo(forzar = false) {
+    if (clientesModuloCargados && !forzar) { renderTablaClientesModulo(); return; }
+    const tbody = document.getElementById('tbodyClientesModulo');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="pedidos-empty">Cargando clientes...</td></tr>';
+    try {
+        const { data, error } = await supabaseClient.from('clientes').select('*').order('nombre_completo', { ascending: true });
+        if (error) throw error;
+        clientesModuloCache = data || [];
+        clientesModuloCargados = true;
+        renderTablaClientesModulo();
+    } catch (err) {
+        console.warn('Error cargando clientes:', err);
+        if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="pedidos-empty"><re-icon icon=x-circle size=15></re-icon> No se pudieron cargar los clientes: ${err.message}</td></tr>`;
+    }
+}
+
+function renderTablaClientesModulo() {
+    const tbody = document.getElementById('tbodyClientesModulo');
+    if (!tbody) return;
+    const texto = (document.getElementById('clientesBuscador')?.value || '').trim().toLowerCase();
+    const filtro = document.getElementById('clientesFiltroTipo')?.value || '';
+
+    let lista = clientesModuloCache.filter(c => {
+        if (filtro === 'mayorista' && !c.es_mayorista) return false;
+        if (filtro === 'deuda' && !(Number(c.cuentas_por_cobrar) > 0)) return false;
+        if (texto) {
+            const campo = `${c.nombre_completo || ''} ${c.telefono || ''} ${c.numero_documento || ''} ${c.email || ''}`.toLowerCase();
+            if (!campo.includes(texto)) return false;
+        }
+        return true;
+    });
+
+    if (lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="pedidos-empty">No se encontraron clientes.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = lista.slice(0, 300).map(c => `
+        <tr>
+            <td><strong>${c.nombre_completo || 'Sin nombre'}</strong>${c.es_mayorista ? ' <span class="status-badge st-neutral">Mayorista</span>' : ''}</td>
+            <td>${c.telefono || '—'}</td>
+            <td>${c.tipo_documento && c.numero_documento ? `${c.tipo_documento}-${c.numero_documento}` : '—'}</td>
+            <td>${c.total_pedidos ?? 0}</td>
+            <td>${formatoMonedaUSD(c.ventas_totales)}</td>
+            <td style="color:${Number(c.cuentas_por_cobrar) > 0 ? '#ef4444' : 'inherit'};">${formatoMonedaUSD(c.cuentas_por_cobrar)}</td>
+            <td><button type="button" class="btn-pill btn-pequeno" onclick="abrirModalDetalleCliente('${c.id}')">Ver / Editar</button></td>
+        </tr>
+    `).join('');
+}
+
+function abrirModalDetalleCliente(id) {
+    const c = clientesModuloCache.find(x => String(x.id) === String(id));
+    if (!c) return;
+    clienteSeleccionadoIdModulo = c.id;
+
+    document.getElementById('dcTotalPedidos').innerText = c.total_pedidos ?? 0;
+    document.getElementById('dcVentasTotales').innerText = formatoMonedaUSD(c.ventas_totales);
+    document.getElementById('dcPorCobrar').innerText = formatoMonedaUSD(c.cuentas_por_cobrar);
+
+    document.getElementById('dcNombre').value = c.nombre_completo || '';
+    document.getElementById('dcTipoDocumento').value = c.tipo_documento || 'V';
+    document.getElementById('dcNumeroDocumento').value = c.numero_documento || '';
+    document.getElementById('dcTelefono').value = c.telefono || '';
+    document.getElementById('dcEmail').value = c.email || '';
+    document.getElementById('dcCodigoReferencia').value = c.codigo_referencia || '';
+    document.getElementById('dcCredito').value = c.credito_tienda ?? 0;
+    document.getElementById('dcEtiquetas').value = Array.isArray(c.etiquetas) ? c.etiquetas.join(', ') : (c.etiquetas || '');
+    document.getElementById('dcEsMayorista').checked = !!c.es_mayorista;
+    document.getElementById('dcNota').value = c.nota || '';
+    document.getElementById('modalDetalleClienteError').innerText = '';
+
+    document.getElementById('modalDetalleCliente').style.display = 'flex';
+}
+
+function cerrarModalDetalleCliente() {
+    document.getElementById('modalDetalleCliente').style.display = 'none';
+    clienteSeleccionadoIdModulo = null;
+}
+
+async function guardarClienteDetalle() {
+    if (!clienteSeleccionadoIdModulo) return;
+    const btn = document.getElementById('btnGuardarCliente');
+    const errorEl = document.getElementById('modalDetalleClienteError');
+    errorEl.innerText = '';
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando...';
+
+    const etiquetasTexto = (document.getElementById('dcEtiquetas').value || '').trim();
+    const cambios = {
+        nombre_completo: (document.getElementById('dcNombre').value || '').trim(),
+        tipo_documento: document.getElementById('dcTipoDocumento').value,
+        numero_documento: (document.getElementById('dcNumeroDocumento').value || '').trim() || null,
+        telefono: (document.getElementById('dcTelefono').value || '').replace(/\D/g, '') || null,
+        email: (document.getElementById('dcEmail').value || '').trim() || null,
+        codigo_referencia: (document.getElementById('dcCodigoReferencia').value || '').trim() || null,
+        credito_tienda: parseFloat(document.getElementById('dcCredito').value) || 0,
+        etiquetas: etiquetasTexto ? etiquetasTexto.split(',').map(t => t.trim()).filter(Boolean) : [],
+        es_mayorista: document.getElementById('dcEsMayorista').checked,
+        nota: (document.getElementById('dcNota').value || '').trim() || null,
+    };
+
+    try {
+        const { error } = await supabaseClient.from('clientes').update(cambios).eq('id', clienteSeleccionadoIdModulo);
+        if (error) throw error;
+
+        const idx = clientesModuloCache.findIndex(c => String(c.id) === String(clienteSeleccionadoIdModulo));
+        if (idx !== -1) clientesModuloCache[idx] = { ...clientesModuloCache[idx], ...cambios };
+        clientesCargados = false; // refresca también el buscador del checkout
+
+        renderTablaClientesModulo();
+        cerrarModalDetalleCliente();
+    } catch (err) {
+        errorEl.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${err.message || 'No se pudo guardar el cliente.'}`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+    }
 }
 
 // --- LÓGICA MÓDULO ANALÍTICAS DE PEDIDOS ---
@@ -1231,6 +1566,11 @@ let currentFiltroPedido = '';
 let currentFiltroPago = '';
 let currentFiltroEnvio = '';
 let currentFiltroEntrega = '';
+
+// Map Delivery
+let mapaDelivery = null;
+let mapaMarkers = null;
+let abortMapLoading = false;
 
 async function cargarAnaliticasPedidos(forzar = false) {
     if (analiticasCargando) return;
@@ -1479,6 +1819,116 @@ function renderAnaliticas() {
         </div>
         ${informeHtml}
     `;
+}
+
+// LOGICA MAPA DE ENTREGAS
+function cerrarModalMapa() {
+    document.getElementById('modalMapaEntregas').style.display = 'none';
+    abortMapLoading = true;
+}
+
+async function abrirModalMapa() {
+    document.getElementById('modalMapaEntregas').style.display = 'flex';
+    abortMapLoading = false;
+    
+    if (!mapaDelivery) {
+        mapaDelivery = L.map('mapaDeliveryContainer').setView([10.1983, -68.0033], 12); // Coordenadas genéricas Valencia, VE
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(mapaDelivery);
+        mapaMarkers = L.featureGroup().addTo(mapaDelivery);
+    }
+    
+    // Invalida tamaño para asegurar carga completa dentro de un modal
+    setTimeout(() => {
+        mapaDelivery.invalidateSize();
+    }, 300);
+
+    mapaMarkers.clearLayers();
+    
+    // Filtramos solo los pedidos que incluyan la palabra Delivery y posean una dirección escrita
+    const entregas = analiticasListaFiltrada().filter(p => (p.metodo_entrega || '').toLowerCase().includes('delivery') && p.direccion_envio);
+    
+    const estadoEl = document.getElementById('mapaEstadoCarga');
+    if (entregas.length === 0) {
+        estadoEl.style.display = 'block';
+        estadoEl.innerText = 'No hay pedidos de Delivery con dirección en los filtros actuales.';
+        estadoEl.style.color = 'var(--text-muted)';
+        return;
+    }
+
+    estadoEl.style.display = 'block';
+    estadoEl.style.color = 'var(--turquesa-dark)';
+    
+    let procesados = 0;
+    let encontrados = 0;
+
+    for (const p of entregas) {
+        if (abortMapLoading) break;
+        
+        estadoEl.innerText = `Procesando ubicaciones... ${procesados}/${entregas.length} (Encontrados: ${encontrados})`;
+        
+        const coords = await extraerCoordenadas(p.direccion_envio);
+        if (coords) {
+            const marker = L.marker(coords).addTo(mapaMarkers);
+            
+            const totalUSD = formatoMonedaUSD(p.monto_total);
+            const badgeEnvio = getBadgeEnvio(p.estado_envio);
+            
+            marker.bindPopup(`
+                <div style="font-family:'Inter',sans-serif; font-size:12px; line-height:1.5;">
+                    <strong style="font-size:14px; color:#1C2430;">#${p.numero_pedido || '—'}</strong><br>
+                    <b>Cliente:</b> ${p.cliente_nombre || 'Desconocido'}<br>
+                    <b>Teléfono:</b> ${p.cliente_telefono || '—'}<br>
+                    <b>Total:</b> ${totalUSD}<br>
+                    <b>Estado:</b> ${badgeEnvio}<br>
+                    <b>Dirección:</b> <span style="color:#64748B;">${p.direccion_envio.substring(0, 80)}...</span>
+                </div>
+            `);
+            encontrados++;
+        }
+        procesados++;
+    }
+    
+    if (!abortMapLoading) {
+        estadoEl.innerText = `Pines listos: ${encontrados} de ${entregas.length} deliveries.`;
+        if (encontrados > 0) {
+            mapaDelivery.fitBounds(mapaMarkers.getBounds(), { padding: [30, 30] });
+        }
+    }
+}
+
+async function extraerCoordenadas(texto) {
+    // 1. Extraer si hay coordenadas exactas escritas
+    const coordRegex = /(-?\d{1,2}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/;
+    const match = texto.match(coordRegex);
+    if (match) {
+        return [parseFloat(match[1]), parseFloat(match[2])];
+    }
+    
+    // 2. Si no, limpiar el texto para buscarlo por geocoding
+    let cleanText = texto.replace(/https?:\/\/[^\s]+/g, '').trim(); // quitar URLs
+    cleanText = cleanText.replace(/Receptor:.*?\|/g, '').trim(); // Eliminar basuras previas de formato
+    
+    if (cleanText.length < 5) return null;
+    
+    // Anexamos el contexto local a la búsqueda (Limitado a 50 chars de string base para que no falle)
+    let searchQuery = cleanText.substring(0, 50) + ", Valencia, Carabobo, Venezuela";
+    
+    try {
+        // Pausa preventiva de 1.2 segundos para no ser bloqueado por OpenStreetMap (Límite 1 req/sec)
+        await new Promise(r => setTimeout(r, 1200)); 
+        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(searchQuery)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data.length > 0) {
+            return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+        }
+    } catch(e) {
+        console.warn("Geocoding failed for: ", texto);
+    }
+    
+    return null;
 }
 
 function exportarCSVAnaliticas() {
@@ -1917,7 +2367,7 @@ async function crearNuevoPedido(esBorrador = false) {
         });
 
         feedback.style.color = 'var(--turquesa-dark)'; 
-        feedback.innerText = esBorrador
+        feedback.innerHTML = esBorrador
             ? `<re-icon icon=file-text size=15></re-icon> Pedido #${data.pedido.numero_pedido} guardado como borrador en TakeApp.`
             : `<re-icon icon=check-circle size=15></re-icon> Pedido #${data.pedido.numero_pedido} creado y actualizado correctamente.`; 
         
@@ -1929,7 +2379,7 @@ async function crearNuevoPedido(esBorrador = false) {
         feedback.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${err.message || 'Error al procesar el pedido.'}`; 
     } finally { 
         btn.disabled = false; 
-        btn.innerHTML = textoOriginal; 
+        btn.innerText = textoOriginal; 
     }
 }
 
@@ -1941,143 +2391,51 @@ async function realizarPedidoYCopiarCaptura() {
     const captureCard = document.getElementById('captureCard');
     try {
         const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true });
-        canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Pedido realizado e imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Pedido realizado e imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Pedido realizado e imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 3000); }, 'image/png');
+        canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 2500); }, 'image/png');
     } catch (e) { alert("Error al capturar la imagen."); btn.innerHTML = originalText; }
 }
 
-function sincronizarTasa(origen) { const mainTasa = document.getElementById('tasaInput'); const calcTasa = document.getElementById('modalTasaInput'); if (origen === 'main') { calcTasa.value = mainTasa.value; } else if (origen === 'modal') { mainTasa.value = calcTasa.value; } calcularNota(); convertirDesdeUSD(); calcularTotalesPedido(); }
-function convertirDesdeUSD() { const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value); const vesInput = document.getElementById('calcVES'); const resumen = document.getElementById('calcResumen'); if (isNaN(usd) || usd <= 0) { vesInput.value = ""; resumen.innerText = "Ingresa un monto para convertir..."; return; } const totalVes = usd * tasa; vesInput.value = totalVes.toFixed(2); resumen.innerText = `$${usd.toFixed(2)} USD = Bs. S ${totalVes.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; }
-function convertirDesdeVES() { const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value); const usdInput = document.getElementById('calcUSD'); const resumen = document.getElementById('calcResumen'); if (isNaN(ves) || ves <= 0 || tasa <= 0) { usdInput.value = ""; resumen.innerText = "Ingresa un monto para convertir..."; return; } const totalUsd = ves / tasa; usdInput.value = totalUsd.toFixed(2); resumen.innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} = $${totalUsd.toFixed(2)} USD`; }
-function generarCamposFechas() {
-    const num = parseInt(document.getElementById('numCuotas').value) || 1; const container = document.getElementById('contenedorFechasCuotas'); container.innerHTML = ''; const hoy = new Date();
-    for (let i = 1; i <= num; i++) { const label = document.createElement('label'); label.innerText = `Fecha Cuota ${i}:`; const input = document.createElement('input'); input.type = 'date'; input.className = 'fecha-cuota-input'; input.onchange = calcularNota; const fechaSugerida = new Date(hoy); fechaSugerida.setDate(hoy.getDate() + (15 * i)); const yyyy = fechaSugerida.getFullYear(); const mm = String(fechaSugerida.getMonth() + 1).padStart(2, '0'); const dd = String(fechaSugerida.getDate()).padStart(2, '0'); input.value = `${yyyy}-${mm}-${dd}`; container.appendChild(label); container.appendChild(input); }
-}
-function formatearFecha(fechaStr) { if (!fechaStr) return ""; const [year, month, day] = fechaStr.split('-').map(Number); const fecha = new Date(year, month - 1, day); const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' }); const diaNum = String(fecha.getDate()).padStart(2, '0'); const mes = fecha.toLocaleDateString('es-ES', { month: 'long' }); return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} ${diaNum} ${mes.charAt(0).toUpperCase() + mes.slice(1)}`; }
 async function obtenerTasa() {
-    const tasaInput = document.getElementById('tasaInput'); tasaInput.placeholder = "Buscando...";
-    try { const res = await fetch(`https://www.brecha-cambiaria.com/api/latest?_=${Date.now()}`, { cache: 'no-store' }); if (res.ok) { const data = await res.json(); if (data && data.bcv_usd) { tasaInput.value = parseFloat(data.bcv_usd).toFixed(2); sincronizarTasa('main'); document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`; document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`; document.getElementById('topStatBcv').innerText = `${parseFloat(data.bcv_usd).toFixed(2)} Bs/$`; document.getElementById('topStatUsdt').innerText = `${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs/$`; document.getElementById('topStatBrecha').innerText = `+${data.brecha_usdt_usd}%`; if (data.timestamp) { const hora = new Date(data.timestamp).toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }); document.getElementById('mTime').innerText = `Actualizado a las ${hora}`; } return; } } } catch (e) { console.warn("Error obteniendo tasa", e); } tasaInput.placeholder = "Ingresa tasa a mano";
-}
-function toggleCampos() { const metodo = document.getElementById('paymentMethod').value; document.getElementById('campoDivisas').style.display = metodo === 'divisas' ? 'block' : 'none'; document.getElementById('campoCuotas').style.display = metodo === 'cuotas' ? 'block' : 'none'; if (metodo === 'cuotas') generarCamposFechas(); }
-function calcularNota() {
-    const usd = parseFloat(document.getElementById('totalUSD').value) || 0; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; const metodo = document.getElementById('paymentMethod').value; let nota = "";
-    if (metodo === 'pago_movil') { const totalBs = (usd * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`; } else if (metodo === 'cuotas') { const inicialVal = parseFloat(document.getElementById('montoInicial').value) || 0; const numCuotas = parseInt(document.getElementById('numCuotas').value) || 1; const restanteVal = usd - inicialVal; const montoPorCuota = (restanteVal > 0 ? restanteVal / numCuotas : 0).toFixed(2); const inputsFechas = document.querySelectorAll('.fecha-cuota-input'); const detalles = []; inputsFechas.forEach((input, index) => { if (input.value) detalles.push(`${index + 1}a (${formatearFecha(input.value)})`); }); nota = `Pago de inicial $${inicialVal} | ${numCuotas} cuotas de $${montoPorCuota} | ${detalles.join(', ')}`; } else if (metodo === 'divisas') { const billete = parseFloat(document.getElementById('billete').value) || 0; nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${(billete - usd).toFixed(2)}) de cambio.`; }
-    document.getElementById('previewText').innerText = nota;
-}
-
-let clientesCache = []; let clientesCargados = false;
-async function abrirModalBuscarCliente() {
-    document.getElementById('modalBuscarCliente').style.display = 'flex';
-    mostrarVistaBuscarCliente();
-    if (!clientesCargados) {
-        document.getElementById('listaClientesEncontrados').innerHTML = '<div class="pedidos-empty">Cargando clientes...</div>';
-        try {
-            const { data, error } = await supabaseClient.from('clientes').select('id,nombre_completo,telefono,email').order('nombre_completo', { ascending: true });
-            if (error) throw error;
-            clientesCache = data || [];
-            clientesCargados = true;
-        } catch (err) { console.warn('Error cargando clientes:', err); clientesCache = []; }
-    }
-    filtrarClientesModal();
-}
-function cerrarModalBuscarCliente() { document.getElementById('modalBuscarCliente').style.display = 'none'; }
-function mostrarVistaBuscarCliente() {
-    document.getElementById('tituloModalCliente').innerText = 'Buscar cliente';
-    document.getElementById('vistaBuscarCliente').style.display = 'block';
-    document.getElementById('vistaRegistrarCliente').style.display = 'none';
-}
-function mostrarVistaRegistrarCliente() {
-    document.getElementById('tituloModalCliente').innerText = 'Registrar cliente';
-    document.getElementById('vistaBuscarCliente').style.display = 'none';
-    document.getElementById('vistaRegistrarCliente').style.display = 'block';
-    document.getElementById('clientFullName').value = document.getElementById('inputBuscarCliente').value || '';
-    formatearCliente();
-}
-function filtrarClientesModal() {
-    const raw = (document.getElementById('inputBuscarCliente').value || '').trim();
-    const q = raw.toLowerCase();
-    const soloDigitos = raw.replace(/\D/g, '');
-    const cont = document.getElementById('listaClientesEncontrados');
-    const filtrados = !q ? clientesCache.slice(0, 50) : clientesCache.filter(c => {
-        const nombre = (c.nombre_completo || '').toLowerCase();
-        if (nombre.includes(q)) return true;
-        if (soloDigitos) {
-            const telefono = c.telefono || '';
-            const nombreSoloDigitos = (c.nombre_completo || '').replace(/\D/g, ''); // permite buscar la cédula aunque tenga puntos (12.345.678)
-            if (telefono.includes(soloDigitos) || nombreSoloDigitos.includes(soloDigitos)) return true;
-        }
-        return false;
-    });
-    if (filtrados.length === 0) { cont.innerHTML = '<div class="pedidos-empty">No se encontraron clientes. Prueba "Registrar cliente".</div>'; return; }
-    cont.innerHTML = filtrados.map(c => `
-        <div class="modal-item-row" onclick="seleccionarClienteEncontrado('${c.id}')">
-            <div class="modal-item-info"><span class="modal-item-name">${c.nombre_completo || 'Sin nombre'}</span><span class="modal-item-sub">${c.telefono || 'Sin teléfono'}</span></div>
-        </div>
-    `).join('');
-}
-function seleccionarClienteEncontrado(id) {
-    const c = clientesCache.find(x => String(x.id) === String(id));
-    if (!c) return;
-    document.getElementById('pedidoClienteNombre').value = c.nombre_completo || '';
-    document.getElementById('resumenClienteSeleccionado').innerText = c.nombre_completo || 'Cliente';
-    const tel = (c.telefono || '').replace(/\D/g, '');
-    const codigos = ['+58', '+1', '+34', '+57', '+54'];
-    let cod = '+58'; let resto = tel;
-    for (const c2 of codigos) { const digitos = c2.replace('+', ''); if (tel.startsWith(digitos)) { cod = c2; resto = tel.slice(digitos.length); break; } }
-    document.getElementById('pedidoWpCod').value = cod;
-    document.getElementById('pedidoWpNum').value = resto;
-    cerrarModalBuscarCliente();
-    actualizarProgresoModales();
-}
-function formatearCliente() {
-    const rawNameInput = document.getElementById('clientFullName'); if (!rawNameInput) return;
-    const rawName = rawNameInput.value; const nac = document.getElementById('clientNac').value; const clientIdNumEl = document.getElementById('clientIdNum'); const rawId = clientIdNumEl ? clientIdNumEl.value.replace(/\D/g, '') : '';
-    const nameFormatted = rawName.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' '); const idFormatted = rawId ? parseInt(rawId, 10).toLocaleString('es-VE') : '';
-    let res = "Ingresa los datos del cliente..."; if (nameFormatted && idFormatted) res = `${nameFormatted} | ${nac}-${idFormatted}`; else if (nameFormatted) res = nameFormatted; else if (idFormatted) res = `${nac}-${idFormatted}`;
-    document.getElementById('previewClientText').innerText = res;
-}
-async function pegarDatosCliente() {
-    let texto = ""; try { texto = await navigator.clipboard.readText(); } catch (err) { texto = prompt("Pega aquí los datos del cliente:"); }
-    if (!texto || !texto.trim()) return; let textClean = texto.replace(/(?:nombre y apellido|nombres|apellidos|nombre|cédula|cedula|c\.i\.?|ci|rif|dni|cliente)[:\-]?/gi, ' '); const matchId = textClean.match(/([VEJGvejg])[\s\.\-]*(\d[\d\.\s]{5,10}\d|\d{6,9})/);
-    let nac = "V"; let idNum = ""; let namePart = textClean;
-    if (matchId) { nac = matchId[1].toUpperCase(); idNum = matchId[2].replace(/\D/g, ''); namePart = textClean.replace(matchId[0], ' '); }
-    let nameFormatted = namePart.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ' ').replace(/\s+/g, ' ').trim();
-    if (nameFormatted) document.getElementById('clientFullName').value = nameFormatted; if (idNum) { document.getElementById('clientNac').value = nac; document.getElementById('clientIdNum').value = idNum; }
-    formatearCliente();
-}
-async function registrarNombreCheckout() {
-    const nombreFormateado = document.getElementById('clientFullName').value.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' ');
-    if (!nombreFormateado) { alert('Ingresa el nombre del cliente.'); return; }
-    const cod = document.getElementById('clientPhoneCod').value;
-    const numTel = document.getElementById('clientPhoneNum').value.replace(/\D/g, '');
-    const telefonoCompleto = numTel ? `${cod}${numTel}` : '';
-
-    const btnNode = document.getElementById('btnCopyCliente'); const originalText = btnNode.innerHTML; btnNode.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando...'; btnNode.disabled = true;
+    const tasaInput = document.getElementById('tasaInput');
+    tasaInput.placeholder = "Buscando...";
     try {
-        if (telefonoCompleto) {
-            const existente = await supabaseClient.from('clientes').select('id').eq('telefono', telefonoCompleto.replace('+', '')).maybeSingle();
-            if (!existente.data) {
-                await supabaseClient.from('clientes').insert({ nombre_completo: nombreFormateado, telefono: telefonoCompleto.replace('+', '') });
-                clientesCargados = false; // fuerza refresco de la lista la próxima vez
+        const url = `https://corsproxy.io/?${encodeURIComponent('https://www.brecha-cambiaria.com/api/latest')}`;
+        const res = await fetch(url, { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.bcv_usd) {
+                tasaInput.value = parseFloat(data.bcv_usd).toFixed(2);
+                sincronizarTasa('main');
+                
+                document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
+                document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
+                document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
+                document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`;
+                document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`;
+                
+                document.getElementById('topStatBcv').innerText = `${parseFloat(data.bcv_usd).toFixed(2)} Bs/$`;
+                document.getElementById('topStatUsdt').innerText = `${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs/$`;
+                document.getElementById('topStatBrecha').innerText = `+${data.brecha_usdt_usd}%`;
+                
+                if (data.timestamp) {
+                    const hora = new Date(data.timestamp).toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('mTime').innerText = `Actualizado a las ${hora}`;
+                }
+                return;
             }
+        } else {
+            console.warn("La API respondió con error:", res.status);
         }
-        document.getElementById('pedidoClienteNombre').value = nombreFormateado;
-        document.getElementById('resumenClienteSeleccionado').innerText = nombreFormateado;
-        if (numTel) { document.getElementById('pedidoWpCod').value = cod; document.getElementById('pedidoWpNum').value = numTel; }
-        btnNode.innerHTML = '<re-icon icon=check-circle size=15></re-icon> ¡Registrado!';
-        setTimeout(() => { btnNode.innerHTML = originalText; btnNode.disabled = false; cerrarModalBuscarCliente(); actualizarProgresoModales(); }, 700);
-    } catch (err) {
-        btnNode.innerHTML = originalText; btnNode.disabled = false;
-        alert('<re-icon icon=x-circle size=15></re-icon> No se pudo registrar el cliente: ' + (err.message || 'error desconocido'));
+    } catch (e) {
+        console.warn("Error obteniendo tasa. Posible caída del servidor o bloqueo de CORS:", e);
     }
+    
+    tasaInput.placeholder = "API Caída - Ingresa manual";
+    document.getElementById('topStatBcv').innerText = "Error API";
+    document.getElementById('topStatUsdt').innerText = "Error API";
+    document.getElementById('topStatBrecha').innerText = "--";
 }
-async function copiarTexto(elementId, btnElement) { const texto = document.getElementById(elementId).innerText; if (texto.includes("Ingresa los datos")) return; try { await navigator.clipboard.writeText(texto); let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement; const originalText = btnNode.innerHTML; btnNode.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Copiado!"; setTimeout(() => { btnNode.innerHTML = originalText; }, 2000); } catch (err) { alert("Error al copiar texto."); } }
-async function generarYCopiarImagen() {
-    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value) || 0; const btn = document.getElementById('btnCopyImage');
-    if (ves <= 0 || usd <= 0) { alert("Ingresa un monto válido para generar la imagen."); return; }
-    document.getElementById('shotVES').innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; document.getElementById('shotUSD').innerText = `$${usd.toFixed(2)}`; document.getElementById('shotTasa').innerText = `${tasa.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`; document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-    const captureCard = document.getElementById('captureCard'); const originalText = btn.innerHTML; btn.innerHTML = "<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Generando imagen...";
-    try { const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true }); canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 2500); }, 'image/png'); } catch (e) { alert("Error al capturar la imagen."); btn.innerHTML = originalText; }
-}
+
 function descargarImagenFallback(canvas) { const link = document.createElement('a'); link.download = `Cotizacion-Brooklyn-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }
 
 obtenerTasa();
