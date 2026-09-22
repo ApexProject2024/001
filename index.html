@@ -580,6 +580,13 @@
         .mapa-pendientes h4 { margin: 0 0 6px 0; font-size: 12px; color: var(--text-main); }
         .mapa-pendientes .mp-row { padding: 4px 0; border-top: 1px dashed var(--border-color); display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
         .mapa-pendientes a { color: var(--turquesa-dark); font-weight: 700; text-decoration: none; }
+
+        /* PAGO MIXTO */
+        .mixto-linea { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 12px; }
+        .mixto-linea select, .mixto-linea input[type=number] { margin: 0; padding: 7px 10px; font-size: 12.5px; border-radius: 8px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); height: 36px; }
+        .mixto-linea .btn-mixto-del { background: transparent; border: none; color: var(--text-muted); cursor: pointer; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s; }
+        .mixto-linea .btn-mixto-del:hover { background: #fee2e2; color: #ef4444; }
+        .mixto-preview-tag { display:inline-flex; align-items:center; gap:5px; background:var(--badge-bg); color:var(--badge-text); border-radius:6px; padding:2px 8px; font-size:11.5px; font-weight:600; margin-right:4px; margin-top:2px; }
     </style>
 </head>
 <body>
@@ -823,6 +830,7 @@
                             <input type="radio" name="metodoPagoRadio" id="radioBinance" value="binance" style="display:none;">
                             <input type="radio" name="metodoPagoRadio" id="radioZelle" value="zelle" style="display:none;">
                             <input type="radio" name="metodoPagoRadio" id="radioZinli" value="zinli" style="display:none;">
+                            <input type="radio" name="metodoPagoRadio" id="radioMixto" value="mixto" style="display:none;">
                             <div id="previewPagoMovilVesWrap" style="margin-top:10px; font-size:12.5px; color: var(--text-muted);">Monto exacto a transferir: <strong id="previewPagoMovilVes" style="color:var(--turquesa-dark);">Bs. 0,00</strong></div>
                         </div>
 
@@ -888,6 +896,10 @@
                                 <div class="modal-option-pill" id="opcionPagoZinli" onclick="seleccionarMetodoPago('zinli')">
                                     <div class="mop-title">Zinli</div>
                                     <div class="mop-desc">Envío directo de USD vía Zinli Wallet.</div>
+                                </div>
+                                <div class="modal-option-pill" id="opcionPagoMixto" onclick="seleccionarMetodoPago('mixto')">
+                                    <div class="mop-title"><re-icon icon=sparkles size=14></re-icon> Pago Mixto</div>
+                                    <div class="mop-desc">El cliente paga con varios métodos combinados (Pago Móvil + Efectivo, Zelle + Binance, etc.).</div>
                                 </div>
                             </div>
                         </div>
@@ -1316,6 +1328,43 @@
             <button type="button" class="modal-close-btn" onclick="cerrarModalProductosSinSku()"><re-icon icon=x size=15></re-icon></button>
         </div>
         <div id="listaProductosSinSku" style="padding-bottom: 14px;"></div>
+    </div>
+</div>
+
+<!-- MODAL: PAGO MIXTO -->
+<div id="modalPagoMixto" class="modal-overlay" onclick="if(event.target === this) cerrarModalPagoMixto()">
+    <div class="modal-card" style="max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h3 class="modal-title"><re-icon icon=sparkles size=15></re-icon> Pago Mixto</h3>
+            <button type="button" class="modal-close-btn" onclick="cerrarModalPagoMixto()"><re-icon icon=x size=15></re-icon></button>
+        </div>
+        <div style="padding: 16px 24px 20px 24px;">
+            <p style="font-size:12.5px; color:var(--text-muted); margin:0 0 14px 0;">Registra los montos parciales pagados por el cliente en cada método de pago. La suma debe igualar el total del pedido.</p>
+
+            <div style="background:var(--badge-bg); border-radius:10px; padding:10px 14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:12px; color:var(--text-muted);">Total del pedido</span>
+                <strong id="mixtoTotalPedido" style="font-size:15px; color:var(--turquesa-dark);">$0.00</strong>
+            </div>
+
+            <div id="mixtoLineas" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+            <button type="button" class="btn-pill" style="width:100%; justify-content:center; margin-top:12px;" onclick="agregarLineaMixto()">
+                <re-icon icon=plus size=14></re-icon> Añadir método de pago
+            </button>
+
+            <div style="margin-top:14px; padding:10px 14px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-input); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:12.5px; color:var(--text-muted);">Suma ingresada</span>
+                <div style="text-align:right;">
+                    <strong id="mixtoSumaUSD" style="font-size:14px; color:var(--text-main);">$0.00</strong>
+                    <div id="mixtoRestante" style="font-size:11px; color:#ef4444; margin-top:2px;"></div>
+                </div>
+            </div>
+
+            <p id="mixtoError" style="color:#ef4444; font-size:12.5px; margin-top:8px; min-height:14px;"></p>
+            <button type="button" class="btn-copy" style="margin-top:10px; width:100%; background:var(--turquesa-dark); color:#fff;" onclick="confirmarPagoMixto()">
+                <re-icon icon=check size=15></re-icon> Confirmar pago mixto
+            </button>
+        </div>
     </div>
 </div>
 
@@ -2150,17 +2199,17 @@ function abrirModalMetodoPago() {
     const radios = document.getElementsByName('metodoPagoRadio');
     let metodo = 'pago_movil';
     for (let r of radios) { if (r.checked) { metodo = r.value; break; } }
-    ['Pago_movil', 'Efectivo_usd', 'Binance', 'Zelle', 'Zinli'].forEach(k => {
+    ['Pago_movil', 'Efectivo_usd', 'Binance', 'Zelle', 'Zinli', 'Mixto'].forEach(k => {
         document.getElementById('opcionPago' + k)?.classList.toggle('selected', k.toLowerCase() === metodo);
     });
     actualizarProgresoModales();
 }
 function cerrarModalMetodoPago() { document.getElementById('modalMetodoPago').style.display = 'none'; }
 function seleccionarMetodoPago(valor) {
-    const mapa = { pago_movil: 'radioPagoMovil', efectivo_usd: 'radioEfectivoUSD', binance: 'radioBinance', zelle: 'radioZelle', zinli: 'radioZinli' };
-    Object.values(mapa).forEach(id => { document.getElementById(id).checked = false; });
-    document.getElementById(mapa[valor]).checked = true;
-    const etiquetas = { pago_movil: '<re-icon icon=banknote size=15></re-icon> Pago móvil', efectivo_usd: '<re-icon icon=dollar-sign size=15></re-icon> Efectivo USD', binance: '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#F0B90B;"></span> Binance', zelle: '<re-icon icon=landmark size=15></re-icon> Zelle', zinli: '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#7C3AED;"></span> Zinli' };
+    const mapa = { pago_movil: 'radioPagoMovil', efectivo_usd: 'radioEfectivoUSD', binance: 'radioBinance', zelle: 'radioZelle', zinli: 'radioZinli', mixto: 'radioMixto' };
+    Object.values(mapa).forEach(id => { const el = document.getElementById(id); if(el) el.checked = false; });
+    if(document.getElementById(mapa[valor])) document.getElementById(mapa[valor]).checked = true;
+    const etiquetas = { pago_movil: '<re-icon icon=banknote size=15></re-icon> Pago móvil', efectivo_usd: '<re-icon icon=dollar-sign size=15></re-icon> Efectivo USD', binance: '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#F0B90B;"></span> Binance', zelle: '<re-icon icon=landmark size=15></re-icon> Zelle', zinli: '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#7C3AED;"></span> Zinli', mixto: '<re-icon icon=sparkles size=15></re-icon> Pago Mixto' };
     document.getElementById('resumenMetodoPago').innerHTML = etiquetas[valor] || valor;
     alCambiarMetodoPago();
     cerrarModalMetodoPago();
@@ -2175,7 +2224,7 @@ function abrirModalDireccionDelivery() {
         if (inputDir.trim() !== "") { textP.innerText = inputDir; previewDiv.style.display = 'block'; const encodedQuery = encodeURIComponent(inputDir.trim()); iframeMap.src = `https://www.google.com/maps?q=${encodedQuery}&output=embed`; mapContainer.style.display = 'block'; } else { previewDiv.style.display = 'none'; mapContainer.style.display = 'none'; iframeMap.src = ""; }
     }
 }
-function alCambiarMetodoPago() { const radios = document.getElementsByName('metodoPagoRadio'); let metodo = 'pago_movil'; for (let r of radios) { if (r.checked) { metodo = r.value; break; } } if (metodo === 'efectivo_usd') { abrirModalEfectivoUSD(); } else { actualizarObservacionCheckout(); } }
+function alCambiarMetodoPago() { const radios = document.getElementsByName('metodoPagoRadio'); let metodo = 'pago_movil'; for (let r of radios) { if (r.checked) { metodo = r.value; break; } } if (metodo === 'efectivo_usd') { abrirModalEfectivoUSD(); } else if (metodo === 'mixto') { abrirModalPagoMixto(); } else { actualizarObservacionCheckout(); } }
 function abrirModalEfectivoUSD() {
     const modal = document.getElementById('modalEfectivoUSD'); modal.style.display = 'flex'; let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste;
     const input = document.getElementById('inputBilleteUSD'); if (billeteUSDCliente > 0) { input.value = billeteUSDCliente; } else { input.value = totalUSD > 0 ? totalUSD : ''; }
@@ -2190,8 +2239,10 @@ function confirmarBilleteUSD() { const val = parseFloat(document.getElementById(
 function actualizarObservacionCheckout() {
     let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0;
     const radios = document.getElementsByName('metodoPagoRadio'); let metodo = 'pago_movil'; for (let r of radios) { if (r.checked) { metodo = r.value; break; } }
+    // El textarea muestra solo el texto del método de pago (lo que irá en remark).
+    // La dirección se agrega automáticamente al remark al momento de crear el pedido.
     let nota = "";
-    if (metodo === 'pago_movil') { const totalBs = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`; } else if (metodo === 'efectivo_usd') { let billete = billeteUSDCliente > 0 ? billeteUSDCliente : totalUSD; let cambio = billete - totalUSD; if (cambio < 0) cambio = 0; nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${cambio.toFixed(2)}) de cambio.`; } else if (metodo === 'binance') { nota = `Transferencia Binance Pay | Total: $${totalUSD.toFixed(2)}`; } else if (metodo === 'zelle') { nota = `Transferencia Zelle | Total: $${totalUSD.toFixed(2)}`; } else if (metodo === 'zinli') { nota = `Transferencia Zinli | Total: $${totalUSD.toFixed(2)}`; }
+    if (metodo === 'pago_movil') { const totalBs = (totalUSD * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`; } else if (metodo === 'efectivo_usd') { let billete = billeteUSDCliente > 0 ? billeteUSDCliente : totalUSD; let cambio = billete - totalUSD; if (cambio < 0) cambio = 0; nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${cambio.toFixed(2)}) de cambio.`; } else if (metodo === 'binance') { nota = `Transferencia Binance Pay | Total: $${totalUSD.toFixed(2)}`; } else if (metodo === 'zelle') { nota = `Transferencia Zelle | Total: $${totalUSD.toFixed(2)}`; } else if (metodo === 'zinli') { nota = `Transferencia Zinli | Total: $${totalUSD.toFixed(2)}`; } else if (metodo === 'mixto') { nota = generarNotaMixto(totalUSD, tasaBCV); }
     const obsInput = document.getElementById('pedidoObservacion'); if (obsInput) { obsInput.value = nota; }
 }
 function calcularTotalesPedido() {
@@ -2201,7 +2252,7 @@ function calcularTotalesPedido() {
     const elPreviewPagoMovil = document.getElementById('previewPagoMovilVes'); if (elPreviewPagoMovil) { elPreviewPagoMovil.innerText = formattedVes; }
     actualizarObservacionCheckout();
 }
-function obtenerEtiquetaMetodoPago() { const radios = document.getElementsByName('metodoPagoRadio'); let metodo = 'pago_movil'; for (let r of radios) { if (r.checked) { metodo = r.value; break; } } const etiquetas = { pago_movil: 'Pago móvil', efectivo_usd: 'Efectivo USD', binance: 'Binance', zelle: 'Zelle', zinli: 'Zinli' }; return etiquetas[metodo] || metodo; }
+function obtenerEtiquetaMetodoPago() { const radios = document.getElementsByName('metodoPagoRadio'); let metodo = 'pago_movil'; for (let r of radios) { if (r.checked) { metodo = r.value; break; } } if (metodo === 'mixto') { const resumen = mixtoLineasData.map(l => `${l.metodo} $${parseFloat(l.monto || 0).toFixed(2)}`).join(' + '); return resumen ? `Pago Mixto: ${resumen}` : 'Pago Mixto'; } const etiquetas = { pago_movil: 'Pago móvil', efectivo_usd: 'Efectivo USD', binance: 'Binance', zelle: 'Zelle', zinli: 'Zinli' }; return etiquetas[metodo] || metodo; }
 function obtenerDatosEnvioPedido() {
     const esNacional = document.getElementById('radioEnvioNacional').checked;
     if (esNacional) { const agencia = document.getElementById('envioNacionalAgencia').value; const nombre = document.getElementById('envioNacNombre').value.trim(); const apellido = document.getElementById('envioNacApellido').value.trim(); const telefono = document.getElementById('envioNacTelefono').value.trim(); const cedula = document.getElementById('envioNacCedula').value.trim(); if (!nombre || !apellido || !telefono || !cedula) { return { valido: false, mensaje: 'Completa los datos del receptor para el envío nacional.' }; } return { valido: true, metodoEntrega: `Envío Nacional (${agencia})`, direccionEnvio: `Receptor: ${nombre} ${apellido} | Tel: ${telefono} | Cédula: ${cedula}`, }; }
@@ -2239,16 +2290,28 @@ async function crearNuevoPedido(esBorrador = false) {
     const textoOriginal = btn.innerText; 
     btn.innerHTML = esBorrador ? '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando borrador...' : '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Procesando pedido...';
 
-    // 1. Payload original SOLO con los datos de creación aceptados
+    // 1. Payload con los datos correctamente mapeados para TakeApp
+    // remark = visible al cliente en el recibo → SOLO método de pago
+    // La dirección se sincroniza en customer.address (PASO 3) — campo nativo de TakeApp
+    const metodoPagoEtiqueta = obtenerEtiquetaMetodoPago();
+    const remarkCliente = (document.getElementById('pedidoObservacion').value || '').trim();
+
     const payloadCreate = {
         action: 'create_order',
         customer: { name: nombre, phone: `${codPais.replace('+', '')}${numTel.replace(/\D/g, '')}` },
         currency: 'USD',
         totalAmount: totalUSD,
-        lineItems: listaArticulosPedido.map(a => ({ name: a.nombre, quantity: 1, unit: 'unidad', price: a.precio, productId: a.productId || undefined, variantId: a.variantId || undefined, })),
-        remark: (document.getElementById('pedidoObservacion').value || '').trim(),
+        lineItems: listaArticulosPedido.map(a => ({
+            name: a.nombre,
+            quantity: a.cantidad || 1,
+            unit: 'unidad',
+            price: a.precio / (a.cantidad || 1),
+            productId: a.productId || undefined,
+            variantId: a.variantId || undefined,
+        })),
+        remark: remarkCliente,
         internalNote: `Cotización Brooklyn: $${totalUSD.toFixed(2)} USD | Tasa BCV: ${tasaBCV.toFixed(2)} Bs/USD | Equivalente: Bs. ${totalVES.toFixed(2)}`,
-        paymentMethod: obtenerEtiquetaMetodoPago(),
+        paymentMethod: metodoPagoEtiqueta,
         metodoEntrega: envio.metodoEntrega,
         direccionEnvio: envio.direccionEnvio,
         montoUsd: totalUSD,
@@ -2267,7 +2330,9 @@ async function crearNuevoPedido(esBorrador = false) {
         const paymentStatusVal = document.getElementById('nuevoPedidoPago').value;
         const fulfillmentStatusVal = document.getElementById('nuevoPedidoCumplimiento').value;
 
-        const cambios = { internalNote: payloadCreate.internalNote };
+        const cambios = { 
+            internalNote: payloadCreate.internalNote,
+        };
         if (esBorrador) cambios.orderStatus = orderStatusVal;
         else if (orderStatusVal !== 'pending') cambios.orderStatus = orderStatusVal;
         if (paymentStatusVal !== 'pending') cambios.paymentStatus = paymentStatusVal;
@@ -2276,6 +2341,32 @@ async function crearNuevoPedido(esBorrador = false) {
         await supabaseClient.functions.invoke('brooklyn-orders', {
             body: { action: 'update_order', pedidoId: pedidoIdGenerado, changes: cambios }
         });
+
+        // PASO 3: Sincronizar dirección en TakeApp vía customer.address
+        // TakeApp no tiene campo de dirección nativo en la orden; la dirección
+        // vive en customer.address y aparece en el recibo del cliente.
+        if (envio.direccionEnvio) {
+            try {
+                await supabaseClient.functions.invoke('brooklyn-orders', {
+                    body: {
+                        action: 'update_customer_address',
+                        pedidoId: pedidoIdGenerado,
+                        takeappOrderId: data.pedido?.takeapp_id || null,
+                        address: {
+                            address1: envio.direccionEnvio,
+                            address2: '',
+                            city: '',
+                            state: '',
+                            zip: '',
+                            country: 'VE',
+                        }
+                    }
+                });
+            } catch (addrErr) {
+                // No bloqueamos el flujo si falla — el pedido ya quedó creado.
+                console.warn('No se pudo sincronizar dirección en TakeApp:', addrErr);
+            }
+        }
 
         feedback.style.color = 'var(--turquesa-dark)'; 
         feedback.innerHTML = esBorrador
@@ -2494,6 +2585,139 @@ function olcRecuperarCercano(corto, refLat, refLng) {
     if (dLat > borde) lat -= resol; else if (dLat < -borde) lat += resol;
     if (dLng > borde) lng -= resol; else if (dLng < -borde) lng += resol;
     return [lat, lng];
+}
+
+// ============================
+// LÓGICA PAGO MIXTO
+// ============================
+let mixtoLineasData = [];
+
+const MIXTO_OPCIONES = [
+    { value: 'Pago móvil', label: 'Pago móvil' },
+    { value: 'Efectivo USD', label: 'Efectivo USD' },
+    { value: 'Binance', label: 'Binance' },
+    { value: 'Zelle', label: 'Zelle' },
+    { value: 'Zinli', label: 'Zinli' },
+    { value: 'Transferencia bancaria', label: 'Transferencia bancaria' },
+    { value: 'Otro', label: 'Otro' },
+];
+
+function abrirModalPagoMixto() {
+    const modal = document.getElementById('modalPagoMixto');
+    modal.style.display = 'flex';
+    let sumaArticulos = 0;
+    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
+    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
+    const totalUSD = sumaArticulos + ajuste;
+    document.getElementById('mixtoTotalPedido').innerText = `$${totalUSD.toFixed(2)}`;
+    if (mixtoLineasData.length === 0) {
+        mixtoLineasData = [
+            { metodo: 'Pago móvil', monto: '' },
+            { metodo: 'Efectivo USD', monto: '' },
+        ];
+    }
+    renderLineasMixto();
+    actualizarResumenMixto();
+}
+
+function cerrarModalPagoMixto() {
+    document.getElementById('modalPagoMixto').style.display = 'none';
+}
+
+function renderLineasMixto() {
+    const cont = document.getElementById('mixtoLineas');
+    if (!cont) return;
+    cont.innerHTML = mixtoLineasData.map((linea, i) => {
+        const opcionesHTML = MIXTO_OPCIONES.map(o =>
+            `<option value="${o.value}" ${linea.metodo === o.value ? 'selected' : ''}>${o.label}</option>`
+        ).join('');
+        return `<div class="mixto-linea" data-idx="${i}">
+            <select onchange="mixtoActualizarLinea(${i}, 'metodo', this.value)">${opcionesHTML}</select>
+            <input type="number" step="0.01" min="0" placeholder="$0.00" value="${linea.monto}" oninput="mixtoActualizarLinea(${i}, 'monto', this.value)">
+            <button type="button" class="btn-mixto-del" onclick="mixtoEliminarLinea(${i})" title="Eliminar"><re-icon icon=x size=13></re-icon></button>
+        </div>`;
+    }).join('');
+}
+
+function mixtoActualizarLinea(idx, campo, valor) {
+    if (!mixtoLineasData[idx]) return;
+    mixtoLineasData[idx][campo] = valor;
+    actualizarResumenMixto();
+}
+
+function mixtoEliminarLinea(idx) {
+    mixtoLineasData.splice(idx, 1);
+    renderLineasMixto();
+    actualizarResumenMixto();
+}
+
+function agregarLineaMixto() {
+    mixtoLineasData.push({ metodo: 'Pago móvil', monto: '' });
+    renderLineasMixto();
+    actualizarResumenMixto();
+}
+
+function actualizarResumenMixto() {
+    let sumaArticulos = 0;
+    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
+    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
+    const totalUSD = sumaArticulos + ajuste;
+    const sumaIngresada = mixtoLineasData.reduce((acc, l) => acc + (parseFloat(l.monto) || 0), 0);
+    const restante = totalUSD - sumaIngresada;
+    const sumaEl = document.getElementById('mixtoSumaUSD');
+    const restanteEl = document.getElementById('mixtoRestante');
+    if (sumaEl) sumaEl.innerText = `$${sumaIngresada.toFixed(2)}`;
+    if (restanteEl) {
+        if (Math.abs(restante) < 0.005) {
+            restanteEl.innerText = '✓ Monto completo';
+            restanteEl.style.color = 'var(--turquesa-dark)';
+        } else if (restante > 0) {
+            restanteEl.innerText = `Faltan $${restante.toFixed(2)}`;
+            restanteEl.style.color = '#ef4444';
+        } else {
+            restanteEl.innerText = `Excede por $${Math.abs(restante).toFixed(2)}`;
+            restanteEl.style.color = '#f59e0b';
+        }
+    }
+}
+
+function confirmarPagoMixto() {
+    const errorEl = document.getElementById('mixtoError');
+    errorEl.innerText = '';
+    if (mixtoLineasData.length === 0) { errorEl.innerText = 'Agrega al menos un método de pago.'; return; }
+    const lineasValidas = mixtoLineasData.filter(l => parseFloat(l.monto) > 0);
+    if (lineasValidas.length === 0) { errorEl.innerText = 'Ingresa al menos un monto mayor a 0.'; return; }
+    let sumaArticulos = 0;
+    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
+    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
+    const totalUSD = sumaArticulos + ajuste;
+    const sumaIngresada = lineasValidas.reduce((acc, l) => acc + (parseFloat(l.monto) || 0), 0);
+    const diferencia = Math.abs(totalUSD - sumaIngresada);
+    if (diferencia > 0.05) {
+        errorEl.innerText = `La suma ($${sumaIngresada.toFixed(2)}) no coincide con el total del pedido ($${totalUSD.toFixed(2)}).`;
+        return;
+    }
+    mixtoLineasData = lineasValidas;
+    const resumenHTML = lineasValidas.map(l =>
+        `<span class="mixto-preview-tag"><re-icon icon=sparkles size=11></re-icon> ${l.metodo} $${parseFloat(l.monto).toFixed(2)}</span>`
+    ).join('');
+    document.getElementById('resumenMetodoPago').innerHTML = resumenHTML;
+    cerrarModalPagoMixto();
+    actualizarObservacionCheckout();
+    actualizarProgresoModales();
+}
+
+function generarNotaMixto(totalUSD, tasaBCV) {
+    if (!mixtoLineasData || mixtoLineasData.length === 0) return `Pago Mixto | Total: $${totalUSD.toFixed(2)}`;
+    const partes = mixtoLineasData.map(l => {
+        const monto = parseFloat(l.monto) || 0;
+        if (l.metodo === 'Pago móvil' && tasaBCV > 0) {
+            const bs = (monto * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return `${l.metodo}: Bs. S ${bs} ($${monto.toFixed(2)})`;
+        }
+        return `${l.metodo}: $${monto.toFixed(2)}`;
+    });
+    return `Pago Mixto | ${partes.join(' + ')} | Total: $${totalUSD.toFixed(2)}`;
 }
 
 function mapaEsc(t) {
