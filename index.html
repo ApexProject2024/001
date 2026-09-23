@@ -436,7 +436,8 @@
         .btn-accion-dots:hover { background: var(--bg-input); color: var(--text-main); }
 
         /* ESTILOS PARA ESTADOS DEL PEDIDO — CHIPS A MEDIDA (Checkout) */
-        .status-grid { display: flex; flex-direction: column; gap: 14px; }
+        .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start; }
+        @media (max-width: 760px) { .status-grid { grid-template-columns: 1fr; } }
         .status-pill-card {
             background: var(--bg-input); border: 1px solid var(--border-color);
             border-radius: 12px; padding: 12px 14px;
@@ -446,10 +447,10 @@
             margin: 0; padding: 0; font-size: 10px; font-weight: 800;
             color: var(--text-muted); letter-spacing: 0.6px; text-transform: uppercase;
         }
-        .status-options { display: flex; flex-wrap: wrap; gap: 8px; }
+        .status-options { display: flex; flex-wrap: wrap; gap: 6px; }
         .status-opt {
-            width: auto; margin: 0; padding: 7px 13px 7px 10px;
-            font-family: inherit; font-size: 12.5px; font-weight: 700;
+            width: auto; margin: 0; padding: 6px 11px 6px 9px;
+            font-family: inherit; font-size: 11.5px; font-weight: 700;
             border-radius: 20px; border: 1.5px solid var(--border-color);
             background: var(--bg-card); color: var(--text-muted);
             cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
@@ -1028,12 +1029,12 @@
                                 <label>3. Estado de la entrega</label>
                                 <div class="status-options" data-target="nuevoPedidoCumplimiento">
                                     <button type="button" class="status-opt is-active c-slate" data-value="unfulfilled"><re-icon icon=package size=13></re-icon>No cumplido</button>
-                                    <button type="button" class="status-opt" data-value="in_transit"><re-icon icon=truck size=13></re-icon>En camino para la entrega</button>
+                                    <button type="button" class="status-opt" data-value="out_for_delivery"><re-icon icon=truck size=13></re-icon>En camino para la entrega</button>
                                     <button type="button" class="status-opt" data-value="fulfilled"><re-icon icon=check-circle size=13></re-icon>Cumplido</button>
                                 </div>
                                 <select id="nuevoPedidoCumplimiento" class="status-native-fallback" tabindex="-1" aria-hidden="true">
                                     <option value="unfulfilled" selected>No cumplido</option>
-                                    <option value="in_transit">En camino para la entrega</option>
+                                    <option value="out_for_delivery">En camino para la entrega</option>
                                     <option value="fulfilled">Cumplido</option>
                                 </select>
                             </div>
@@ -1044,7 +1045,7 @@
                         const COLORES_OPCION = {
                             confirmed: 'c-blue', completed: 'c-green', cancelled: 'c-red',
                             pending: 'c-amber', confirming: 'c-blue', partial: 'c-amber', paid: 'c-green', refunded: 'c-red',
-                            unfulfilled: 'c-slate', in_transit: 'c-blue', fulfilled: 'c-green'
+                            unfulfilled: 'c-slate', out_for_delivery: 'c-blue', fulfilled: 'c-green'
                         };
                         document.querySelectorAll('.status-options').forEach(function (grupo) {
                             const select = document.getElementById(grupo.dataset.target);
@@ -1099,7 +1100,7 @@
                         </div>
                         <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
                             <select id="pedidosFiltroEstadoEnvio" onchange="renderTablaGestionPedidos()" style="margin: 0; background: var(--bg-card); width: auto; font-size:12px; padding: 8px 14px;">
-                                <option value="">Envío: todos</option><option value="unfulfilled">Incumplido / Sin enviar</option><option value="ready">Listo para enviar</option><option value="in_transit">En camino</option><option value="fulfilled">Enviado / entregado</option><option value="cancelled">Cancelado</option>
+                                <option value="">Envío: todos</option><option value="unfulfilled">Incumplido / Sin enviar</option><option value="ready">Listo para enviar</option><option value="out_for_delivery">En camino para la entrega</option><option value="in_transit">En tránsito</option><option value="fulfilled">Enviado / entregado</option><option value="cancelled">Cancelado</option>
                             </select>
                             <select id="pedidosFiltroPago" onchange="renderTablaGestionPedidos()" style="margin: 0; background: var(--bg-card); width: auto; font-size:12px; padding: 8px 14px;">
                                 <option value="">Pago: todos</option><option value="unpaid">Sin pagar</option><option value="paid">Pagado</option><option value="pending">Pendiente</option><option value="refunded">Reembolsado</option>
@@ -1332,7 +1333,8 @@
                                 <div class="modal-option-pill selected" onclick="seleccionarFiltro('envio', '', 'Todos')"><div class="mop-title">Todos</div></div>
                                 <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'unfulfilled', 'No cumplido')"><div class="mop-title">No cumplido</div></div>
                                 <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'ready', 'Listo')"><div class="mop-title">Listo</div></div>
-                                <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'in_transit', 'En camino')"><div class="mop-title">En camino</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'out_for_delivery', 'En camino para la entrega')"><div class="mop-title">En camino para la entrega</div></div>
+                                <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'in_transit', 'En tránsito')"><div class="mop-title">En tránsito</div></div>
                                 <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'fulfilled', 'Cumplido')"><div class="mop-title">Cumplido</div></div>
                                 <div class="modal-option-pill" onclick="seleccionarFiltro('envio', 'partially_fulfilled', 'Parcial')"><div class="mop-title">Parcialmente cumplido</div></div>
                             </div>
@@ -1417,7 +1419,7 @@
                         </div>
                         <label>Estado de envío</label>
                         <select id="selectEstadoEnvio">
-                            <option value="unfulfilled">Incumplido</option><option value="ready">Listo para enviar/retirar</option><option value="in_transit">En camino para la entrega</option><option value="out_for_delivery">Saliendo para entrega</option><option value="partially_fulfilled">Parcialmente cumplido</option><option value="fulfilled">Enviado / entregado</option>
+                            <option value="unfulfilled">Incumplido</option><option value="ready">Listo para enviar/retirar</option><option value="out_for_delivery">En camino para la entrega</option><option value="in_transit">En tránsito</option><option value="partially_fulfilled">Parcialmente cumplido</option><option value="fulfilled">Enviado / entregado</option>
                         </select>
                         <label>Nota interna (no visible para el cliente)</label>
                         <textarea id="inputNotaInternaPedido" rows="2" placeholder="Ej: Esperando repuesto en almacén..." style="margin-top:6px; resize:vertical;"></textarea>
@@ -1637,7 +1639,7 @@ function formatoFechaCorta(valor) { if (!valor) return '—'; const d = new Date
 
 const ETIQUETAS_ESTADO_PEDIDO = { pending: 'Pendiente', confirmed: 'Confirmado', completed: 'Completado', cancelled: 'Cancelado', draft: 'Borrador' };
 const ETIQUETAS_ESTADO_PAGO = { pending: 'Pendiente', confirming: 'Confirmando pago', partial: 'Parcial. pagado', paid: 'Pagado', refunded: 'Reembolsado', voided: 'Anulado' };
-const ETIQUETAS_ESTADO_ENVIO = { unfulfilled: 'Incumplido', ready: 'Listo', in_transit: 'En camino', out_for_delivery: 'Saliendo para entrega', partially_fulfilled: 'Parcial. cumplido', fulfilled: 'Enviado' };
+const ETIQUETAS_ESTADO_ENVIO = { unfulfilled: 'Incumplido', ready: 'Listo', in_transit: 'En tránsito', out_for_delivery: 'En camino para la entrega', partially_fulfilled: 'Parcial. cumplido', fulfilled: 'Enviado' };
 
 function getBadgePago(estado) {
     const label = ETIQUETAS_ESTADO_PAGO[estado] || estado || '—';
@@ -2762,6 +2764,11 @@ async function pegarDatosCliente() {
 async function registrarNombreCheckout() {
     const nombreFormateado = document.getElementById('clientFullName').value.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' ');
     if (!nombreFormateado) { alert('Ingresa el nombre del cliente.'); return; }
+    const nac = document.getElementById('clientNac').value;
+    const clientIdNumEl = document.getElementById('clientIdNum');
+    const rawId = clientIdNumEl ? clientIdNumEl.value.replace(/\D/g, '') : '';
+    const idFormatted = rawId ? parseInt(rawId, 10).toLocaleString('es-VE') : '';
+    const nombreConCedula = idFormatted ? `${nombreFormateado} | ${nac}-${idFormatted}` : nombreFormateado;
     const cod = document.getElementById('clientPhoneCod').value;
     const numTel = document.getElementById('clientPhoneNum').value.replace(/\D/g, '');
     const telefonoCompleto = numTel ? `${cod}${numTel}` : '';
@@ -2771,12 +2778,17 @@ async function registrarNombreCheckout() {
         if (telefonoCompleto) {
             const existente = await supabaseClient.from('clientes').select('id').eq('telefono', telefonoCompleto.replace('+', '')).maybeSingle();
             if (!existente.data) {
-                await supabaseClient.from('clientes').insert({ nombre_completo: nombreFormateado, telefono: telefonoCompleto.replace('+', '') });
+                await supabaseClient.from('clientes').insert({
+                    nombre_completo: nombreConCedula,
+                    telefono: telefonoCompleto.replace('+', ''),
+                    tipo_documento: rawId ? nac : null,
+                    numero_documento: rawId || null
+                });
                 clientesCargados = false; // fuerza refresco de la lista la próxima vez
             }
         }
-        document.getElementById('pedidoClienteNombre').value = nombreFormateado;
-        document.getElementById('resumenClienteSeleccionado').innerText = nombreFormateado;
+        document.getElementById('pedidoClienteNombre').value = nombreConCedula;
+        document.getElementById('resumenClienteSeleccionado').innerText = nombreConCedula;
         if (numTel) { document.getElementById('pedidoWpCod').value = cod; document.getElementById('pedidoWpNum').value = numTel; }
         btnNode.innerHTML = '<re-icon icon=check-circle size=15></re-icon> ¡Registrado!';
         setTimeout(() => { btnNode.innerHTML = originalText; btnNode.disabled = false; cerrarModalBuscarCliente(); actualizarProgresoModales(); }, 700);
