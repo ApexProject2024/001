@@ -435,21 +435,37 @@
         .btn-accion-dots { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 4px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; margin:0; width: auto; height: 28px; line-height: 1; }
         .btn-accion-dots:hover { background: var(--bg-input); color: var(--text-main); }
 
-        /* ESTILOS PARA ESTADOS DEL PEDIDO TIPO "PILL" COMPACTO (Checkout) */
-        .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        @media (max-width: 600px) { .status-grid { grid-template-columns: 1fr; } }
+        /* ESTILOS PARA ESTADOS DEL PEDIDO — CHIPS A MEDIDA (Checkout) */
+        .status-grid { display: flex; flex-direction: column; gap: 14px; }
         .status-pill-card {
             background: var(--bg-input); border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 10px 12px;
-            display: flex; flex-direction: column; gap: 2px;
+            border-radius: 12px; padding: 12px 14px;
+            display: flex; flex-direction: column; gap: 8px;
         }
-        .status-pill-card label { margin: 0; font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; }
-        .status-pill-card select {
-            background: transparent; border: none; padding: 0; margin: 0;
-            font-size: 13.5px; font-weight: 700; color: var(--text-main);
-            cursor: pointer; box-shadow: none; width: 100%;
+        .status-pill-card > label {
+            margin: 0; padding: 0; font-size: 10px; font-weight: 800;
+            color: var(--text-muted); letter-spacing: 0.6px; text-transform: uppercase;
         }
-        .status-pill-card select:focus { box-shadow: none; background: transparent; }
+        .status-options { display: flex; flex-wrap: wrap; gap: 8px; }
+        .status-opt {
+            width: auto; margin: 0; padding: 7px 13px 7px 10px;
+            font-family: inherit; font-size: 12.5px; font-weight: 700;
+            border-radius: 20px; border: 1.5px solid var(--border-color);
+            background: var(--bg-card); color: var(--text-muted);
+            cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+            transition: all 0.15s ease; outline: none;
+        }
+        .status-opt re-icon { flex-shrink: 0; opacity: 0.85; }
+        .status-opt:hover { border-color: var(--turquesa); color: var(--text-main); }
+        .status-opt.is-active { color: #fff; border-color: transparent; box-shadow: var(--shadow-sm); }
+        .status-opt.is-active re-icon { opacity: 1; }
+        .status-opt.is-active.c-blue { background: #3B82F6; }
+        .status-opt.is-active.c-green { background: #10B981; }
+        .status-opt.is-active.c-red { background: #EF4444; }
+        .status-opt.is-active.c-amber { background: #F59E0B; }
+        .status-opt.is-active.c-slate { background: #64748B; }
+        [data-theme="dark"] .status-opt { background: rgba(255,255,255,0.03); }
+        .status-pill-card select.status-native-fallback { display: none; }
 
         .inventario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
         .inventario-card { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-card); display: flex; flex-direction: column; }
@@ -581,6 +597,70 @@
         .mapa-pendientes .mp-row { padding: 4px 0; border-top: 1px dashed var(--border-color); display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
         .mapa-pendientes a { color: var(--turquesa-dark); font-weight: 700; text-decoration: none; }
 
+        /* ===========================
+           MÓDULO AGENDA
+        =========================== */
+        .agenda-wrap { background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; min-height: 560px; }
+        .agenda-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; gap: 12px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
+        .ag-search { display: flex; align-items: center; gap: 7px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; padding: 6px 12px; font-size: 12px; color: var(--text-muted); width: 170px; }
+        .ag-notion-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--turquesa-dark); background: transparent; color: var(--turquesa-dark); font-size: 12px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; }
+        .ag-notion-btn:hover { background: var(--turquesa-dark); color: #fff; }
+        .ag-notion-btn.connected { border-color: #16a34a; background: #dcfce7; color: #15803d; }
+        .agenda-body { display: grid; grid-template-columns: 1fr 220px; flex: 1; }
+        .ag-cal-section { padding: 16px 18px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px; }
+        .ag-cal-nav { display: flex; align-items: center; justify-content: space-between; }
+        .ag-month-label { font-size: 15px; font-weight: 600; color: var(--text-main); }
+        .ag-arrow { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-input); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-muted); line-height: 1; transition: background .12s; }
+        .ag-arrow:hover { background: var(--badge-bg); }
+        .ag-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+        .ag-day-header { font-size: 10px; color: var(--text-muted); text-align: center; padding: 4px 0; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+        .ag-day-cell { min-height: 64px; border-radius: 8px; padding: 5px 6px; cursor: pointer; transition: background .12s; border: 1px solid transparent; }
+        .ag-day-cell:hover { background: var(--badge-bg); }
+        .ag-day-cell.ag-other-month .ag-day-num { color: var(--text-muted); opacity: .5; }
+        .ag-day-cell.ag-today { background: rgba(20,184,166,.1); border-color: var(--turquesa-dark); }
+        .ag-day-cell.ag-today .ag-day-num { color: var(--turquesa-dark); font-weight: 700; }
+        .ag-day-cell.ag-selected { background: var(--badge-bg); border-color: var(--border-color); }
+        .ag-day-num { font-size: 12px; color: var(--text-main); line-height: 1; }
+        .ag-ev-dots { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+        .ag-ev-dot { font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 1px 4px; border-radius: 3px; line-height: 1.5; }
+        .ag-ev-dot.tp-important { background: rgba(20,184,166,.12); color: var(--turquesa-dark); }
+        .ag-ev-dot.tp-event { background: rgba(37,99,235,.1); color: #1d4ed8; }
+        .ag-ev-dot.tp-reminder { background: rgba(220,38,38,.1); color: #b91c1c; }
+        .ag-sidebar { display: flex; flex-direction: column; overflow: hidden; }
+        .ag-sidebar-header { padding: 14px 14px 10px; border-bottom: 1px solid var(--border-color); }
+        .ag-events-list { flex: 1; overflow-y: auto; padding: 10px 10px; display: flex; flex-direction: column; gap: 8px; max-height: 420px; }
+        .ag-event-card { background: var(--bg-input); border-radius: 10px; border: 1px solid var(--border-color); padding: 10px 10px; cursor: pointer; transition: border-color .15s; display: flex; gap: 8px; align-items: flex-start; }
+        .ag-event-card:hover { border-color: var(--turquesa-dark); }
+        .ag-ev-bar { width: 3px; border-radius: 2px; min-height: 44px; flex-shrink: 0; margin-top: 2px; }
+        .ag-ev-bar.tp-important { background: var(--turquesa-dark); }
+        .ag-ev-bar.tp-event { background: #2563eb; }
+        .ag-ev-bar.tp-reminder { background: #dc2626; }
+        .ag-ev-title { font-size: 12px; font-weight: 600; color: var(--text-main); line-height: 1.3; }
+        .ag-ev-badge { font-size: 10px; padding: 1px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+        .ag-ev-badge.tp-important { background: rgba(20,184,166,.12); color: var(--turquesa-dark); }
+        .ag-ev-badge.tp-event { background: rgba(37,99,235,.1); color: #1d4ed8; }
+        .ag-ev-badge.tp-reminder { background: rgba(220,38,38,.1); color: #b91c1c; }
+        .ag-ev-badge.tp-notion { background: rgba(99,102,241,.12); color: #4f46e5; }
+        .ag-ev-time { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text-muted); margin-top: 5px; }
+        .ag-add-btn { margin: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; border-radius: 8px; border: 1px dashed var(--border-color); background: transparent; color: var(--text-muted); font-size: 12px; cursor: pointer; transition: all .15s; }
+        .ag-add-btn:hover { background: var(--badge-bg); color: var(--text-main); }
+        .ag-empty { padding: 24px 14px; text-align: center; color: var(--text-muted); font-size: 12px; line-height: 1.7; }
+        .ag-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        .ag-modal { background: var(--bg-card); border-radius: 14px; border: 1px solid var(--border-color); padding: 22px 20px; width: 320px; display: flex; flex-direction: column; gap: 13px; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+        .ag-form-row { display: flex; flex-direction: column; gap: 5px; }
+        .ag-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+        .ag-input { padding: 7px 10px; border-radius: 7px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-size: 13px; font-family: inherit; width: 100%; }
+        .ag-input:focus { outline: none; border-color: var(--turquesa-dark); }
+        .ag-type-pill { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid var(--border-color); cursor: pointer; transition: all .12s; color: var(--text-muted); background: transparent; }
+        .ag-type-pill.active-important { background: rgba(20,184,166,.12); color: var(--turquesa-dark); border-color: var(--turquesa-dark); }
+        .ag-type-pill.active-event { background: rgba(37,99,235,.1); color: #1d4ed8; border-color: #2563eb; }
+        .ag-type-pill.active-reminder { background: rgba(220,38,38,.1); color: #b91c1c; border-color: #dc2626; }
+        .ag-notion-sync-row { display: flex; align-items: center; justify-content: space-between; background: rgba(99,102,241,.08); border-radius: 7px; padding: 7px 10px; border: 1px solid rgba(99,102,241,.2); }
+        .ag-toggle { width: 28px; height: 16px; border-radius: 8px; background: var(--border-color); position: relative; cursor: pointer; transition: background .2s; flex-shrink: 0; }
+        .ag-toggle.on { background: var(--turquesa-dark); }
+        .ag-toggle::after { content: ''; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: left .2s; }
+        .ag-toggle.on::after { left: 14px; }
+
         /* PAGO MIXTO */
         .mixto-linea { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 12px; }
         .mixto-linea select, .mixto-linea input[type=number] { margin: 0; padding: 7px 10px; font-size: 12.5px; border-radius: 8px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); height: 36px; }
@@ -648,6 +728,9 @@
             <li class="menu-category">Finanzas & Mercado</li>
             <li class="nav-item" data-module="mod-tasas" onclick="seleccionarModulo('mod-tasas')">
                 <span class="nav-icon"><re-icon icon=chart-column size=15></re-icon></span> Tasas y Brechas
+            </li>
+            <li class="nav-item" data-module="mod-agenda" onclick="seleccionarModulo('mod-agenda'); iniciarAgenda();">
+                <span class="nav-icon"><re-icon icon=calendar size=15></re-icon></span> Agenda
             </li>
         </ul>
     </aside>
@@ -905,44 +988,78 @@
                         </div>
                     </div>
 
-                    <!-- ESTADOS DE PEDIDO TIPO "PILLS" COMPACTAS -->
+                    <!-- ESTADOS DE PEDIDO TIPO "CHIPS" (Checkout) -->
                     <div class="checkout-card-section">
                         <div class="checkout-section-header">
                             <h3 class="checkout-section-title">Estados Iniciales del Pedido</h3>
                         </div>
                         <div class="status-grid">
                             <div class="status-pill-card">
-                                <label>1. Pedido</label>
-                                <select id="nuevoPedidoEstado">
-                                    <option value="pending" selected>Pendiente</option>
-                                    <option value="confirmed">Confirmado</option>
+                                <label>1. Estado del pedido</label>
+                                <div class="status-options" data-target="nuevoPedidoEstado">
+                                    <button type="button" class="status-opt is-active c-blue" data-value="confirmed"><re-icon icon=check-circle size=13></re-icon>Confirmado</button>
+                                    <button type="button" class="status-opt" data-value="completed"><re-icon icon=check size=13></re-icon>Completado</button>
+                                    <button type="button" class="status-opt" data-value="cancelled"><re-icon icon=x-circle size=13></re-icon>Cancelado</button>
+                                </div>
+                                <select id="nuevoPedidoEstado" class="status-native-fallback" tabindex="-1" aria-hidden="true">
+                                    <option value="confirmed" selected>Confirmado</option>
                                     <option value="completed">Completado</option>
                                     <option value="cancelled">Cancelado</option>
                                 </select>
                             </div>
                             <div class="status-pill-card">
-                                <label>2. Pago</label>
-                                <select id="nuevoPedidoPago">
-                                    <option value="pending" selected>Sin pagar</option>
+                                <label>2. Estado del pago</label>
+                                <div class="status-options" data-target="nuevoPedidoPago">
+                                    <button type="button" class="status-opt is-active c-amber" data-value="pending"><re-icon icon=alert-triangle size=13></re-icon>Pendiente</button>
+                                    <button type="button" class="status-opt" data-value="confirming"><re-icon icon=refresh-cw size=13></re-icon>Confirmando pago</button>
+                                    <button type="button" class="status-opt" data-value="partial"><re-icon icon=banknote size=13></re-icon>Parc. pagado</button>
+                                    <button type="button" class="status-opt" data-value="paid"><re-icon icon=check-circle size=13></re-icon>Pagado</button>
+                                    <button type="button" class="status-opt" data-value="refunded"><re-icon icon=x-circle size=13></re-icon>Reembolsado</button>
+                                </div>
+                                <select id="nuevoPedidoPago" class="status-native-fallback" tabindex="-1" aria-hidden="true">
+                                    <option value="pending" selected>Pendiente</option>
                                     <option value="confirming">Confirmando pago</option>
                                     <option value="partial">Parc. pagado</option>
                                     <option value="paid">Pagado</option>
                                     <option value="refunded">Reembolsado</option>
-                                    <option value="voided">Anulado</option>
                                 </select>
                             </div>
                             <div class="status-pill-card">
-                                <label>3. Envío</label>
-                                <select id="nuevoPedidoCumplimiento">
-                                    <option value="unfulfilled" selected>Incumplido</option>
-                                    <option value="ready">Listo</option>
-                                    <option value="in_transit">En camino</option>
-                                    <option value="partially_fulfilled">Parc. cumplido</option>
-                                    <option value="fulfilled">Entregado</option>
+                                <label>3. Estado de la entrega</label>
+                                <div class="status-options" data-target="nuevoPedidoCumplimiento">
+                                    <button type="button" class="status-opt is-active c-slate" data-value="unfulfilled"><re-icon icon=package size=13></re-icon>No cumplido</button>
+                                    <button type="button" class="status-opt" data-value="in_transit"><re-icon icon=truck size=13></re-icon>En camino para la entrega</button>
+                                    <button type="button" class="status-opt" data-value="fulfilled"><re-icon icon=check-circle size=13></re-icon>Cumplido</button>
+                                </div>
+                                <select id="nuevoPedidoCumplimiento" class="status-native-fallback" tabindex="-1" aria-hidden="true">
+                                    <option value="unfulfilled" selected>No cumplido</option>
+                                    <option value="in_transit">En camino para la entrega</option>
+                                    <option value="fulfilled">Cumplido</option>
                                 </select>
                             </div>
                         </div>
                     </div>
+                    <script>
+                    (function () {
+                        const COLORES_OPCION = {
+                            confirmed: 'c-blue', completed: 'c-green', cancelled: 'c-red',
+                            pending: 'c-amber', confirming: 'c-blue', partial: 'c-amber', paid: 'c-green', refunded: 'c-red',
+                            unfulfilled: 'c-slate', in_transit: 'c-blue', fulfilled: 'c-green'
+                        };
+                        document.querySelectorAll('.status-options').forEach(function (grupo) {
+                            const select = document.getElementById(grupo.dataset.target);
+                            grupo.querySelectorAll('.status-opt').forEach(function (btn) {
+                                btn.addEventListener('click', function () {
+                                    grupo.querySelectorAll('.status-opt').forEach(function (b) {
+                                        b.classList.remove('is-active', 'c-blue', 'c-green', 'c-red', 'c-amber', 'c-slate');
+                                    });
+                                    btn.classList.add('is-active', COLORES_OPCION[btn.dataset.value] || 'c-blue');
+                                    if (select) select.value = btn.dataset.value;
+                                });
+                            });
+                        });
+                    })();
+                    </script>
 
                     <!-- Ajuste del pedido y Totales -->
                     <div class="checkout-card-section">
@@ -1314,6 +1431,92 @@
             <div class="module-pane" id="mod-notas"><div class="card"><h2><re-icon icon=credit-card size=15></re-icon> Redactar notas de pago</h2><label>Tasa BCV VES</label><div class="tasa-container"><input type="number" step="0.01" id="tasaInput" placeholder="Cargando..." oninput="sincronizarTasa('main')"><button type="button" class="btn-refresh" onclick="obtenerTasa()" title="Actualizar Tasa"><re-icon icon=refresh-cw size=15></re-icon></button></div><label>Monto total de la orden ($)</label><input type="number" step="0.01" id="totalUSD" placeholder="0.00" oninput="calcularNota()"><label>Método de Pago:</label><select id="paymentMethod" onchange="toggleCampos(); calcularNota();"><option value="pago_movil">Pago móvil</option><option value="cuotas">Pago en Cuotas / Crédito</option><option value="divisas">Divisas (Efectivo)</option></select><div id="campoDivisas" style="display:none;"><label>¿Con cuánto cancela el cliente ($)?</label><input type="number" id="billete" placeholder="0.00" oninput="calcularNota()"></div><div id="campoCuotas" style="display:none;"><label>Monto de Inicial ($):</label><input type="number" step="0.01" id="montoInicial" placeholder="0.00" oninput="calcularNota()"><label>Número de Cuotas:</label><select id="numCuotas" onchange="generarCamposFechas(); calcularNota();"><option value="1">1 Cuota</option><option value="2">2 Cuotas</option><option value="3">3 Cuotas</option><option value="4">4 Cuotas</option><option value="5">5 Cuotas</option></select><div id="contenedorFechasCuotas"></div></div><div class="preview"><strong>Nota generada:</strong><p id="previewText">Ingresa los datos del pedido...</p><button type="button" class="btn-copy" id="btnCopyNota" onclick="copiarTexto('previewText', 'btnCopyNota')"><re-icon icon=clipboard size=15></re-icon> Copiar Texto</button></div></div></div>
             <div class="module-pane" id="mod-calc"><div class="card"><h2><re-icon icon=calculator size=15></re-icon> Calculadora de Montos (VES / USD)</h2><label>Tasa BCV Aplicada (Bs/USD):</label><input type="number" step="0.01" id="modalTasaInput" placeholder="0.00" oninput="sincronizarTasa('modal')"><label>Monto en USD ($):</label><input type="number" step="0.01" id="calcUSD" placeholder="0.00" oninput="convertirDesdeUSD()"><label>Monto en Bolívares (Bs. S):</label><input type="number" step="0.01" id="calcVES" placeholder="0.00" oninput="convertirDesdeVES()"><div class="preview"><strong>Monto del pedido en Bolívares:</strong><p id="calcResumen" style="margin-bottom: 0;">Ingresa un monto para convertir...</p></div><button type="button" class="btn-copy" style="margin-top: 14px;" onclick="copiarTexto('calcResumen', this)"><re-icon icon=clipboard size=15></re-icon> Copiar Texto</button><button type="button" class="btn-copy btn-shot" id="btnCopyImage" onclick="generarYCopiarImagen()"><re-icon icon=camera size=15></re-icon> Copiar Captura (Imagen)</button></div></div>
             <div class="module-pane" id="mod-tasas"><div class="card"><h2><re-icon icon=chart-column size=15></re-icon> Tasas y Brechas Cambiarias</h2><div class="market-grid"><div class="market-item"><div class="market-label">Dólar BCV</div><div class="market-value" id="mBcvUsd">Cargando...</div></div><div class="market-item"><div class="market-label">Euro BCV</div><div class="market-value" id="mBcvEur">Cargando...</div></div><div class="market-item full-width"><div class="market-label">USDT Binance</div><div class="market-value" id="mUsdt">Cargando...</div></div><div class="market-item"><div class="market-label">Brecha USDT/BCV</div><div class="market-value badge-gap" id="mBrechaUsdt">--%</div></div><div class="market-item"><div class="market-label">Brecha EUR/USD</div><div class="market-value badge-gap" id="mBrechaEur">--%</div></div></div><div class="market-time" id="mTime">Sincronizando mercado...</div></div></div>
+            <!-- MÓDULO AGENDA -->
+            <div class="module-pane" id="mod-agenda">
+                <div class="agenda-wrap" id="agenda-root">
+                    <div class="agenda-topbar">
+                        <div class="agenda-greeting">
+                            <h2 id="ag-greet" style="font-size:18px;font-weight:600;color:var(--text-main)">Cargando...</h2>
+                            <p id="ag-sub" style="font-size:13px;color:var(--text-muted);margin-top:2px">Aquí está tu agenda del día</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div class="ag-search"><re-icon icon=search size=13></re-icon> Buscar evento...</div>
+                            <button class="ag-notion-btn" id="ag-notion-btn" onclick="agendaToggleNotion()">
+                                <re-icon icon=link size=13></re-icon> <span id="ag-notion-label">Conectar Notion</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="agenda-body">
+                        <!-- Calendario -->
+                        <div class="ag-cal-section">
+                            <div class="ag-cal-nav">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <span class="ag-month-label" id="ag-month-label"></span>
+                                    <span style="font-size:13px;color:var(--text-muted);" id="ag-year-label"></span>
+                                </div>
+                                <div style="display:flex;gap:4px;">
+                                    <button class="ag-arrow" onclick="agNavMonth(-1)" aria-label="Mes anterior">&#8249;</button>
+                                    <button class="ag-arrow" onclick="agNavMonth(1)" aria-label="Mes siguiente">&#8250;</button>
+                                </div>
+                            </div>
+                            <div class="ag-grid" id="ag-grid"></div>
+                        </div>
+                        <!-- Panel lateral -->
+                        <div class="ag-sidebar">
+                            <div class="ag-sidebar-header">
+                                <div style="font-size:13px;font-weight:600;color:var(--text-main)">Programado</div>
+                                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;" id="ag-sidebar-date"></div>
+                            </div>
+                            <div class="ag-events-list" id="ag-events-list"></div>
+                            <button class="ag-add-btn" onclick="agOpenModal()"><re-icon icon=plus size=13></re-icon> Añadir evento</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal nuevo evento -->
+                <div class="ag-modal-bg" id="ag-modal-bg" onclick="if(event.target===this)agCloseModal()">
+                    <div class="ag-modal" role="dialog">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                            <span style="font-size:14px;font-weight:600;color:var(--text-main)">Nuevo evento</span>
+                            <button class="btn-pill" onclick="agCloseModal()" style="padding:4px 8px;"><re-icon icon=x size=13></re-icon></button>
+                        </div>
+                        <div class="ag-form-row">
+                            <label class="ag-label">Título *</label>
+                            <input class="ag-input" id="ag-ev-title" placeholder="Nombre del evento" type="text" oninput="document.getElementById('ag-modal-error').textContent=''">
+                        </div>
+                        <div class="ag-form-row">
+                            <label class="ag-label">Tipo</label>
+                            <div style="display:flex;gap:6px;">
+                                <button class="ag-type-pill active-important" id="ag-pill-important" onclick="agSetType('important')">Importante</button>
+                                <button class="ag-type-pill" id="ag-pill-event" onclick="agSetType('event')">Evento</button>
+                                <button class="ag-type-pill" id="ag-pill-reminder" onclick="agSetType('reminder')">Recordatorio</button>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                            <div class="ag-form-row">
+                                <label class="ag-label">Inicio</label>
+                                <input class="ag-input" id="ag-ev-start" type="time" value="09:00">
+                            </div>
+                            <div class="ag-form-row">
+                                <label class="ag-label">Fin</label>
+                                <input class="ag-input" id="ag-ev-end" type="time" value="10:00">
+                            </div>
+                        </div>
+                        <div class="ag-form-row">
+                            <label class="ag-label">Nota</label>
+                            <input class="ag-input" id="ag-ev-note" placeholder="Descripción opcional" type="text">
+                        </div>
+                        <div class="ag-notion-sync-row" id="ag-notion-sync-row" style="display:none;">
+                            <span style="font-size:11px;color:var(--turquesa-dark);display:flex;align-items:center;gap:5px;"><re-icon icon=link size=11></re-icon> Sincronizar con Notion</span>
+                            <div class="ag-toggle" id="ag-sync-toggle" onclick="this.classList.toggle('on')" role="switch"></div>
+                        </div>
+                        <p id="ag-modal-error" style="color:#ef4444;font-size:12px;min-height:14px;"></p>
+                        <div style="display:flex;gap:8px;justify-content:flex-end;">
+                            <button class="btn-pill" onclick="agCloseModal()">Cancelar</button>
+                            <button class="btn-copy" onclick="agSaveEvent()" style="background:var(--turquesa-dark);color:#fff;"><re-icon icon=check size=13></re-icon> Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 </div>
@@ -2375,7 +2578,12 @@ async function crearNuevoPedido(esBorrador = false) {
         
         // Forzamos la actualización de la tabla de Gestión de pedidos automáticamente
         pedidosGestionCargados = false;
-        cargarGestionPedidos(true); 
+        cargarGestionPedidos(true);
+
+        // Resetear el checkout para el siguiente pedido sin recargar la página
+        if (!esBorrador) {
+            setTimeout(() => resetearCheckout(), 1800);
+        }
 
     } catch (err) { 
         feedback.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${err.message || 'Error al procesar el pedido.'}`; 
@@ -2383,6 +2591,61 @@ async function crearNuevoPedido(esBorrador = false) {
         btn.disabled = false; 
         btn.innerHTML = textoOriginal; 
     }
+}
+
+function resetearCheckout() {
+    // --- Cliente ---
+    document.getElementById('pedidoClienteNombre').value = '';
+    document.getElementById('pedidoWpCod').value = '+58';
+    document.getElementById('pedidoWpNum').value = '';
+    document.getElementById('resumenClienteSeleccionado').innerText = 'Buscar cliente';
+
+    // --- Artículos ---
+    listaArticulosPedido = [];
+    renderTablaArticulos();
+
+    // --- Envío: volver a Delivery por defecto ---
+    document.getElementById('radioEnvioDelivery').checked = true;
+    document.getElementById('radioEnvioNacional').checked = false;
+    document.getElementById('resumenMetodoEnvio').innerHTML = '<re-icon icon=package size=15></re-icon> Delivery GRATIS';
+    // Limpiar dirección delivery
+    const previewDiv = document.getElementById('previewDireccionDelivery');
+    const textP = document.getElementById('textoDireccionDelivery');
+    const mapContainer = document.getElementById('mapPreviewContainer');
+    const iframeMap = document.getElementById('googleMapIframe');
+    if (previewDiv) previewDiv.style.display = 'none';
+    if (textP) textP.innerText = '';
+    if (iframeMap) iframeMap.src = '';
+    // Limpiar campos Envío Nacional
+    ['envioNacNombre','envioNacApellido','envioNacTelefono','envioNacCedula'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
+    });
+    const agencia = document.getElementById('envioNacionalAgencia');
+    if (agencia) agencia.selectedIndex = 0;
+    toggleCamposEnvio();
+
+    // --- Pago: volver a Pago móvil por defecto ---
+    seleccionarMetodoPago('pago_movil');
+    billeteUSDCliente = 0;
+    mixtoLineasData = [];
+
+    // --- Ajuste, observación y feedback ---
+    document.getElementById('pedidoAjuste').value = '0.00';
+    document.getElementById('pedidoObservacion').value = '';
+    const feedback = document.getElementById('feedbackPedido');
+    if (feedback) { feedback.innerHTML = ''; feedback.style.color = ''; }
+
+    // --- Estados iniciales ---
+    const sp = document.getElementById('selectEstadoPedido');
+    const spg = document.getElementById('selectEstadoPago');
+    const se = document.getElementById('selectEstadoEnvio');
+    if (sp) sp.value = 'completed';
+    if (spg) spg.value = 'paid';
+    if (se) se.value = 'delivered';
+
+    // --- Recalcular totales y progreso ---
+    calcularTotalesPedido();
+    actualizarProgresoModales();
 }
 
 async function realizarPedidoYCopiarCaptura() {
@@ -2585,6 +2848,180 @@ function olcRecuperarCercano(corto, refLat, refLng) {
     if (dLat > borde) lat -= resol; else if (dLat < -borde) lat += resol;
     if (dLng > borde) lng -= resol; else if (dLng < -borde) lng += resol;
     return [lat, lng];
+}
+
+// ============================
+// MÓDULO AGENDA
+// ============================
+const AG_MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const AG_DAYS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+let agYear, agMonth, agSelectedDate, agNotionConnected = false, agNewType = 'important', agEvents = {}, agInited = false;
+
+function agDateKey(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
+function iniciarAgenda() {
+    if (agInited) { agRender(); return; }
+    agInited = true;
+    const now = new Date();
+    agYear = now.getFullYear(); agMonth = now.getMonth();
+    agSelectedDate = agDateKey(agYear, agMonth, now.getDate());
+    const h = now.getHours();
+    document.getElementById('ag-greet').textContent = h < 12 ? 'Buenos días 👋' : h < 18 ? 'Buenas tardes 👋' : 'Buenas noches 👋';
+    document.getElementById('ag-sub').textContent = 'Aquí está tu agenda del día';
+    // Eventos de ejemplo
+    const td = now.getDate();
+    const seeds = [
+        { d: agDateKey(agYear, agMonth, td),   title: 'Reunión de equipo',    type: 'important', start: '09:00', end: '10:00', note: 'Revisión semanal' },
+        { d: agDateKey(agYear, agMonth, td),   title: 'Llamada con cliente',  type: 'event',     start: '11:30', end: '12:00', note: '' },
+        { d: agDateKey(agYear, agMonth, td+1), title: 'Entrega de proyecto',  type: 'reminder',  start: '08:00', end: '08:30', note: 'Enviar por correo' },
+        { d: agDateKey(agYear, agMonth, td+3), title: 'Planificación mensual',type: 'important', start: '14:00', end: '15:30', note: '' },
+        { d: agDateKey(agYear, agMonth, td-1), title: 'Sesión de diseño',     type: 'event',     start: '10:00', end: '11:00', note: '' },
+    ];
+    seeds.forEach(ev => { if (!agEvents[ev.d]) agEvents[ev.d] = []; agEvents[ev.d].push(ev); });
+    agRender();
+}
+
+function agRender() { agRenderHeader(); agRenderGrid(); agRenderSidebar(); }
+
+function agRenderHeader() {
+    document.getElementById('ag-month-label').textContent = AG_MONTHS[agMonth];
+    document.getElementById('ag-year-label').textContent = agYear;
+}
+
+function agRenderGrid() {
+    const grid = document.getElementById('ag-grid');
+    if (!grid) return;
+    const today = new Date(), todayKey = agDateKey(today.getFullYear(), today.getMonth(), today.getDate());
+    const first = new Date(agYear, agMonth, 1).getDay();
+    const daysInMonth = new Date(agYear, agMonth + 1, 0).getDate();
+    const prevDays = new Date(agYear, agMonth, 0).getDate();
+    let cells = [];
+    for (let i = first - 1; i >= 0; i--) cells.push({ day: prevDays - i, cur: false, m: agMonth - 1, y: agYear });
+    for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, cur: true, m: agMonth, y: agYear });
+    let next = 1; while (cells.length % 7 !== 0) cells.push({ day: next++, cur: false, m: agMonth + 1, y: agYear });
+    grid.innerHTML = AG_DAYS.map(d => `<div class="ag-day-header">${d}</div>`).join('') +
+        cells.map(c => {
+            let rm = c.m, ry = c.y;
+            if (rm < 0) { rm = 11; ry--; } else if (rm > 11) { rm = 0; ry++; }
+            const k = agDateKey(ry, rm, c.day);
+            const evs = agEvents[k] || [];
+            let cls = 'ag-day-cell' + (!c.cur ? ' ag-other-month' : '') + (k === todayKey ? ' ag-today' : k === agSelectedDate ? ' ag-selected' : '');
+            const dots = evs.slice(0, 2).map(e => `<div class="ag-ev-dot tp-${e.type}">${e.title}</div>`).join('');
+            return `<div class="${cls}" onclick="agSelectDay('${k}')"><div class="ag-day-num">${c.day}</div><div class="ag-ev-dots">${dots}</div></div>`;
+        }).join('');
+}
+
+function agRenderSidebar() {
+    const parts = agSelectedDate.split('-');
+    const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+    const sidebarDate = document.getElementById('ag-sidebar-date');
+    if (sidebarDate) sidebarDate.textContent = `${d.getDate()} de ${AG_MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+    const evs = agEvents[agSelectedDate] || [];
+    const list = document.getElementById('ag-events-list');
+    if (!list) return;
+    if (!evs.length) {
+        list.innerHTML = `<div class="ag-empty"><re-icon icon=calendar size=24 style="display:block;margin:0 auto 8px"></re-icon>Sin eventos este día.<br>Pulsa + para añadir uno.</div>`;
+        return;
+    }
+    const labels = { important: 'Importante', event: 'Evento', reminder: 'Recordatorio' };
+    list.innerHTML = evs.map((e, i) => `
+        <div class="ag-event-card" onclick="agEditEvent(${i})">
+            <div class="ag-ev-bar tp-${e.type}"></div>
+            <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;">
+                    <div class="ag-ev-title">${e.title}</div>
+                    <span class="ag-ev-badge tp-${e.type}">${labels[e.type]}</span>
+                </div>
+                ${e.note ? `<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${e.note}</div>` : ''}
+                <div class="ag-ev-time"><re-icon icon=clock size=10></re-icon> ${e.start} – ${e.end}${e.notion ? ' <span class="ag-ev-badge tp-notion" style="margin-left:4px">Notion</span>' : ''}</div>
+            </div>
+        </div>`).join('');
+}
+
+function agSelectDay(key) { agSelectedDate = key; agRenderGrid(); agRenderSidebar(); }
+function agNavMonth(dir) { agMonth += dir; if (agMonth > 11) { agMonth = 0; agYear++; } else if (agMonth < 0) { agMonth = 11; agYear--; } agRender(); }
+
+function agOpenModal() {
+    document.getElementById('ag-modal-bg').style.display = 'flex';
+    document.getElementById('ag-modal-error').textContent = '';
+    document.getElementById('ag-notion-sync-row').style.display = agNotionConnected ? 'flex' : 'none';
+    setTimeout(() => document.getElementById('ag-ev-title').focus(), 50);
+}
+
+function agCloseModal() {
+    document.getElementById('ag-modal-bg').style.display = 'none';
+    document.getElementById('ag-ev-title').value = '';
+    document.getElementById('ag-ev-note').value = '';
+    document.getElementById('ag-ev-start').value = '09:00';
+    document.getElementById('ag-ev-end').value = '10:00';
+    document.getElementById('ag-sync-toggle').classList.remove('on');
+    agSetType('important');
+}
+
+function agSetType(t) {
+    agNewType = t;
+    ['important', 'event', 'reminder'].forEach(k => {
+        const pill = document.getElementById('ag-pill-' + k);
+        if (pill) pill.className = 'ag-type-pill' + (k === t ? ' active-' + k : '');
+    });
+}
+
+function agSaveEvent() {
+    const title = (document.getElementById('ag-ev-title').value || '').trim();
+    const errEl = document.getElementById('ag-modal-error');
+    if (!title) { errEl.textContent = 'Ingresa un título para el evento.'; return; }
+    errEl.textContent = '';
+    const syncOn = agNotionConnected && document.getElementById('ag-sync-toggle').classList.contains('on');
+    const ev = {
+        d: agSelectedDate,
+        title,
+        type: agNewType,
+        start: document.getElementById('ag-ev-start').value,
+        end:   document.getElementById('ag-ev-end').value,
+        note:  (document.getElementById('ag-ev-note').value || '').trim(),
+        notion: syncOn,
+    };
+    if (!agEvents[agSelectedDate]) agEvents[agSelectedDate] = [];
+    agEvents[agSelectedDate].push(ev);
+    agCloseModal();
+    agRenderGrid();
+    agRenderSidebar();
+    // Si Notion está conectado y el toggle está activo → abrir integración
+    if (syncOn) {
+        const parts = agSelectedDate.split('-');
+        const fd = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+        const fechaLeg = `${fd.getDate()} de ${AG_MONTHS[fd.getMonth()]} de ${fd.getFullYear()}`;
+        alert(`Evento "${title}" guardado.\n\nPara sincronizarlo con Notion, conecta el conector de Notion desde el menú de herramientas y Claude lo creará automáticamente en tu base de datos.`);
+    }
+}
+
+function agEditEvent(i) {
+    const ev = (agEvents[agSelectedDate] || [])[i];
+    if (!ev) return;
+    document.getElementById('ag-ev-title').value = ev.title;
+    document.getElementById('ag-ev-note').value = ev.note || '';
+    document.getElementById('ag-ev-start').value = ev.start;
+    document.getElementById('ag-ev-end').value = ev.end;
+    agSetType(ev.type);
+    if (agNotionConnected && ev.notion) document.getElementById('ag-sync-toggle').classList.add('on');
+    document.getElementById('ag-notion-sync-row').style.display = agNotionConnected ? 'flex' : 'none';
+    document.getElementById('ag-modal-bg').style.display = 'flex';
+}
+
+function agendaToggleNotion() {
+    agNotionConnected = !agNotionConnected;
+    const btn = document.getElementById('ag-notion-btn');
+    const label = document.getElementById('ag-notion-label');
+    if (agNotionConnected) {
+        btn.classList.add('connected');
+        label.textContent = 'Notion conectado ✓';
+        // Guía para conectar el conector real
+        alert('Para vincular Notion:\n1. Ve a Herramientas → Conectores en Claude\n2. Conecta el conector de Notion\n3. Vuelve aquí y al guardar un evento con el toggle activo, Claude lo creará en tu base de datos de Notion automáticamente.');
+    } else {
+        btn.classList.remove('connected');
+        label.textContent = 'Conectar Notion';
+    }
+    agRenderSidebar();
 }
 
 // ============================
