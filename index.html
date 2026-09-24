@@ -1666,10 +1666,52 @@ function getBadgeEnvio(estado) {
 async function cargarGestionPedidos(forzar = false) {
     if (pedidosGestionCargados && !forzar) { renderTablaGestionPedidos(); return; }
     const tbody = document.getElementById('tbodyGestionPedidos');
-    if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">Cargando pedidos...</td></tr>';
-    const { data, error } = await supabaseClient.from('gestion_pedidos').select('*').order('fecha_pedido', { ascending: false }).limit(300);
+    if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty"><re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Cargando pedidos…</td></tr>';
+
+    // PASO 1: Pedidos de Supabase
+    const { data, error } = await supabaseClient.from('gestion_pedidos').select('*').order('fecha_pedido', { ascending: false }).limit(1000);
     if (error) { console.warn('Error cargando pedidos:', error); if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">No se pudieron cargar los pedidos.</td></tr>'; return; }
-    gestionPedidosCache = data || []; pedidosGestionCargados = true; renderTablaGestionPedidos();
+    let supaPedidos = data || [];
+
+    // PASO 2: Si el cache de analíticas ya tiene pedidos de TakeApp (ya fusionados), reutilizarlo
+    // De lo contrario, traer de TakeApp para completar el historial
+    let taPedidosNorm = [];
+    if (analiticasCargadas && analiticasPedidosCache.length > 0) {
+        // Reutilizar lo que ya cargamos en analíticas
+        taPedidosNorm = analiticasPedidosCache.filter(p => p._fuente === 'takeapp');
+    } else {
+        if (tbody) {
+            const filaActual = tbody.querySelector('td');
+            if (filaActual) filaActual.innerHTML = '<re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Sincronizando con TakeApp…';
+        }
+        const taBrutos = await cargarPedidosTakeAppMCP();
+        taPedidosNorm = taBrutos.map(normalizarPedidoTakeApp);
+    }
+
+    // Enriquecer pedidos Supabase que no tienen dirección
+    const supaPorTaId = {};
+    supaPedidos.forEach(p => { if (p.takeapp_id) supaPorTaId[String(p.takeapp_id)] = p; });
+    for (const tp of taPedidosNorm) {
+        const taId = String(tp.takeapp_id || '');
+        if (taId && supaPorTaId[taId] && !supaPorTaId[taId].direccion_envio?.trim()) {
+            supaPorTaId[taId].direccion_envio = tp.direccion_envio;
+        }
+    }
+
+    // Agregar solo pedidos de TakeApp que no están en Supabase
+    const supaIds = new Set(supaPedidos.map(p => String(p.takeapp_id || '')).filter(Boolean));
+    const supaNumeros = new Set(supaPedidos.map(p => String(p.numero_pedido || '')).filter(Boolean));
+    const soloTa = taPedidosNorm.filter(tp =>
+        !supaIds.has(String(tp.takeapp_id || '')) &&
+        !supaNumeros.has(String(tp.numero_pedido || ''))
+    );
+
+    const todos = [...supaPedidos, ...soloTa];
+    todos.sort((a, b) => new Date(b.fecha_pedido || 0) - new Date(a.fecha_pedido || 0));
+
+    gestionPedidosCache = todos;
+    pedidosGestionCargados = true;
+    renderTablaGestionPedidos();
 }
 
 function renderTablaGestionPedidos() {
@@ -1688,9 +1730,20 @@ function renderTablaGestionPedidos() {
     if (lista.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="pedidos-empty">No se encontraron pedidos con esos filtros.</td></tr>'; return; }
 
     tbody.innerHTML = lista.map(p => {
+        const esSoloTakeApp = p._fuente === 'takeapp';
+        const numDisplay = p.enlace_recibo
+            ? `<a href="${p.enlace_recibo}" target="_blank" style="color: var(--text-main); text-decoration: none;" title="Ver Nota de Entrega">#${p.numero_pedido || '—'}</a>`
+            : `#${p.numero_pedido || '—'}`;
+        const badgeTA = esSoloTakeApp ? `<span class="status-badge st-neutral" style="font-size:10px;margin-left:4px;" title="Importado de TakeApp (solo lectura)">TakeApp</span>` : '';
+        const acciones = esSoloTakeApp
+            ? `<span style="font-size:11px;color:var(--text-muted);">Solo lectura</span>`
+            : `<div style="display:flex; align-items:center; gap:8px;">
+                   <button type="button" class="btn-accion-link" onclick="abrirModalEstadoPedido('${p.id}')">Modificar</button>
+                   <button type="button" class="btn-accion-dots" title="Opciones (Eliminar)" onclick="abrirModalEliminarPedido('${p.id}')">•••</button>
+               </div>`;
         return `
         <tr>
-            <td style="font-weight:700;">${p.enlace_recibo ? `<a href="${p.enlace_recibo}" target="_blank" style="color: var(--text-main); text-decoration: none;" title="Ver Nota de Entrega">#${p.numero_pedido || '—'}</a>` : `#${p.numero_pedido || '—'}`}</td>
+            <td style="font-weight:700;">${numDisplay}${badgeTA}</td>
             <td>
                 <div style="font-weight:600; color:var(--text-main);">${p.cliente_nombre || 'Sin nombre'}</div>
                 <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${p.cliente_telefono || ''}</div>
@@ -1700,12 +1753,7 @@ function renderTablaGestionPedidos() {
             <td>${getBadgePedido(p.estado_pedido)}</td>
             <td>${getBadgeEnvio(p.estado_envio)}</td>
             <td style="color:var(--text-muted); font-size:12px;">${formatoFechaCorta(p.fecha_pedido)}</td>
-            <td>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <button type="button" class="btn-accion-link" onclick="abrirModalEstadoPedido('${p.id}')">Modificar</button>
-                    <button type="button" class="btn-accion-dots" title="Opciones (Eliminar)" onclick="abrirModalEliminarPedido('${p.id}')">•••</button>
-                </div>
-            </td>
+            <td>${acciones}</td>
         </tr>
     `}).join('');
 }
@@ -1847,16 +1895,106 @@ let currentFiltroPago = '';
 let currentFiltroEnvio = '';
 let currentFiltroEntrega = '';
 
+// Normaliza un pedido de TakeApp al esquema de gestion_pedidos
+function normalizarPedidoTakeApp(tp) {
+    const mapEstadoPedido = { pending: 'pending', confirmed: 'confirmed', completed: 'completed', cancelled: 'cancelled', draft: 'draft' };
+    const mapEstadoPago   = { pending: 'pending', paid: 'paid', partial: 'partial', refunded: 'refunded', voided: 'voided' };
+    const mapEstadoEnvio  = { unfulfilled: 'unfulfilled', fulfilled: 'fulfilled', in_transit: 'in_transit', out_for_delivery: 'out_for_delivery', partially_fulfilled: 'partially_fulfilled', ready: 'ready' };
+
+    // Dirección: TakeApp la almacena en customer.address o en shippingAddress
+    const addr = tp.shippingAddress || tp.customer?.address || {};
+    const partesDireccion = [addr.address1, addr.address2, addr.city, addr.state, addr.zip, addr.country].filter(Boolean);
+    const direccion = partesDireccion.join(', ') || '';
+
+    return {
+        id: 'ta_' + tp.id,           // prefijo para distinguir del id de Supabase
+        takeapp_id: tp.id,
+        numero_pedido: tp.orderNumber || tp.id,
+        cliente_nombre: tp.customer?.name || tp.contactName || 'Sin nombre',
+        cliente_telefono: tp.customer?.phone || tp.contactPhone || '',
+        monto_total: parseFloat(tp.totalAmount || tp.total || 0),
+        estado_pedido: mapEstadoPedido[tp.orderStatus] || tp.orderStatus || 'pending',
+        estado_pago: mapEstadoPago[tp.paymentStatus] || tp.paymentStatus || 'pending',
+        estado_envio: mapEstadoEnvio[tp.fulfillmentStatus] || tp.fulfillmentStatus || 'unfulfilled',
+        metodo_entrega: tp.shippingMethod || tp.deliveryMethod || '',
+        fecha_pedido: tp.createdAt || tp.created_at || null,
+        direccion_envio: direccion,
+        enlace_recibo: tp.receiptUrl || tp.invoiceUrl || '',
+        _fuente: 'takeapp',
+    };
+}
+
+async function cargarPedidosTakeAppMCP() {
+    // Trae todos los pedidos de TakeApp desde el pedido #1 usando paginación
+    try {
+        const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
+        let cursor = null;
+        let todosTakeApp = [];
+        let intentos = 0;
+        const MAX_PAGINAS = 20; // hasta 2000 pedidos (100 por página)
+
+        while (intentos < MAX_PAGINAS) {
+            intentos++;
+            const promptPagina = cursor
+                ? `Usa la herramienta list_orders de TakeApp con limit 100 y after_cursor "${cursor}". Responde SOLO con JSON válido: { "orders": [...], "next_cursor": "..." o null }. Sin texto extra.`
+                : `Usa la herramienta list_orders de TakeApp con limit 100 sin cursor. Responde SOLO con JSON válido: { "orders": [...], "next_cursor": "..." o null }. Sin texto extra.`;
+
+            const res = await fetch(ANTHROPIC_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-6',
+                    max_tokens: 4000,
+                    messages: [{ role: 'user', content: promptPagina }],
+                    mcp_servers: [{ type: 'url', url: 'https://take.app/api/mcp', name: 'takeapp-mcp' }]
+                })
+            });
+            if (!res.ok) break;
+            const apiData = await res.json();
+
+            // Extraer el JSON de la respuesta (puede venir en content blocks de tipo text o mcp_tool_result)
+            let jsonTexto = '';
+            for (const block of (apiData.content || [])) {
+                if (block.type === 'text' && block.text) {
+                    jsonTexto = block.text;
+                } else if (block.type === 'mcp_tool_result') {
+                    const inner = block.content?.[0]?.text || block.content?.[0] || '';
+                    if (typeof inner === 'string' && inner.length > 0) jsonTexto = inner;
+                }
+            }
+            jsonTexto = jsonTexto.replace(/```json|```/g, '').trim();
+
+            let parsed = null;
+            try { parsed = JSON.parse(jsonTexto); } catch (e) {
+                // intentar extraer JSON del texto
+                const m = jsonTexto.match(/\{[\s\S]*\}/);
+                if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }
+            }
+            if (!parsed) break;
+
+            const pagina = parsed.orders || parsed.data || parsed.items || [];
+            todosTakeApp = todosTakeApp.concat(pagina);
+            cursor = parsed.next_cursor || parsed.nextCursor || parsed.cursor || null;
+            if (!cursor || pagina.length === 0) break;
+        }
+        return todosTakeApp;
+    } catch (e) {
+        console.warn('No se pudieron cargar pedidos de TakeApp:', e);
+        return [];
+    }
+}
+
 async function cargarAnaliticasPedidos(forzar = false) {
     if (analiticasCargando) return;
     if (analiticasCargadas && !forzar) { renderAnaliticas(); return; }
 
     analiticasCargando = true;
     const cont = document.getElementById('analiticasContenido');
-    if (cont) cont.innerHTML = '<div class="pedidos-empty">Cargando analíticas...</div>';
+    if (cont) cont.innerHTML = '<div class="pedidos-empty"><re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Cargando pedidos de Supabase…</div>';
 
     try {
-        let todos = [];
+        // PASO 1: Cargar todos los pedidos de Supabase
+        let supaPedidos = [];
         let desde = 0;
         const paso = 1000;
         while (true) {
@@ -1866,10 +2004,45 @@ async function cargarAnaliticasPedidos(forzar = false) {
                 .order('fecha_pedido', { ascending: false })
                 .range(desde, desde + paso - 1);
             if (error) throw error;
-            todos = todos.concat(data || []);
+            supaPedidos = supaPedidos.concat(data || []);
             if (!data || data.length < paso) break;
             desde += paso;
         }
+
+        // PASO 2: Cargar pedidos de TakeApp y fusionar los que faltan dirección
+        if (cont) cont.innerHTML = '<div class="pedidos-empty"><re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Sincronizando direcciones desde TakeApp…</div>';
+        const taPedidos = await cargarPedidosTakeAppMCP();
+
+        // Construir mapa de takeapp_id → pedido Supabase para detectar duplicados y enriquecer
+        const supaPorTaId = {};
+        supaPedidos.forEach(p => { if (p.takeapp_id) supaPorTaId[String(p.takeapp_id)] = p; });
+
+        // Enriquecer pedidos Supabase que no tienen dirección con la de TakeApp
+        for (const tp of taPedidos) {
+            const taId = String(tp.id);
+            if (supaPorTaId[taId]) {
+                // Ya existe en Supabase — completar dirección si falta
+                const sup = supaPorTaId[taId];
+                if (!sup.direccion_envio || !sup.direccion_envio.trim()) {
+                    const norm = normalizarPedidoTakeApp(tp);
+                    if (norm.direccion_envio) sup.direccion_envio = norm.direccion_envio;
+                }
+            }
+        }
+
+        // Pedidos de TakeApp que NO están en Supabase → agregarlos como solo-lectura
+        const supaIds = new Set(supaPedidos.map(p => String(p.takeapp_id || '')).filter(Boolean));
+        // También descartar los que ya existen por numero_pedido
+        const supaNumeros = new Set(supaPedidos.map(p => String(p.numero_pedido || '')).filter(Boolean));
+
+        const soloTa = taPedidos
+            .filter(tp => !supaIds.has(String(tp.id)) && !supaNumeros.has(String(tp.orderNumber || tp.id)))
+            .map(normalizarPedidoTakeApp);
+
+        const todos = [...supaPedidos, ...soloTa];
+        // Ordenar por fecha descendente
+        todos.sort((a, b) => new Date(b.fecha_pedido || 0) - new Date(a.fecha_pedido || 0));
+
         analiticasPedidosCache = todos;
         analiticasCargadas = true;
         renderAnaliticas();
@@ -2314,8 +2487,9 @@ function renderListaProductosModal(query) {
         const precioTxt = (tieneVariantes && Math.min(...precios) !== Math.max(...precios)) ? `$${Math.min(...precios).toFixed(2)} - $${Math.max(...precios).toFixed(2)}` : `$${(precios[0] || 0).toFixed(2)}`;
         const agotadoTotal = tieneVariantes ? p.variantes.every(v => v.agotado) : p.agotado;
         const row = document.createElement('div'); row.className = 'modal-item-row';
-        row.innerHTML = `<div class="modal-item-info"><span class="modal-item-name">${p.nombre}</span><span class="modal-item-sub">SKU: ${p.sku || 'S/N'}${tieneVariantes ? ` · ${p.variantes.length} variantes` : ''}</span></div><div class="modal-item-price-box"><span class="modal-item-price">${precioTxt}</span>${agotadoTotal ? '<span class="modal-item-agotado">Agotado</span>' : (tieneVariantes ? '<span class="modal-item-qty">Ver opciones ›</span>' : '<span class="modal-item-qty">/ 1 QTY</span>')}</div>`;
-        if (!agotadoTotal) { row.onclick = () => { if (tieneVariantes) mostrarVariantesProductoModal(p); else seleccionarArticuloDesdeModal(p.nombre, p.precio || 0, p.id, null); }; } else { row.style.opacity = '0.6'; }
+        const tieneOpciones = p.opciones && p.opciones.length > 0;
+        row.innerHTML = `<div class="modal-item-info"><span class="modal-item-name">${p.nombre}</span><span class="modal-item-sub">SKU: ${p.sku || 'S/N'}${tieneVariantes ? ` · ${p.variantes.length} variantes` : ''}</span></div><div class="modal-item-price-box"><span class="modal-item-price">${precioTxt}</span>${agotadoTotal ? '<span class="modal-item-agotado">Agotado</span>' : ((tieneVariantes || tieneOpciones) ? '<span class="modal-item-qty">Ver opciones ›</span>' : '<span class="modal-item-qty">/ 1 QTY</span>')}</div>`;
+        if (!agotadoTotal) { row.onclick = () => { if (tieneVariantes) mostrarVariantesProductoModal(p); else continuarConOpcionesProducto(p, p.nombre, p.precio || 0, p.id, null); }; } else { row.style.opacity = '0.6'; }
         container.appendChild(row);
     });
 }
@@ -2329,9 +2503,79 @@ function mostrarVariantesProductoModal(producto) {
     producto.variantes.forEach(v => {
         const row = document.createElement('div'); row.className = 'modal-item-row';
         row.innerHTML = `<div class="modal-item-info"><span class="modal-item-name">${v.nombre}</span><span class="modal-item-sub">${v.stock !== null ? `Stock: ${v.stock}` : ''}</span></div><div class="modal-item-price-box"><span class="modal-item-price">$${v.precio.toFixed(2)}</span>${v.agotado ? '<span class="modal-item-agotado">Agotado</span>' : '<span class="modal-item-qty">/ 1 QTY</span>'}</div>`;
-        if (!v.agotado) { row.onclick = () => seleccionarArticuloDesdeModal(`${producto.nombre} | ${v.nombre}`, v.precio, producto.id, v.id); } else { row.style.opacity = '0.6'; }
+        if (!v.agotado) { row.onclick = () => continuarConOpcionesProducto(producto, `${producto.nombre} | ${v.nombre}`, v.precio, producto.id, v.id); } else { row.style.opacity = '0.6'; }
         container.appendChild(row);
     });
+}
+
+// Si el producto tiene "Opciones" (ej. una Selección de Calidad con recargo de precio),
+// se muestran como chips antes de añadir el artículo. Si no tiene, se añade directo.
+function continuarConOpcionesProducto(producto, nombreBase, precioBase, productId, variantId) {
+    const opciones = (producto.opciones || []).filter(o => (o.choices || []).length > 0);
+    if (opciones.length === 0) { seleccionarArticuloDesdeModal(nombreBase, precioBase, productId, variantId); return; }
+    renderModalOpcionesProducto(producto, nombreBase, precioBase, productId, variantId, opciones);
+}
+
+function renderModalOpcionesProducto(producto, nombreBase, precioBase, productId, variantId, opciones) {
+    const container = document.getElementById('modalListaItemsContainer'); container.innerHTML = '';
+    const seleccion = {}; // { opcionId: [choiceId, ...] }
+    opciones.forEach(o => { seleccion[o.id] = []; });
+
+    const wrap = document.createElement('div'); wrap.style.cssText = 'padding:4px 2px 12px;';
+    const backRow = document.createElement('div'); backRow.className = 'modal-item-row'; backRow.style.cssText = 'font-weight:700; color:var(--turquesa-dark);';
+    backRow.innerHTML = `‹ Volver — <span style="font-weight:400;color:var(--text-main);">${nombreBase}</span>`;
+    backRow.onclick = () => { if (producto.variantes && producto.variantes.length > 0) mostrarVariantesProductoModal(producto); else filtrarProductosModal(); };
+    container.appendChild(backRow);
+
+    opciones.forEach(o => {
+        const bloque = document.createElement('div'); bloque.style.cssText = 'margin:14px 4px 0;';
+        bloque.innerHTML = `<div style="font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">${o.texto}${o.requerido ? ' *' : ''}</div>`;
+        const opts = document.createElement('div'); opts.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;';
+        o.choices.forEach(c => {
+            const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'status-opt';
+            btn.innerHTML = `${c.texto}${c.precio ? ` (+$${c.precio.toFixed(2)})` : ''}`;
+            btn.onclick = () => {
+                if (o.tipo === 'multiple') {
+                    const idx = seleccion[o.id].indexOf(c.id);
+                    if (idx >= 0) { seleccion[o.id].splice(idx, 1); btn.classList.remove('is-active', 'c-blue'); }
+                    else { seleccion[o.id].push(c.id); btn.classList.add('is-active', 'c-blue'); }
+                } else {
+                    seleccion[o.id] = [c.id];
+                    opts.querySelectorAll('.status-opt').forEach(b => b.classList.remove('is-active', 'c-blue'));
+                    btn.classList.add('is-active', 'c-blue');
+                }
+                actualizarPrecioPreviewOpciones();
+            };
+            opts.appendChild(btn);
+        });
+        bloque.appendChild(opts);
+        container.appendChild(bloque);
+    });
+
+    const previewRow = document.createElement('div'); previewRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin:18px 4px 8px;font-weight:700;font-size:14px;';
+    previewRow.innerHTML = `<span>Total</span><span id="previewTotalOpcionesProducto">$${precioBase.toFixed(2)}</span>`;
+    container.appendChild(previewRow);
+
+    function calcularExtra() {
+        let extra = 0;
+        opciones.forEach(o => { seleccion[o.id].forEach(cid => { const c = o.choices.find(x => x.id === cid); if (c) extra += c.precio; }); });
+        return extra;
+    }
+    function actualizarPrecioPreviewOpciones() {
+        const el = document.getElementById('previewTotalOpcionesProducto');
+        if (el) el.textContent = `$${(precioBase + calcularExtra()).toFixed(2)}`;
+    }
+
+    const btnAgregar = document.createElement('button'); btnAgregar.type = 'button'; btnAgregar.className = 'btn-pill'; btnAgregar.style.cssText = 'width:100%;padding:12px;font-weight:700;margin-top:4px;';
+    btnAgregar.textContent = 'Añadir al pedido';
+    btnAgregar.onclick = () => {
+        const faltante = opciones.find(o => o.requerido && seleccion[o.id].length === 0);
+        if (faltante) { alert(`Selecciona una opción para "${faltante.texto}".`); return; }
+        const sufijo = opciones.map(o => seleccion[o.id].map(cid => (o.choices.find(c => c.id === cid) || {}).texto).filter(Boolean).join(' + ')).filter(Boolean).join(' - ');
+        const nombreFinal = sufijo ? `${nombreBase} - ${sufijo}` : nombreBase;
+        seleccionarArticuloDesdeModal(nombreFinal, precioBase + calcularExtra(), productId, variantId);
+    };
+    container.appendChild(btnAgregar);
 }
 
 function seleccionarArticuloDesdeModal(nombreCompleto, precio, productId = null, variantId = null) { listaArticulosPedido.push({ nombre: nombreCompleto, precio, productId, variantId }); cerrarModalArticulos(); actualizarTablaArticulosPedido(); }
