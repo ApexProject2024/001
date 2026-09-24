@@ -1896,87 +1896,133 @@ let currentFiltroEnvio = '';
 let currentFiltroEntrega = '';
 
 // Normaliza un pedido de TakeApp al esquema de gestion_pedidos
-function normalizarPedidoTakeApp(tp) {
-    const mapEstadoPedido = { pending: 'pending', confirmed: 'confirmed', completed: 'completed', cancelled: 'cancelled', draft: 'draft' };
-    const mapEstadoPago   = { pending: 'pending', paid: 'paid', partial: 'partial', refunded: 'refunded', voided: 'voided' };
-    const mapEstadoEnvio  = { unfulfilled: 'unfulfilled', fulfilled: 'fulfilled', in_transit: 'in_transit', out_for_delivery: 'out_for_delivery', partially_fulfilled: 'partially_fulfilled', ready: 'ready' };
+// Estructura REAL de la API de TakeApp (confirmada):
+// - tp.number          → número de pedido (ej. "1267")
+// - tp.order_status    → estado del pedido
+// - tp.payment_status  → estado de pago
+// - tp.fulfillment_status → estado de envío
+// - tp.total_amount    → total en centavos (dividir entre 100 para USD)
+// - tp.created_at      → fecha ISO
+// - tp.customer.name / .phone / .address → datos del cliente
+// - tp.service.location → { address1, latitude, longitude } ← DIRECCIÓN DE ENTREGA REAL
+// - tp.service.name    → nombre del servicio (ej. "Delivery GRATIS")
 
-    // Dirección: TakeApp la almacena en customer.address o en shippingAddress
-    const addr = tp.shippingAddress || tp.customer?.address || {};
-    const partesDireccion = [addr.address1, addr.address2, addr.city, addr.state, addr.zip, addr.country].filter(Boolean);
-    const direccion = partesDireccion.join(', ') || '';
+function normalizarPedidoTakeApp(tp) {
+    // La dirección de entrega está en service.location (tiene lat/lng directas)
+    // Fallback: customer.address si no hay service.location
+    const srvLoc = tp.service?.location || null;
+    const custAddr = tp.customer?.address || null;
+
+    let direccion_envio = '';
+    let _lat = null, _lng = null;
+
+    if (srvLoc) {
+        // Construir string legible + guardar coordenadas directamente
+        const partes = [srvLoc.address1, srvLoc.address2, srvLoc.district, srvLoc.city, srvLoc.state].filter(Boolean);
+        direccion_envio = partes.join(', ');
+        if (srvLoc.latitude && srvLoc.longitude) {
+            _lat = srvLoc.latitude;
+            _lng = srvLoc.longitude;
+            // Formato de coordenadas que el mapa de Brooklyn ya sabe resolver directamente
+            if (!direccion_envio) direccion_envio = `${_lat},${_lng}`;
+        }
+    } else if (custAddr) {
+        const partes = [custAddr.address1, custAddr.address2, custAddr.district, custAddr.city, custAddr.state].filter(Boolean);
+        direccion_envio = partes.join(', ');
+        if (custAddr.latitude && custAddr.longitude) {
+            _lat = custAddr.latitude;
+            _lng = custAddr.longitude;
+            if (!direccion_envio) direccion_envio = `${_lat},${_lng}`;
+        }
+    }
+
+    // Si tenemos coordenadas, usar el formato "lat,lng" que el parser del mapa
+    // ya resuelve sin necesidad de geocoding (ahorra tiempo y rate limits)
+    if (_lat && _lng && direccion_envio && !direccion_envio.match(/^-?\d+\.?\d*,-?\d+\.?\d*$/)) {
+        // Anteponer las coordenadas al texto para que el mapa las use directamente
+        direccion_envio = `${_lat},${_lng}`;
+    }
 
     return {
-        id: 'ta_' + tp.id,           // prefijo para distinguir del id de Supabase
+        id: 'ta_' + tp.id,
         takeapp_id: tp.id,
-        numero_pedido: tp.orderNumber || tp.id,
-        cliente_nombre: tp.customer?.name || tp.contactName || 'Sin nombre',
-        cliente_telefono: tp.customer?.phone || tp.contactPhone || '',
-        monto_total: parseFloat(tp.totalAmount || tp.total || 0),
-        estado_pedido: mapEstadoPedido[tp.orderStatus] || tp.orderStatus || 'pending',
-        estado_pago: mapEstadoPago[tp.paymentStatus] || tp.paymentStatus || 'pending',
-        estado_envio: mapEstadoEnvio[tp.fulfillmentStatus] || tp.fulfillmentStatus || 'unfulfilled',
-        metodo_entrega: tp.shippingMethod || tp.deliveryMethod || '',
-        fecha_pedido: tp.createdAt || tp.created_at || null,
-        direccion_envio: direccion,
-        enlace_recibo: tp.receiptUrl || tp.invoiceUrl || '',
+        numero_pedido: tp.number || tp.name || tp.id,
+        cliente_nombre: tp.customer?.name || 'Sin nombre',
+        cliente_telefono: tp.customer?.phone || '',
+        // total_amount viene en centavos en TakeApp (ej. 1000 = $10.00)
+        monto_total: (tp.total_amount || 0) / 100,
+        estado_pedido: tp.order_status || 'pending',
+        estado_pago: tp.payment_status || 'pending',
+        estado_envio: tp.fulfillment_status || 'unfulfilled',
+        metodo_entrega: tp.service?.name || '',
+        fecha_pedido: tp.created_at || null,
+        direccion_envio,
+        enlace_recibo: '',
         _fuente: 'takeapp',
+        _lat,
+        _lng,
     };
 }
 
 async function cargarPedidosTakeAppMCP() {
-    // Trae todos los pedidos de TakeApp desde el pedido #1 usando paginación
+    // Usa la API de Anthropic con MCP de TakeApp para traer TODOS los pedidos paginando
     try {
         const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
         let cursor = null;
         let todosTakeApp = [];
         let intentos = 0;
-        const MAX_PAGINAS = 20; // hasta 2000 pedidos (100 por página)
+        const MAX_PAGINAS = 15; // hasta 1500 pedidos (100 por página)
 
         while (intentos < MAX_PAGINAS) {
             intentos++;
-            const promptPagina = cursor
-                ? `Usa la herramienta list_orders de TakeApp con limit 100 y after_cursor "${cursor}". Responde SOLO con JSON válido: { "orders": [...], "next_cursor": "..." o null }. Sin texto extra.`
-                : `Usa la herramienta list_orders de TakeApp con limit 100 sin cursor. Responde SOLO con JSON válido: { "orders": [...], "next_cursor": "..." o null }. Sin texto extra.`;
+            const userMsg = cursor
+                ? `Call list_orders with limit=100 and cursor="${cursor}". Return ONLY a raw JSON object with keys "data" (array of orders) and "next_cursor" (string or null). No markdown, no explanation.`
+                : `Call list_orders with limit=100. Return ONLY a raw JSON object with keys "data" (array of orders) and "next_cursor" (string or null). No markdown, no explanation.`;
 
             const res = await fetch(ANTHROPIC_API, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     model: 'claude-sonnet-4-6',
-                    max_tokens: 4000,
-                    messages: [{ role: 'user', content: promptPagina }],
+                    max_tokens: 8000,
+                    system: 'You are a data extraction assistant. When the user asks you to call a TakeApp tool, call it and then output ONLY the raw JSON result with no additional text.',
+                    messages: [{ role: 'user', content: userMsg }],
                     mcp_servers: [{ type: 'url', url: 'https://take.app/api/mcp', name: 'takeapp-mcp' }]
                 })
             });
-            if (!res.ok) break;
+            if (!res.ok) { console.warn('TakeApp API error:', res.status); break; }
             const apiData = await res.json();
 
-            // Extraer el JSON de la respuesta (puede venir en content blocks de tipo text o mcp_tool_result)
-            let jsonTexto = '';
+            // El resultado real de MCP viene en bloques mcp_tool_result
+            // pero Claude también lo repite en el bloque text final
+            let pagina = [];
+            let nextCursor = null;
+
             for (const block of (apiData.content || [])) {
-                if (block.type === 'text' && block.text) {
-                    jsonTexto = block.text;
-                } else if (block.type === 'mcp_tool_result') {
-                    const inner = block.content?.[0]?.text || block.content?.[0] || '';
-                    if (typeof inner === 'string' && inner.length > 0) jsonTexto = inner;
+                let jsonStr = '';
+                if (block.type === 'mcp_tool_result') {
+                    // Resultado crudo del tool — es el objeto list de TakeApp
+                    const raw = block.content?.[0]?.text || '';
+                    if (raw) jsonStr = raw;
+                } else if (block.type === 'text' && block.text) {
+                    jsonStr = block.text.replace(/```json|```/g, '').trim();
                 }
+                if (!jsonStr) continue;
+                try {
+                    const parsed = JSON.parse(jsonStr);
+                    // TakeApp list response: { object:"list", data:[...], has_more, next_cursor }
+                    const items = parsed.data || parsed.orders || parsed.items || [];
+                    if (items.length > 0) { pagina = items; nextCursor = parsed.next_cursor || null; break; }
+                    // Respuesta envuelta por Claude: { data:[...], next_cursor }
+                    if (parsed.data) { pagina = parsed.data; nextCursor = parsed.next_cursor || null; break; }
+                } catch (_) { /* continuar con el siguiente bloque */ }
             }
-            jsonTexto = jsonTexto.replace(/```json|```/g, '').trim();
 
-            let parsed = null;
-            try { parsed = JSON.parse(jsonTexto); } catch (e) {
-                // intentar extraer JSON del texto
-                const m = jsonTexto.match(/\{[\s\S]*\}/);
-                if (m) { try { parsed = JSON.parse(m[0]); } catch (_) {} }
-            }
-            if (!parsed) break;
-
-            const pagina = parsed.orders || parsed.data || parsed.items || [];
             todosTakeApp = todosTakeApp.concat(pagina);
-            cursor = parsed.next_cursor || parsed.nextCursor || parsed.cursor || null;
+            cursor = nextCursor;
             if (!cursor || pagina.length === 0) break;
         }
+        console.log(`TakeApp: ${todosTakeApp.length} pedidos cargados en ${intentos} página(s)`);
         return todosTakeApp;
     } catch (e) {
         console.warn('No se pudieron cargar pedidos de TakeApp:', e);
@@ -3566,6 +3612,11 @@ async function abrirMapaEntregas() {
         if (token !== mapaTokenRender) return;
         estado.innerHTML = '<re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Ubicando entregas… ' + (i + 1) + ' de ' + lista.length;
         const pedido = lista[i];
+        // Pedidos de TakeApp ya traen _lat/_lng directas de service.location — sin geocoding
+        if (pedido._lat != null && pedido._lng != null) {
+            ubicados.push({ pedido, lat: pedido._lat, lng: pedido._lng, tipo: 'TakeApp GPS' });
+            continue;
+        }
         const r = await mapaResolverUbicacion(pedido.direccion_envio);
         if (r.ok) ubicados.push({ pedido, lat: r.lat, lng: r.lng, tipo: r.tipo });
         else pendientes.push({ pedido, motivo: r.motivo });
