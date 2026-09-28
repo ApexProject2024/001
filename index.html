@@ -212,7 +212,7 @@
         .login-error { color: #ef4444 !important; font-weight: 600; margin-top: 12px; font-size: 13px; }
 
         /* LAYOUT PRINCIPAL CON SIDEBAR PERMANENTE */
-        .app-layout { display: flex; min-height: 100vh; }
+        .app-layout { display: flex; min-height: 100vh; min-height: 100dvh; align-items: flex-start; }
 
         .sidebar {
             width: var(--sidebar-width);
@@ -1116,19 +1116,19 @@
         .modal-item-agotado { color: #ef4444; font-size: 11px; font-weight: 600; }
 
         /* CAPTURE CARD HIDDEN */
-        #captureCard { position: fixed; left: -9999px; top: 0; width: 450px; padding: 32px; background: linear-gradient(135deg, #E6E1F7 0%, #E0F5F6 50%, #D8F2F6 100%); font-family: 'Inter', sans-serif; border-radius: 24px; }
+        #captureCard { position: fixed; left: -9999px; top: 0; width: 450px; padding: 32px; background: linear-gradient(135deg, #E6E1F7 0%, #E0F5F6 50%, #D8F2F6 100%); font-family: Arial, Helvetica, sans-serif; border-radius: 24px; font-variant-ligatures: none; }
         .shot-box { background: #FFFFFF; border-radius: 20px; padding: 28px 24px; box-shadow: 0 15px 35px rgba(28, 36, 48, 0.08); border: 1px solid rgba(25, 211, 211, 0.2); text-align: center; }
         .shot-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
         .shot-header img { max-width: 200px; max-height: 90px; object-fit: contain; }
-        .shot-title { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
-        .shot-amount-ves { font-size: 38px; font-weight: 800; color: #1C2430; margin-bottom: 4px; }
-        .shot-subtitle { font-size: 12px; color: #64748b; margin-bottom: 20px; }
+        .shot-title { font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 6px; letter-spacing: .02em; white-space: nowrap; }
+        .shot-amount-ves { font-size: 38px; font-weight: 800; color: #1C2430; margin-bottom: 4px; letter-spacing: 0; white-space: nowrap; }
+        .shot-subtitle { font-size: 12px; color: #64748b; margin-bottom: 20px; letter-spacing: .01em; white-space: nowrap; }
         .shot-details { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; }
         .shot-detail-item { text-align: center; flex: 1; }
         .shot-detail-item + .shot-detail-item { border-left: 1px solid #E2E8F0; }
-        .shot-detail-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; }
+        .shot-detail-label { font-size: 10px; font-weight: 700; color: #64748b; letter-spacing: .02em; white-space: nowrap; }
         .shot-detail-value { font-size: 15px; font-weight: 700; color: #1C2430; margin-top: 2px; }
-        .shot-footer { margin-top: 18px; font-size: 11px; color: #94A3B8; font-weight: 500; }
+        .shot-footer { margin-top: 18px; font-size: 11px; color: #94A3B8; font-weight: 500; letter-spacing: 0; white-space: nowrap; }
 
         /* ÍCONOS <re-icon> */
         re-icon { display: inline-flex; align-items: center; justify-content: center; vertical-align: -0.2em; flex-shrink: 0; line-height: 1; }
@@ -1352,11 +1352,31 @@
            SIDEBAR COMPACTO / ICON-ONLY
         =========================== */
         :root { --sidebar-width: 82px; }
-        .sidebar { width: var(--sidebar-width); overflow: visible; align-items: center; }
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            height: 100dvh;
+            max-height: 100vh;
+            max-height: 100dvh;
+            position: sticky;
+            top: 0;
+            align-self: flex-start;
+            overflow: visible;
+            align-items: center;
+            flex-shrink: 0;
+        }
         .sidebar-brand { width: 100%; padding: 18px 0 16px; justify-content: center; border-bottom: 0; }
         .brand-logo { width: 43px; height: 43px; }
         .brand-info, .menu-category { display: none !important; }
-        .sidebar-menu { width: 100%; padding: 8px 12px; gap: 8px; align-items: center; overflow: visible; }
+        .sidebar-menu {
+            width: 100%;
+            padding: 8px 12px;
+            gap: 8px;
+            align-items: center;
+            overflow: visible;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
         .nav-item { width: 46px; height: 46px; padding: 0; border-radius: 15px; justify-content: center; gap: 0; position: relative; flex-shrink: 0; }
         .nav-icon { width: auto; display: flex; align-items: center; justify-content: center; }
         .nav-item:hover { transform: translateY(-1px); }
@@ -1413,7 +1433,19 @@
             box-shadow: var(--shadow-md); transition: opacity .14s ease, transform .14s ease; z-index: 1200;
         }
         .nav-item:hover::after { opacity: 1; visibility: visible; transform: translateY(-50%) translateX(0); }
-        .sidebar-footer { width: 100%; margin-top: auto; padding: 12px 0 16px; display: flex; flex-direction: column; align-items: center; gap: 9px; }
+        .sidebar-footer {
+            width: 100%;
+            margin-top: auto;
+            padding: 10px 0 max(14px, env(safe-area-inset-bottom));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 9px;
+            flex: 0 0 auto;
+            background: var(--bg-sidebar);
+            position: relative;
+            z-index: 4;
+        }
         .sidebar-tool-btn { width: 42px; height: 42px; border-radius: 14px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; margin: 0; padding: 0; transition: .18s ease; }
         .sidebar-tool-btn:hover { color: var(--text-main); border-color: rgba(25,211,211,.55); background: var(--badge-bg); }
         .sidebar-theme-toggle { position: relative; }
@@ -1433,6 +1465,16 @@
         .login-logo-theme { width: 72px; height: 72px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; }
         .login-card .login-logo { width: 72px; height: 72px; margin: 0; background: transparent; padding: 3px; }
         .login-logo-dark { display: none !important; }
+
+        @media (max-height: 760px) {
+            .sidebar-brand { padding-top: 10px; padding-bottom: 8px; }
+            .brand-logo { width: 36px; height: 36px; }
+            .sidebar-menu { gap: 4px; padding-top: 5px; padding-bottom: 5px; }
+            .nav-item { width: 40px; height: 40px; border-radius: 13px; }
+            .sidebar-footer { gap: 5px; padding-top: 6px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+            .sidebar-tool-btn { width: 38px; height: 38px; border-radius: 12px; }
+            .sidebar-profile { width: 40px; height: 40px; }
+        }
         [data-theme="dark"] .login-logo-light { display: none !important; }
         [data-theme="dark"] .login-logo-dark { display: block !important; }
 
@@ -2428,7 +2470,7 @@
                             <div id="infoPagoBrooklynTexto" style="font-size:11px;color:var(--text-main);margin-top:5px;"></div>
                         </div>
                         <div class="tracking-inline-box">
-                            <small>Tracking del cliente</small>
+                            <small>Tracking interno de Brooklyn</small>
                             <div class="tracking-inline-actions">
                                 <input id="modalTrackingPedidoUrl" type="text" readonly placeholder="Se generará automáticamente">
                                 <button type="button" class="btn-copy" style="width:auto;padding:7px 10px;" onclick="copiarTrackingPedido()"><re-icon icon=copy size=14></re-icon></button>
@@ -2669,7 +2711,7 @@
         <div id="mapaEntregasPendientes" class="mapa-pendientes" style="display:none;"></div>
     </div>
 </div>
-<div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://okguzqyujdnubhllnamo.supabase.co/storage/v1/object/public/multimedia/imagenes/2026/09/1790556095398-376e718fb027-Logo-Icono.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto Total del Pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa Oficial BCV Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa Oficial</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
+<div id="captureCard"><div class="shot-box"><div class="shot-header"><img src="https://okguzqyujdnubhllnamo.supabase.co/storage/v1/object/public/multimedia/imagenes/2026/09/1790556095398-376e718fb027-Logo-Icono.png" alt="Logo" id="shotLogo" crossorigin="anonymous"></div><div class="shot-title">Monto total del pedido</div><div class="shot-amount-ves" id="shotVES">Bs. S 0,00</div><div class="shot-subtitle">Tasa oficial BCV de Venezuela</div><div class="shot-details"><div class="shot-detail-item"><div class="shot-detail-label">Monto en USD</div><div class="shot-detail-value" id="shotUSD">$0.00</div></div><div class="shot-detail-item"><div class="shot-detail-label">Tasa oficial BCV</div><div class="shot-detail-value" id="shotTasa">0.00 Bs/$</div></div></div><div class="shot-footer" id="shotFecha">Cotización válida por hoy</div></div></div>
 
 
 
@@ -3555,8 +3597,8 @@ function renderDeliveryGps(lista) {
 
 // Reglas operativas Brooklyn ↔ TakeApp
 function sincronizarReglasEstadoPedido() {
-    const orderEl=document.getElementById('selectEstadoPedido'), payEl=document.getElementById('selectEstadoPago');
-    if(orderEl?.value==='cancelled' && payEl) payEl.value='voided';
+    // Pedido, pago y envío son estados independientes.
+    // Cambiar uno nunca modifica automáticamente otro.
     actualizarInfoPagoBrooklyn();
 }
 function actualizarInfoPagoBrooklyn() {
@@ -4282,6 +4324,19 @@ function abrirModalEstadoPedido(pedidoId) {
 
 function cerrarModalEstadoPedido() { document.getElementById('modalEstadoPedido').style.display = 'none'; pedidoSeleccionadoId = null; }
 
+async function obtenerMensajeErrorFuncion(error, data, fallback = 'No se pudo completar la operación.') {
+    if (data?.error) return data.error;
+    try {
+        const response = error?.context;
+        if (response && typeof response.clone === 'function') {
+            const payload = await response.clone().json();
+            if (payload?.error) return payload.error;
+            if (payload?.message) return payload.message;
+        }
+    } catch (_) {}
+    return error?.message || fallback;
+}
+
 async function guardarEstadoPedido() {
     if (!pedidoSeleccionadoId) return;
     const btn = document.getElementById('btnGuardarEstadoPedido');
@@ -4289,16 +4344,41 @@ async function guardarEstadoPedido() {
     errorEl.innerText = ''; btn.disabled = true;
     const textoOriginal = btn.innerHTML; btn.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando...';
     sincronizarReglasEstadoPedido();
-    const cambios = { orderStatus: document.getElementById('selectEstadoPedido').value, paymentStatus: document.getElementById('selectEstadoPago').value, fulfillmentStatus: document.getElementById('selectEstadoEnvio').value, };
     const pedidoActual = gestionPedidosCache.find(p => String(p.id) === String(pedidoSeleccionadoId));
+    const cambios = {};
+    const nuevoEstadoPedido = document.getElementById('selectEstadoPedido').value;
+    const nuevoEstadoPago = document.getElementById('selectEstadoPago').value;
+    const nuevoEstadoEnvio = document.getElementById('selectEstadoEnvio').value;
+
+    // Cada estado es independiente: solo enviamos a TakeApp lo que realmente cambió.
+    if (nuevoEstadoPedido !== (pedidoActual?.estado_pedido || 'pending')) cambios.orderStatus = nuevoEstadoPedido;
+    if (nuevoEstadoPago !== (pedidoActual?.estado_pago || 'pending')) cambios.paymentStatus = nuevoEstadoPago;
+    if (nuevoEstadoEnvio !== (pedidoActual?.estado_envio || 'unfulfilled')) cambios.fulfillmentStatus = nuevoEstadoEnvio;
+
     const nota = document.getElementById('inputNotaInternaPedido').value.trim();
     if (nota) cambios.internalNote = nota;
+
+    if (!Object.keys(cambios).length) {
+        errorEl.style.color = 'var(--text-muted)';
+        errorEl.textContent = 'No hay cambios para guardar.';
+        btn.disabled = false;
+        btn.innerHTML = textoOriginal;
+        return;
+    }
     try {
         const { data, error } = await supabaseClient.functions.invoke('brooklyn-orders', { body: { action: 'update_order', pedidoId: pedidoSeleccionadoId, changes: cambios, paymentMethod: pedidoActual?.metodo_pago || 'No especificado', paymentAmount: Number(pedidoActual?.monto_total || 0) }, });
-        if (error || !data?.ok) throw new Error(data?.error || error?.message || 'No se pudo actualizar el pedido.');
+        if (error || !data?.ok) throw new Error(await obtenerMensajeErrorFuncion(error, data, 'No se pudo actualizar el pedido.'));
         const idx = gestionPedidosCache.findIndex(p => String(p.id) === String(pedidoSeleccionadoId));
         if (idx !== -1) { gestionPedidosCache[idx].estado_pedido = data.pedido.estado_pedido; gestionPedidosCache[idx].estado_pago = data.pedido.estado_pago; gestionPedidosCache[idx].estado_envio = data.pedido.estado_envio; }
-        renderTablaGestionPedidos(); cerrarModalEstadoPedido();
+        renderTablaGestionPedidos();
+        const avisosTakeApp = Array.isArray(data.update_warnings) ? data.update_warnings.filter(Boolean) : [];
+        if (avisosTakeApp.length) {
+            errorEl.style.color = '#f59e0b';
+            errorEl.innerHTML = `<re-icon icon=alert-triangle size=15></re-icon> Los cambios principales se guardaron, pero TakeApp informó: ${avisosTakeApp.map(escapeHtml).join(' · ')}`;
+        } else {
+            errorEl.style.color = '';
+            cerrarModalEstadoPedido();
+        }
     } catch (err) { errorEl.innerHTML = `<re-icon icon=x-circle size=15></re-icon> ${err.message || 'Error al guardar los cambios.'}`; } finally { btn.disabled = false; btn.innerHTML = textoOriginal; }
 }
 
@@ -4751,9 +4831,13 @@ async function crearNuevoPedido(esBorrador = false) {
         if (paymentStatusVal !== 'pending') cambios.paymentStatus = paymentStatusVal;
         if (fulfillmentStatusVal !== 'unfulfilled') cambios.fulfillmentStatus = fulfillmentStatusVal;
 
-        await supabaseClient.functions.invoke('brooklyn-orders', {
+        const { data: dataEstado, error: errorEstado } = await supabaseClient.functions.invoke('brooklyn-orders', {
             body: { action: 'update_order', pedidoId: pedidoIdGenerado, changes: cambios, paymentMethod: metodoPagoEtiqueta, paymentAmount: totalUSD }
         });
+        if (errorEstado || !dataEstado?.ok) {
+            throw new Error(await obtenerMensajeErrorFuncion(errorEstado, dataEstado, 'El pedido se creó, pero no se pudieron aplicar sus estados iniciales.'));
+        }
+        const avisosEstadoInicial = Array.isArray(dataEstado?.update_warnings) ? dataEstado.update_warnings.filter(Boolean) : [];
 
         // PASO 3: Sincronizar dirección en TakeApp vía customer.address
         // TakeApp no tiene campo de dirección nativo en la orden; la dirección
@@ -4784,7 +4868,10 @@ async function crearNuevoPedido(esBorrador = false) {
         feedback.style.color = 'var(--turquesa-dark)'; 
         feedback.innerHTML = esBorrador
             ? `<re-icon icon=file-text size=15></re-icon> Pedido #${data.pedido.numero_pedido} guardado como borrador en TakeApp.`
-            : `<re-icon icon=check-circle size=15></re-icon> Pedido #${data.pedido.numero_pedido} creado y actualizado correctamente.`; 
+            : `<re-icon icon=check-circle size=15></re-icon> Pedido #${data.pedido.numero_pedido} creado y actualizado correctamente.`;
+        if (avisosEstadoInicial.length) {
+            feedback.innerHTML += `<br><span style="color:#f59e0b"><re-icon icon=alert-triangle size=14></re-icon> ${avisosEstadoInicial.map(escapeHtml).join(' · ')}</span>`;
+        } 
         
         // Forzamos la actualización de la tabla de Gestión de pedidos automáticamente
         pedidosGestionCargados = false;
@@ -4860,732 +4947,4 @@ function resetearCheckout() {
 }
 
 async function realizarPedidoYCopiarCaptura() {
-    let sumaArticulos = 0; listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; }); const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0; const totalUSD = sumaArticulos + ajuste; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; const totalVES = totalUSD * tasaBCV;
-    if (totalUSD <= 0) { alert("El total del pedido debe ser mayor a 0 para generar la captura."); return; }
-    const btn = document.getElementById('btnRealizarPedido'); const originalText = btn.innerHTML; btn.innerHTML = "<span class=\"checkout-action-icon\"><re-icon icon=loader-2 size=17 class=spin-icon></re-icon></span><span class=\"checkout-action-label\">Generando captura...</span>";
-    document.getElementById('shotVES').innerText = `Bs. S ${totalVES.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; document.getElementById('shotUSD').innerText = `$${totalUSD.toFixed(2)}`; document.getElementById('shotTasa').innerText = `${tasaBCV.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`; document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-    const captureCard = document.getElementById('captureCard');
-    try {
-        const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true });
-        canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<span class=\"checkout-action-icon\"><re-icon icon=check-circle size=17></re-icon></span><span class=\"checkout-action-label\">¡Captura copiada!</span>"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<span class=\"checkout-action-icon\"><re-icon icon=download size=17></re-icon></span><span class=\"checkout-action-label\">¡Captura descargada!</span>"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<span class=\"checkout-action-icon\"><re-icon icon=download size=17></re-icon></span><span class=\"checkout-action-label\">¡Captura descargada!</span>"; } setTimeout(() => { btn.innerHTML = originalText; }, 3000); }, 'image/png');
-    } catch (e) { alert("Error al capturar la imagen."); btn.innerHTML = originalText; }
-}
-
-function sincronizarTasa(origen) { const mainTasa = document.getElementById('tasaInput'); const calcTasa = document.getElementById('modalTasaInput'); if (origen === 'main') { calcTasa.value = mainTasa.value; } else if (origen === 'modal') { mainTasa.value = calcTasa.value; } calcularNota(); convertirDesdeUSD(); calcularTotalesPedido(); }
-function convertirDesdeUSD() { const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value); const vesInput = document.getElementById('calcVES'); const resumen = document.getElementById('calcResumen'); if (isNaN(usd) || usd <= 0) { vesInput.value = ""; resumen.innerText = "Ingresa un monto para convertir..."; return; } const totalVes = usd * tasa; vesInput.value = totalVes.toFixed(2); resumen.innerText = `$${usd.toFixed(2)} USD = Bs. S ${totalVes.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; }
-function convertirDesdeVES() { const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value); const usdInput = document.getElementById('calcUSD'); const resumen = document.getElementById('calcResumen'); if (isNaN(ves) || ves <= 0 || tasa <= 0) { usdInput.value = ""; resumen.innerText = "Ingresa un monto para convertir..."; return; } const totalUsd = ves / tasa; usdInput.value = totalUsd.toFixed(2); resumen.innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} = $${totalUsd.toFixed(2)} USD`; }
-function generarCamposFechas() {
-    const num = parseInt(document.getElementById('numCuotas').value) || 1; const container = document.getElementById('contenedorFechasCuotas'); container.innerHTML = ''; const hoy = new Date();
-    for (let i = 1; i <= num; i++) { const label = document.createElement('label'); label.innerText = `Fecha Cuota ${i}:`; const input = document.createElement('input'); input.type = 'date'; input.className = 'fecha-cuota-input'; input.onchange = calcularNota; const fechaSugerida = new Date(hoy); fechaSugerida.setDate(hoy.getDate() + (15 * i)); const yyyy = fechaSugerida.getFullYear(); const mm = String(fechaSugerida.getMonth() + 1).padStart(2, '0'); const dd = String(fechaSugerida.getDate()).padStart(2, '0'); input.value = `${yyyy}-${mm}-${dd}`; container.appendChild(label); container.appendChild(input); }
-}
-function formatearFecha(fechaStr) { if (!fechaStr) return ""; const [year, month, day] = fechaStr.split('-').map(Number); const fecha = new Date(year, month - 1, day); const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' }); const diaNum = String(fecha.getDate()).padStart(2, '0'); const mes = fecha.toLocaleDateString('es-ES', { month: 'long' }); return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} ${diaNum} ${mes.charAt(0).toUpperCase() + mes.slice(1)}`; }
-async function obtenerTasa() {
-    const tasaInput = document.getElementById('tasaInput'); tasaInput.placeholder = "Buscando...";
-    try { const res = await fetch(`https://www.brecha-cambiaria.com/api/latest?_=${Date.now()}`, { cache: 'no-store' }); if (res.ok) { const data = await res.json(); if (data && data.bcv_usd) { tasaInput.value = parseFloat(data.bcv_usd).toFixed(2); sincronizarTasa('main'); document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`; document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`; document.getElementById('topStatBcv').innerText = `${parseFloat(data.bcv_usd).toFixed(2)} Bs/$`; document.getElementById('topStatUsdt').innerText = `${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs/$`; document.getElementById('topStatBrecha').innerText = `+${data.brecha_usdt_usd}%`; if (data.timestamp) { const hora = new Date(data.timestamp).toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }); document.getElementById('mTime').innerText = `Actualizado a las ${hora}`; } return; } } } catch (e) { console.warn("Error obteniendo tasa", e); } tasaInput.placeholder = "Ingresa tasa a mano";
-}
-function toggleCampos() { const metodo = document.getElementById('paymentMethod').value; document.getElementById('campoDivisas').style.display = metodo === 'divisas' ? 'block' : 'none'; document.getElementById('campoCuotas').style.display = metodo === 'cuotas' ? 'block' : 'none'; if (metodo === 'cuotas') generarCamposFechas(); }
-function calcularNota() {
-    const usd = parseFloat(document.getElementById('totalUSD').value) || 0; const tasaBCV = parseFloat(document.getElementById('tasaInput').value) || 0; const metodo = document.getElementById('paymentMethod').value; let nota = "";
-    if (metodo === 'pago_movil') { const totalBs = (usd * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); nota = `Pago móvil | Tasa BCV USD (Bs. S ${tasaBCV.toFixed(2)}) | Total: Bs. S ${totalBs}`; } else if (metodo === 'cuotas') { const inicialVal = parseFloat(document.getElementById('montoInicial').value) || 0; const numCuotas = parseInt(document.getElementById('numCuotas').value) || 1; const restanteVal = usd - inicialVal; const montoPorCuota = (restanteVal > 0 ? restanteVal / numCuotas : 0).toFixed(2); const inputsFechas = document.querySelectorAll('.fecha-cuota-input'); const detalles = []; inputsFechas.forEach((input, index) => { if (input.value) detalles.push(`${index + 1}a (${formatearFecha(input.value)})`); }); nota = `Pago de inicial $${inicialVal} | ${numCuotas} cuotas de $${montoPorCuota} | ${detalles.join(', ')}`; } else if (metodo === 'divisas') { const billete = parseFloat(document.getElementById('billete').value) || 0; nota = `Paga ($${billete.toFixed(2)}) en divisas | Enviar ($${(billete - usd).toFixed(2)}) de cambio.`; }
-    document.getElementById('previewText').innerText = nota;
-}
-
-let clientesCache = []; let clientesCargados = false;
-async function abrirModalBuscarCliente() {
-    document.getElementById('modalBuscarCliente').style.display = 'flex';
-    mostrarVistaBuscarCliente();
-    if (!clientesCargados) {
-        document.getElementById('listaClientesEncontrados').innerHTML = '<div class="pedidos-empty">Cargando clientes...</div>';
-        try {
-            const { data, error } = await supabaseClient.from('clientes').select('id,nombre_completo,telefono,email').order('nombre_completo', { ascending: true });
-            if (error) throw error;
-            clientesCache = data || [];
-            clientesCargados = true;
-        } catch (err) { console.warn('Error cargando clientes:', err); clientesCache = []; }
-    }
-    filtrarClientesModal();
-}
-function cerrarModalBuscarCliente() { document.getElementById('modalBuscarCliente').style.display = 'none'; }
-function mostrarVistaBuscarCliente() {
-    document.getElementById('tituloModalCliente').innerText = 'Buscar cliente';
-    document.getElementById('vistaBuscarCliente').style.display = 'block';
-    document.getElementById('vistaRegistrarCliente').style.display = 'none';
-}
-function mostrarVistaRegistrarCliente() {
-    document.getElementById('tituloModalCliente').innerText = 'Registrar cliente';
-    document.getElementById('vistaBuscarCliente').style.display = 'none';
-    document.getElementById('vistaRegistrarCliente').style.display = 'block';
-    document.getElementById('clientFullName').value = document.getElementById('inputBuscarCliente').value || '';
-    formatearCliente();
-}
-function filtrarClientesModal() {
-    const raw = (document.getElementById('inputBuscarCliente').value || '').trim();
-    const q = raw.toLowerCase();
-    const soloDigitos = raw.replace(/\D/g, '');
-    const cont = document.getElementById('listaClientesEncontrados');
-    const filtrados = !q ? clientesCache.slice(0, 50) : clientesCache.filter(c => {
-        const nombre = (c.nombre_completo || '').toLowerCase();
-        if (nombre.includes(q)) return true;
-        if (soloDigitos) {
-            const telefono = c.telefono || '';
-            const nombreSoloDigitos = (c.nombre_completo || '').replace(/\D/g, ''); // permite buscar la cédula aunque tenga puntos (12.345.678)
-            if (telefono.includes(soloDigitos) || nombreSoloDigitos.includes(soloDigitos)) return true;
-        }
-        return false;
-    });
-    if (filtrados.length === 0) { cont.innerHTML = '<div class="pedidos-empty">No se encontraron clientes. Prueba "Registrar cliente".</div>'; return; }
-    cont.innerHTML = filtrados.map(c => `
-        <div class="modal-item-row" onclick="seleccionarClienteEncontrado('${c.id}')">
-            <div class="modal-item-info"><span class="modal-item-name">${c.nombre_completo || 'Sin nombre'}</span><span class="modal-item-sub">${c.telefono || 'Sin teléfono'}</span></div>
-        </div>
-    `).join('');
-}
-function seleccionarClienteEncontrado(id) {
-    const c = clientesCache.find(x => String(x.id) === String(id));
-    if (!c) return;
-    document.getElementById('pedidoClienteNombre').value = c.nombre_completo || '';
-    document.getElementById('resumenClienteSeleccionado').innerText = c.nombre_completo || 'Cliente';
-    const tel = (c.telefono || '').replace(/\D/g, '');
-    const codigos = ['+58', '+1', '+34', '+57', '+54'];
-    let cod = '+58'; let resto = tel;
-    for (const c2 of codigos) { const digitos = c2.replace('+', ''); if (tel.startsWith(digitos)) { cod = c2; resto = tel.slice(digitos.length); break; } }
-    document.getElementById('pedidoWpCod').value = cod;
-    document.getElementById('pedidoWpNum').value = resto;
-    cerrarModalBuscarCliente();
-    actualizarProgresoModales();
-}
-function formatearCliente() {
-    const rawNameInput = document.getElementById('clientFullName'); if (!rawNameInput) return;
-    const rawName = rawNameInput.value; const nac = document.getElementById('clientNac').value; const clientIdNumEl = document.getElementById('clientIdNum'); const rawId = clientIdNumEl ? clientIdNumEl.value.replace(/\D/g, '') : '';
-    const nameFormatted = rawName.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' '); const idFormatted = rawId ? parseInt(rawId, 10).toLocaleString('es-VE') : '';
-    let res = "Ingresa los datos del cliente..."; if (nameFormatted && idFormatted) res = `${nameFormatted} | ${nac}-${idFormatted}`; else if (nameFormatted) res = nameFormatted; else if (idFormatted) res = `${nac}-${idFormatted}`;
-    document.getElementById('previewClientText').innerText = res;
-}
-async function pegarDatosCliente() {
-    let texto = ""; try { texto = await navigator.clipboard.readText(); } catch (err) { texto = prompt("Pega aquí los datos del cliente:"); }
-    if (!texto || !texto.trim()) return; let textClean = texto.replace(/(?:nombre y apellido|nombres|apellidos|nombre|cédula|cedula|c\.i\.?|ci|rif|dni|cliente)[:\-]?/gi, ' '); const matchId = textClean.match(/([VEJGvejg])[\s\.\-]*(\d[\d\.\s]{5,10}\d|\d{6,9})/);
-    let nac = "V"; let idNum = ""; let namePart = textClean;
-    if (matchId) { nac = matchId[1].toUpperCase(); idNum = matchId[2].replace(/\D/g, ''); namePart = textClean.replace(matchId[0], ' '); }
-    let nameFormatted = namePart.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ' ').replace(/\s+/g, ' ').trim();
-    if (nameFormatted) document.getElementById('clientFullName').value = nameFormatted; if (idNum) { document.getElementById('clientNac').value = nac; document.getElementById('clientIdNum').value = idNum; }
-    formatearCliente();
-}
-async function registrarNombreCheckout() {
-    const nombreFormateado = document.getElementById('clientFullName').value.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' ');
-    if (!nombreFormateado) { alert('Ingresa el nombre del cliente.'); return; }
-    const nac = document.getElementById('clientNac').value;
-    const clientIdNumEl = document.getElementById('clientIdNum');
-    const rawId = clientIdNumEl ? clientIdNumEl.value.replace(/\D/g, '') : '';
-    const idFormatted = rawId ? parseInt(rawId, 10).toLocaleString('es-VE') : '';
-    const nombreConCedula = idFormatted ? `${nombreFormateado} | ${nac}-${idFormatted}` : nombreFormateado;
-    const cod = document.getElementById('clientPhoneCod').value;
-    const numTel = document.getElementById('clientPhoneNum').value.replace(/\D/g, '');
-    const telefonoCompleto = numTel ? `${cod}${numTel}` : '';
-
-    const btnNode = document.getElementById('btnCopyCliente'); const originalText = btnNode.innerHTML; btnNode.innerHTML = '<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Guardando...'; btnNode.disabled = true;
-    try {
-        if (telefonoCompleto) {
-            const existente = await supabaseClient.from('clientes').select('id').eq('telefono', telefonoCompleto.replace('+', '')).maybeSingle();
-            if (!existente.data) {
-                await supabaseClient.from('clientes').insert({
-                    nombre_completo: nombreConCedula,
-                    telefono: telefonoCompleto.replace('+', ''),
-                    tipo_documento: rawId ? nac : null,
-                    numero_documento: rawId || null
-                });
-                clientesCargados = false; // fuerza refresco de la lista la próxima vez
-            }
-        }
-        document.getElementById('pedidoClienteNombre').value = nombreConCedula;
-        document.getElementById('resumenClienteSeleccionado').innerText = nombreConCedula;
-        if (numTel) { document.getElementById('pedidoWpCod').value = cod; document.getElementById('pedidoWpNum').value = numTel; }
-        btnNode.innerHTML = '<re-icon icon=check-circle size=15></re-icon> ¡Registrado!';
-        setTimeout(() => { btnNode.innerHTML = originalText; btnNode.disabled = false; cerrarModalBuscarCliente(); actualizarProgresoModales(); }, 700);
-    } catch (err) {
-        btnNode.innerHTML = originalText; btnNode.disabled = false;
-        alert('⚠️ No se pudo registrar el cliente: ' + (err.message || 'error desconocido'));
-    }
-}
-async function copiarTexto(elementId, btnElement) { const texto = document.getElementById(elementId).innerText; if (texto.includes("Ingresa los datos")) return; try { await navigator.clipboard.writeText(texto); let btnNode = typeof btnElement === 'string' ? document.getElementById(btnElement) : btnElement; const originalText = btnNode.innerHTML; btnNode.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Copiado!"; setTimeout(() => { btnNode.innerHTML = originalText; }, 2000); } catch (err) { alert("Error al copiar texto."); } }
-async function generarYCopiarImagen() {
-    const tasa = parseFloat(document.getElementById('modalTasaInput').value) || 0; const usd = parseFloat(document.getElementById('calcUSD').value) || 0; const ves = parseFloat(document.getElementById('calcVES').value) || 0; const btn = document.getElementById('btnCopyImage');
-    if (ves <= 0 || usd <= 0) { alert("Ingresa un monto válido para generar la imagen."); return; }
-    document.getElementById('shotVES').innerText = `Bs. S ${ves.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; document.getElementById('shotUSD').innerText = `$${usd.toFixed(2)}`; document.getElementById('shotTasa').innerText = `${tasa.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs/$`; document.getElementById('shotFecha').innerText = `Cotización BCV al ${new Date().toLocaleDateString('es-VE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-    const captureCard = document.getElementById('captureCard'); const originalText = btn.innerHTML; btn.innerHTML = "<re-icon icon=loader-2 size=15 class=spin-icon></re-icon> Generando imagen...";
-    try { const canvas = await html2canvas(captureCard, { scale: 2, backgroundColor: null, useCORS: true }); canvas.toBlob(async (blob) => { if (navigator.clipboard && window.ClipboardItem) { try { await navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]); btn.innerHTML = "<re-icon icon=check-circle size=15></re-icon> ¡Imagen copiada!"; } catch (err) { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } } else { descargarImagenFallback(canvas); btn.innerHTML = "<re-icon icon=download size=15></re-icon> ¡Imagen descargada!"; } setTimeout(() => { btn.innerHTML = originalText; }, 2500); }, 'image/png'); } catch (e) { alert("Error al capturar la imagen."); btn.innerHTML = originalText; }
-}
-function descargarImagenFallback(canvas) { const link = document.createElement('a'); link.download = `Cotizacion-Brooklyn-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }
-
-obtenerTasa();
-
-/* =====================================================================
-   MAPA DE ENTREGAS (módulo Analíticas)
-   Lee direccion_envio de los pedidos filtrados y ubica: coordenadas,
-   Plus Codes (completos o cortos con ciudad) y enlaces de Google Maps
-   que contengan coordenadas. Lo que no se pueda ubicar queda listado
-   debajo con un enlace para abrirlo en Google Maps.
-   ===================================================================== */
-const OLC_ALFABETO = '23456789CFGHJMPQRVWX';
-
-function olcDecodificarCentro(codigo) {
-    const c = codigo.toUpperCase().replace('+', '');
-    const nPares = Math.min(c.length, 10) / 2;
-    let lat = -90, lng = -180, tam = 20, alto = 20;
-    for (let k = 0; k < nPares; k++) {
-        lat += OLC_ALFABETO.indexOf(c[2 * k]) * tam;
-        lng += OLC_ALFABETO.indexOf(c[2 * k + 1]) * tam;
-        alto = tam;
-        tam /= 20;
-    }
-    let latTam = alto, lngTam = alto;
-    for (let i = 10; i < c.length; i++) {
-        const d = OLC_ALFABETO.indexOf(c[i]);
-        latTam /= 5; lngTam /= 4;
-        lat += Math.floor(d / 4) * latTam;
-        lng += (d % 4) * lngTam;
-    }
-    return [lat + latTam / 2, lng + lngTam / 2];
-}
-
-function olcPrefijoReferencia(lat, lng, n) {
-    let la = Math.min(Math.max(lat, -90), 89.999999) + 90;
-    let ln = (((lng + 180) % 360) + 360) % 360;
-    let tam = 20, out = '';
-    for (let k = 0; k < 2; k++) {
-        const a = Math.floor(la / tam), b = Math.floor(ln / tam);
-        out += OLC_ALFABETO[a] + OLC_ALFABETO[b];
-        la -= a * tam; ln -= b * tam; tam /= 20;
-    }
-    return out.substr(0, n);
-}
-
-function olcRecuperarCercano(corto, refLat, refLng) {
-    const c = corto.toUpperCase();
-    const relleno = 8 - c.indexOf('+');
-    const resol = Math.pow(20, 2 - relleno / 2);
-    const borde = resol / 2;
-    let [lat, lng] = olcDecodificarCentro(olcPrefijoReferencia(refLat, refLng, relleno) + c);
-    const dLat = lat - refLat, dLng = lng - refLng;
-    if (dLat > borde) lat -= resol; else if (dLat < -borde) lat += resol;
-    if (dLng > borde) lng -= resol; else if (dLng < -borde) lng += resol;
-    return [lat, lng];
-}
-
-// ============================
-// MÓDULO AGENDA
-// ============================
-const AG_MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const AG_DAYS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-let agYear, agMonth, agSelectedDate, agEvents = {}, agInited = false, agSearchTerm = '';
-
-function agDateKey(y, m, d) {
-    const dt = new Date(y, m, d);
-    return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
-}
-function agEsc(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
-function agEventosFiltrados(fecha) {
-    let lista = [...(agEvents[fecha] || [])];
-    if (agSearchTerm) lista = lista.filter(e => String(e.title || '').toLowerCase().includes(agSearchTerm) || String(e.note || '').toLowerCase().includes(agSearchTerm));
-    return lista.sort((a,b) => String(a.start || '99:99').localeCompare(String(b.start || '99:99')));
-}
-function agSetSearch(v) { agSearchTerm = String(v || '').trim().toLowerCase(); agRenderGrid(); agRenderSidebar(); }
-
-function iniciarAgenda() {
-    const now = new Date();
-    if (!agInited) {
-        agYear = now.getFullYear();
-        agMonth = now.getMonth();
-        agSelectedDate = agDateKey(agYear, agMonth, now.getDate());
-        agInited = true;
-    }
-    const nombre = perfilUsuarioActual?.nombre || perfilNombreDefecto || 'Usuario';
-    const h = now.getHours();
-    const saludo = h < 12 ? 'Buenos días' : h < 18 ? 'Buenas tardes' : 'Buenas noches';
-    const greet = document.getElementById('ag-greet');
-    const avatar = document.getElementById('ag-user-avatar');
-    if (greet) greet.textContent = `${saludo}, ${nombre}`;
-    if (avatar) avatar.textContent = perfilIniciales(nombre);
-    sincronizarTareasConAgenda();
-    agRender();
-}
-
-function agRender() { agRenderHeader(); agRenderGrid(); agRenderSidebar(); }
-
-function agRenderHeader() {
-    const m = document.getElementById('ag-month-label'), y = document.getElementById('ag-year-label');
-    if (m) m.textContent = AG_MONTHS[agMonth];
-    if (y) y.textContent = agYear;
-}
-
-function agRenderGrid() {
-    const grid = document.getElementById('ag-grid');
-    if (!grid) return;
-    const today = new Date(), todayKey = agDateKey(today.getFullYear(), today.getMonth(), today.getDate());
-    const first = new Date(agYear, agMonth, 1).getDay();
-    const daysInMonth = new Date(agYear, agMonth + 1, 0).getDate();
-    const prevDays = new Date(agYear, agMonth, 0).getDate();
-    const cells = [];
-    for (let i = first - 1; i >= 0; i--) cells.push({ day: prevDays - i, cur:false, m:agMonth-1, y:agYear });
-    for (let d = 1; d <= daysInMonth; d++) cells.push({ day:d, cur:true, m:agMonth, y:agYear });
-    let next = 1; while (cells.length < 42) cells.push({ day:next++, cur:false, m:agMonth+1, y:agYear });
-
-    grid.innerHTML = AG_DAYS.map(d => `<div class="ag-day-header">${d}</div>`).join('') + cells.map(c => {
-        const k = agDateKey(c.y, c.m, c.day);
-        const evs = agEventosFiltrados(k);
-        const cls = 'ag-day-cell' + (!c.cur ? ' ag-other-month' : '') + (k === todayKey ? ' ag-today' : '') + (k === agSelectedDate ? ' ag-selected' : '');
-        const dots = evs.slice(0,2).map(e => `<div class="ag-ev-dot tp-${e.type}">${e.start ? agEsc(e.start)+' · ' : ''}${agEsc(e.title)}</div>`).join('');
-        const more = evs.length > 2 ? `<div class="ag-more">+${evs.length - 2} más</div>` : '';
-        return `<div class="${cls}" onclick="agSelectDay('${k}')"><div class="ag-day-num">${c.day}</div><div class="ag-ev-dots">${dots}${more}</div></div>`;
-    }).join('');
-}
-
-function agRenderSidebar() {
-    const parts = agSelectedDate.split('-');
-    const d = new Date(+parts[0], +parts[1]-1, +parts[2]);
-    const dateEl = document.getElementById('ag-sidebar-date');
-    if (dateEl) dateEl.textContent = `${AG_DAYS[d.getDay()]}, ${d.getDate()} de ${AG_MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
-
-    const all = agEvents[agSelectedDate] || [];
-    const evs = agEventosFiltrados(agSelectedDate);
-    const pendientes = all.filter(e => e.type === 'tarea').length;
-    const completadas = all.filter(e => e.type === 'event').length;
-    const summary = document.getElementById('ag-summary');
-    if (summary) summary.innerHTML = `
-        <span class="ag-summary-chip"><span class="ag-summary-dot"></span>${pendientes} pendiente${pendientes===1?'':'s'}</span>
-        <span class="ag-summary-chip"><span class="ag-summary-dot done"></span>${completadas} completada${completadas===1?'':'s'}</span>`;
-
-    const list = document.getElementById('ag-events-list');
-    if (!list) return;
-    if (!evs.length) {
-        const text = agSearchTerm ? 'No hay tareas que coincidan con la búsqueda.' : 'Este día no tiene tareas asignadas.';
-        list.innerHTML = `<div class="ag-empty"><re-icon icon=calendar size=25 style="display:block;margin:0 auto 9px"></re-icon><strong>Agenda vacía</strong>${text}</div>`;
-        return;
-    }
-    list.innerHTML = evs.map(e => {
-        const done = e.type === 'event';
-        return `<div class="ag-event-card${done?' done':''}">
-            <div class="ag-ev-bar"></div>
-            <div style="flex:1;min-width:0">
-                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:7px">
-                    <div class="ag-ev-title">${agEsc(e.title)}</div>
-                    <span class="ag-ev-badge">${done?'Completada':'Pendiente'}</span>
-                </div>
-                <div class="ag-ev-meta"><re-icon icon=clock size=10></re-icon> ${e.start ? agEsc(e.start) : 'Sin hora'} <span>·</span> <re-icon icon=calendar size=10></re-icon> Tarea personal</div>
-                ${e.note ? `<div style="font-size:9.5px;color:var(--ag-muted);margin-top:6px;line-height:1.45;white-space:pre-wrap">${agEsc(e.note)}</div>` : ''}
-                ${e.tareaId ? `<div class="ag-task-actions"><button type="button" class="ag-mini-btn" onclick="toggleTareaPerfil('${e.tareaId}')"><re-icon icon=${done?'refresh-cw':'check'} size=11></re-icon>${done?'Reabrir':'Completar'}</button><button type="button" class="ag-mini-btn danger" onclick="agEliminarTareaDesdeAgenda('${e.tareaId}')"><re-icon icon=trash-2 size=11></re-icon>Eliminar</button></div>` : ''}
-            </div>
-        </div>`;
-    }).join('');
-}
-
-function agSelectDay(key) {
-    agSelectedDate = key;
-    const [y,m] = key.split('-').map(Number);
-    if (y !== agYear || m-1 !== agMonth) { agYear = y; agMonth = m-1; agRenderHeader(); }
-    agRenderGrid();
-    agRenderSidebar();
-}
-function agNavMonth(dir) {
-    agMonth += dir;
-    if (agMonth > 11) { agMonth = 0; agYear++; }
-    else if (agMonth < 0) { agMonth = 11; agYear--; }
-    agRender();
-}
-function agIrHoy() {
-    const now = new Date();
-    agYear = now.getFullYear(); agMonth = now.getMonth(); agSelectedDate = agDateKey(agYear, agMonth, now.getDate());
-    agRender();
-}
-
-function agAbrirModalTarea() {
-    const modal = document.getElementById('modalAgendaTarea');
-    const date = document.getElementById('agTaskDate');
-    const time = document.getElementById('agTaskTime');
-    const title = document.getElementById('agTaskTitle');
-    const desc = document.getElementById('agTaskDescription');
-    const err = document.getElementById('agTaskError');
-    if (!modal) return;
-    if (date) date.value = agSelectedDate || agDateKeyHoy();
-    if (time) {
-        const now = new Date();
-        now.setMinutes(Math.ceil(now.getMinutes()/5)*5,0,0);
-        time.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-    }
-    if (title) title.value = '';
-    if (desc) desc.value = '';
-    if (err) err.textContent = '';
-    modal.style.display = 'flex';
-    setTimeout(() => title?.focus(), 50);
-}
-function agCerrarModalTarea() {
-    const modal = document.getElementById('modalAgendaTarea');
-    if (modal) modal.style.display = 'none';
-}
-async function agGuardarTarea() {
-    const title = document.getElementById('agTaskTitle');
-    const date = document.getElementById('agTaskDate');
-    const time = document.getElementById('agTaskTime');
-    const desc = document.getElementById('agTaskDescription');
-    const err = document.getElementById('agTaskError');
-    const texto = String(title?.value || '').trim();
-    const fecha = String(date?.value || '').trim();
-    const hora = String(time?.value || '').trim();
-    const descripcion = String(desc?.value || '').trim();
-    if (!texto) { if (err) err.textContent = 'Escribe el título de la tarea.'; title?.focus(); return; }
-    if (!fecha) { if (err) err.textContent = 'Selecciona la fecha.'; date?.focus(); return; }
-    if (!hora) { if (err) err.textContent = 'Selecciona la hora.'; time?.focus(); return; }
-    if (!perfilUsuarioActual.tareas) perfilUsuarioActual.tareas = [];
-    perfilUsuarioActual.tareas.push({ id:'t'+Date.now(), texto, fecha, hora, descripcion, hecha:false, creada_at:new Date().toISOString() });
-    agSelectedDate = fecha;
-    const [y,m] = fecha.split('-').map(Number); agYear=y; agMonth=m-1;
-    renderTareasPerfil();
-    sincronizarTareasConAgenda();
-    await guardarPerfilUsuario();
-    agCerrarModalTarea();
-    agRender();
-}
-function agEliminarTareaDesdeAgenda(id) {
-    if (!confirm('¿Eliminar esta tarea de tu agenda?')) return;
-    eliminarTareaPerfil(id);
-}
-
-// ============================
-// LÓGICA PAGO MIXTO
-// ============================
-let mixtoLineasData = [];
-
-const MIXTO_OPCIONES = [
-    { value: 'Pago móvil', label: 'Pago móvil' },
-    { value: 'Efectivo USD', label: 'Efectivo USD' },
-    { value: 'Binance', label: 'Binance' },
-    { value: 'Zelle', label: 'Zelle' },
-    { value: 'Zinli', label: 'Zinli' },
-    { value: 'Transferencia bancaria', label: 'Transferencia bancaria' },
-    { value: 'Otro', label: 'Otro' },
-];
-
-function abrirModalPagoMixto() {
-    const modal = document.getElementById('modalPagoMixto');
-    modal.style.display = 'flex';
     let sumaArticulos = 0;
-    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
-    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
-    const totalUSD = sumaArticulos + ajuste;
-    document.getElementById('mixtoTotalPedido').innerText = `$${totalUSD.toFixed(2)}`;
-    if (mixtoLineasData.length === 0) {
-        mixtoLineasData = [
-            { metodo: 'Pago móvil', monto: '' },
-            { metodo: 'Efectivo USD', monto: '' },
-        ];
-    }
-    renderLineasMixto();
-    actualizarResumenMixto();
-}
-
-function cerrarModalPagoMixto() {
-    document.getElementById('modalPagoMixto').style.display = 'none';
-}
-
-function renderLineasMixto() {
-    const cont = document.getElementById('mixtoLineas');
-    if (!cont) return;
-    cont.innerHTML = mixtoLineasData.map((linea, i) => {
-        const opcionesHTML = MIXTO_OPCIONES.map(o =>
-            `<option value="${o.value}" ${linea.metodo === o.value ? 'selected' : ''}>${o.label}</option>`
-        ).join('');
-        return `<div class="mixto-linea" data-idx="${i}">
-            <select onchange="mixtoActualizarLinea(${i}, 'metodo', this.value)">${opcionesHTML}</select>
-            <input type="number" step="0.01" min="0" placeholder="$0.00" value="${linea.monto}" oninput="mixtoActualizarLinea(${i}, 'monto', this.value)">
-            <button type="button" class="btn-mixto-del" onclick="mixtoEliminarLinea(${i})" title="Eliminar"><re-icon icon=x size=13></re-icon></button>
-        </div>`;
-    }).join('');
-}
-
-function mixtoActualizarLinea(idx, campo, valor) {
-    if (!mixtoLineasData[idx]) return;
-    mixtoLineasData[idx][campo] = valor;
-    actualizarResumenMixto();
-}
-
-function mixtoEliminarLinea(idx) {
-    mixtoLineasData.splice(idx, 1);
-    renderLineasMixto();
-    actualizarResumenMixto();
-}
-
-function agregarLineaMixto() {
-    mixtoLineasData.push({ metodo: 'Pago móvil', monto: '' });
-    renderLineasMixto();
-    actualizarResumenMixto();
-}
-
-function actualizarResumenMixto() {
-    let sumaArticulos = 0;
-    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
-    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
-    const totalUSD = sumaArticulos + ajuste;
-    const sumaIngresada = mixtoLineasData.reduce((acc, l) => acc + (parseFloat(l.monto) || 0), 0);
-    const restante = totalUSD - sumaIngresada;
-    const sumaEl = document.getElementById('mixtoSumaUSD');
-    const restanteEl = document.getElementById('mixtoRestante');
-    if (sumaEl) sumaEl.innerText = `$${sumaIngresada.toFixed(2)}`;
-    if (restanteEl) {
-        if (Math.abs(restante) < 0.005) {
-            restanteEl.innerText = '✓ Monto completo';
-            restanteEl.style.color = 'var(--turquesa-dark)';
-        } else if (restante > 0) {
-            restanteEl.innerText = `Faltan $${restante.toFixed(2)}`;
-            restanteEl.style.color = '#ef4444';
-        } else {
-            restanteEl.innerText = `Excede por $${Math.abs(restante).toFixed(2)}`;
-            restanteEl.style.color = '#f59e0b';
-        }
-    }
-}
-
-function confirmarPagoMixto() {
-    const errorEl = document.getElementById('mixtoError');
-    errorEl.innerText = '';
-    if (mixtoLineasData.length === 0) { errorEl.innerText = 'Agrega al menos un método de pago.'; return; }
-    const lineasValidas = mixtoLineasData.filter(l => parseFloat(l.monto) > 0);
-    if (lineasValidas.length === 0) { errorEl.innerText = 'Ingresa al menos un monto mayor a 0.'; return; }
-    let sumaArticulos = 0;
-    listaArticulosPedido.forEach(art => { sumaArticulos += art.precio; });
-    const ajuste = parseFloat(document.getElementById('pedidoAjuste').value) || 0;
-    const totalUSD = sumaArticulos + ajuste;
-    const sumaIngresada = lineasValidas.reduce((acc, l) => acc + (parseFloat(l.monto) || 0), 0);
-    const diferencia = Math.abs(totalUSD - sumaIngresada);
-    if (diferencia > 0.05) {
-        errorEl.innerText = `La suma ($${sumaIngresada.toFixed(2)}) no coincide con el total del pedido ($${totalUSD.toFixed(2)}).`;
-        return;
-    }
-    mixtoLineasData = lineasValidas;
-    const resumenHTML = lineasValidas.map(l =>
-        `<span class="mixto-preview-tag"><re-icon icon=sparkles size=11></re-icon> ${l.metodo} $${parseFloat(l.monto).toFixed(2)}</span>`
-    ).join('');
-    document.getElementById('resumenMetodoPago').innerHTML = resumenHTML;
-    cerrarModalPagoMixto();
-    actualizarObservacionCheckout();
-    actualizarProgresoModales();
-}
-
-function generarNotaMixto(totalUSD, tasaBCV) {
-    if (!mixtoLineasData || mixtoLineasData.length === 0) return `Pago Mixto | Total: $${totalUSD.toFixed(2)}`;
-    const partes = mixtoLineasData.map(l => {
-        const monto = parseFloat(l.monto) || 0;
-        if (l.metodo === 'Pago móvil' && tasaBCV > 0) {
-            const bs = (monto * tasaBCV).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            return `${l.metodo}: Bs. S ${bs} ($${monto.toFixed(2)})`;
-        }
-        return `${l.metodo}: $${monto.toFixed(2)}`;
-    });
-    return `Pago Mixto | ${partes.join(' + ')} | Total: $${totalUSD.toFixed(2)}`;
-}
-
-function mapaEsc(t) {
-    return String(t == null ? '' : t).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-}
-
-function mapaParsearUbicacion(texto) {
-    const t = (texto || '').trim();
-    if (!t) return null;
-
-    let m = t.match(/^\(?\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)\s*\)?$/);
-    if (m) {
-        const lat = parseFloat(m[1]), lng = parseFloat(m[2]);
-        if (Math.abs(lat) <= 90 && Math.abs(lng) <= 180) return { tipo: 'Coordenadas', lat, lng };
-    }
-
-    const link = t.match(/https?:\/\/\S+/i);
-    if (link) {
-        let url = link[0];
-        try { url = decodeURIComponent(url); } catch (e) { /* se usa tal cual */ }
-        m = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
-            || url.match(/[?&](?:q|query|ll|destination|daddr)=(-?\d+\.\d+)[,+\s]+(-?\d+\.\d+)/)
-            || url.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
-        if (m) return { tipo: 'Enlace de Google Maps', lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
-        return { tipo: 'link' };
-    }
-
-    m = t.match(/(?:^|[\s,(])([23456789CFGHJMPQRVWX]{2,8})\+([23456789CFGHJMPQRVWX]{2,3})(?:[\s,]+(.+))?$/i);
-    if (m) {
-        const previo = m[1].toUpperCase();
-        const codigo = previo + '+' + m[2].toUpperCase();
-        if (previo.length === 8) return { tipo: 'pluscode_completo', codigo };
-        if (previo.length === 4 || previo.length === 6) return { tipo: 'pluscode_corto', codigo, localidad: (m[3] || '').trim() };
-    }
-    return { tipo: 'texto' };
-}
-
-let mapaGeoCache = {};
-try { mapaGeoCache = JSON.parse(localStorage.getItem('brooklyn_geo_localidades_v1') || '{}') || {}; } catch (e) { mapaGeoCache = {}; }
-function mapaGuardarGeoCache() { try { localStorage.setItem('brooklyn_geo_localidades_v1', JSON.stringify(mapaGeoCache)); } catch (e) { /* sin almacenamiento */ } }
-
-let mapaUltimaConsultaNominatim = 0;
-async function mapaGeocodificarLocalidad(localidad) {
-    const clave = localidad.toLowerCase();
-    if (Object.prototype.hasOwnProperty.call(mapaGeoCache, clave)) return mapaGeoCache[clave];
-    const espera = 1100 - (Date.now() - mapaUltimaConsultaNominatim);
-    if (espera > 0) await new Promise(r => setTimeout(r, espera));
-    mapaUltimaConsultaNominatim = Date.now();
-    const resp = await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=es&q=' + encodeURIComponent(localidad));
-    if (!resp.ok) throw new Error('Nominatim ' + resp.status);
-    const j = await resp.json();
-    let res = null;
-    if (Array.isArray(j) && j[0]) {
-        const bb = (j[0].boundingbox || []).map(Number);
-        const alto = bb.length === 4 ? bb[1] - bb[0] : 99;
-        const ancho = bb.length === 4 ? bb[3] - bb[2] : 99;
-        // El Plus Code corto solo se recupera bien si el punto de referencia está a menos de ~0.5° del lugar real.
-        res = { lat: parseFloat(j[0].lat), lng: parseFloat(j[0].lon), ok: alto <= 0.9 && ancho <= 0.9 };
-    }
-    mapaGeoCache[clave] = res;
-    mapaGuardarGeoCache();
-    return res;
-}
-
-async function mapaResolverUbicacion(direccion) {
-    const p = mapaParsearUbicacion(direccion);
-    if (!p) return { ok: false, motivo: 'Sin dirección' };
-    if (p.lat != null) return { ok: true, lat: p.lat, lng: p.lng, tipo: p.tipo };
-    if (p.tipo === 'pluscode_completo') {
-        const [lat, lng] = olcDecodificarCentro(p.codigo);
-        return { ok: true, lat, lng, tipo: 'Plus Code' };
-    }
-    if (p.tipo === 'pluscode_corto') {
-        if (!p.localidad) return { ok: false, motivo: 'Plus Code corto sin ciudad o localidad' };
-        let ref;
-        try { ref = await mapaGeocodificarLocalidad(p.localidad); }
-        catch (e) { return { ok: false, motivo: 'No se pudo consultar la localidad (sin conexión al servicio de mapas)' }; }
-        if (!ref) return { ok: false, motivo: 'No se encontró la localidad "' + p.localidad + '"' };
-        if (!ref.ok) return { ok: false, motivo: 'Localidad demasiado amplia para ubicar el Plus Code' };
-        const [lat, lng] = olcRecuperarCercano(p.codigo, ref.lat, ref.lng);
-        return { ok: true, lat, lng, tipo: 'Plus Code' };
-    }
-    if (p.tipo === 'link') return { ok: false, motivo: 'Enlace corto de Google Maps (no trae coordenadas legibles)' };
-    return { ok: false, motivo: 'Dirección en texto libre' };
-}
-
-function mapaEnlaceGoogle(direccion) {
-    const p = mapaParsearUbicacion(direccion);
-    const m = (direccion || '').match(/https?:\/\/\S+/i);
-    if (p && p.tipo === 'link' && m) return m[0];
-    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent((direccion || '').trim());
-}
-
-let mapaEntregas = null;
-let mapaCapaMarcadores = null;
-let mapaTokenRender = 0;
-
-function mapaIconoPin(n) {
-    return L.divIcon({
-        className: 'mapa-pin-wrap',
-        html: '<div class="mapa-pin"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#19D3D3" stroke="#0E7490" stroke-width="1.4"/><circle cx="12" cy="10" r="4.2" fill="#fff"/></svg>' + (n > 1 ? '<span class="mapa-pin-n">' + n + '</span>' : '') + '</div>',
-        iconSize: [34, 34], iconAnchor: [17, 33], popupAnchor: [0, -30]
-    });
-}
-
-function cerrarMapaEntregas() {
-    mapaTokenRender++;
-    document.getElementById('modalMapaEntregas').style.display = 'none';
-}
-document.addEventListener('keydown', ev => {
-    const m = document.getElementById('modalMapaEntregas');
-    if (ev.key === 'Escape' && m && m.style.display === 'flex') cerrarMapaEntregas();
-});
-
-async function abrirMapaEntregas() {
-    const modal = document.getElementById('modalMapaEntregas');
-    const estado = document.getElementById('mapaEntregasEstado');
-    const pendientesEl = document.getElementById('mapaEntregasPendientes');
-    modal.style.display = 'flex';
-    pendientesEl.style.display = 'none';
-    pendientesEl.innerHTML = '';
-
-    if (typeof L === 'undefined') {
-        estado.innerHTML = '<re-icon icon=x-circle size=15></re-icon> No se pudo cargar la librería del mapa (Leaflet). Revisa tu conexión y recarga la página.';
-        return;
-    }
-    if (!mapaEntregas) {
-        mapaEntregas = L.map('mapaEntregasCanvas').setView([15, -60], 3);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(mapaEntregas);
-        mapaCapaMarcadores = L.layerGroup().addTo(mapaEntregas);
-    }
-    setTimeout(() => mapaEntregas.invalidateSize(), 60);
-    mapaCapaMarcadores.clearLayers();
-
-    const token = ++mapaTokenRender;
-    if (!analiticasCargadas) {
-        estado.innerHTML = '<re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Cargando pedidos…';
-        await cargarAnaliticasPedidos();
-        if (token !== mapaTokenRender) return;
-    }
-    const base = analiticasListaFiltrada();
-    const canceladas = base.filter(p => p.estado_pedido === 'cancelled' && (p.direccion_envio || '').trim()).length;
-    const lista = base.filter(p => (p.direccion_envio || '').trim() && p.estado_pedido !== 'cancelled');
-
-    if (lista.length === 0) {
-        estado.innerHTML = 'No hay entregas con dirección registrada para el rango y filtros seleccionados.' + (canceladas ? ' (' + canceladas + ' cancelada(s) omitida(s))' : '');
-        return;
-    }
-
-    const ubicados = [];
-    const pendientes = [];
-    for (let i = 0; i < lista.length; i++) {
-        if (token !== mapaTokenRender) return;
-        estado.innerHTML = '<re-icon icon=loader-2 size=14 class=spin-icon></re-icon> Ubicando entregas… ' + (i + 1) + ' de ' + lista.length;
-        const pedido = lista[i];
-        // Coords GPS directas desde la vista (latitud_envio/longitud_envio) — sin geocoding
-        if (pedido.latitud_envio != null && pedido.longitud_envio != null) {
-            ubicados.push({ pedido, lat: pedido.latitud_envio, lng: pedido.longitud_envio, tipo: 'GPS' });
-            continue;
-        }
-        // Fallback: _lat/_lng del embed (compatibilidad)
-        if (pedido._lat != null && pedido._lng != null) {
-            ubicados.push({ pedido, lat: pedido._lat, lng: pedido._lng, tipo: 'GPS embed' });
-            continue;
-        }
-        const r = await mapaResolverUbicacion(pedido.direccion_envio);
-        if (r.ok) ubicados.push({ pedido, lat: r.lat, lng: r.lng, tipo: r.tipo });
-        else pendientes.push({ pedido, motivo: r.motivo });
-    }
-    if (token !== mapaTokenRender) return;
-
-    const grupos = {};
-    ubicados.forEach(u => {
-        const k = u.lat.toFixed(5) + ',' + u.lng.toFixed(5);
-        (grupos[k] = grupos[k] || { lat: u.lat, lng: u.lng, items: [] }).items.push(u);
-    });
-    const puntos = [];
-    Object.values(grupos).forEach(g => {
-        const html = '<div class="mapa-popup">' + g.items.map(u => {
-            const p = u.pedido;
-            const fecha = p.fecha_pedido ? new Date(p.fecha_pedido).toLocaleDateString('es-VE') : '';
-            const est = (ETIQUETAS_ESTADO_ENVIO && ETIQUETAS_ESTADO_ENVIO[p.estado_envio]) || p.estado_envio || '';
-            return '<div class="mp-item"><span class="mp-num">#' + mapaEsc(p.numero_pedido) + '</span> · ' + mapaEsc(p.cliente_nombre || 'Sin cliente')
-                + '<br>' + mapaEsc(formatoMonedaUSD(p.monto_total)) + (fecha ? ' · ' + mapaEsc(fecha) : '')
-                + (est ? '<br>Envío: ' + mapaEsc(est) : '')
-                + '<br><span class="mp-dir">' + mapaEsc(p.direccion_envio) + '</span>'
-                + '<br><a href="' + mapaEsc('https://www.google.com/maps/search/?api=1&query=' + g.lat + ',' + g.lng) + '" target="_blank" rel="noopener">Abrir en Google Maps</a></div>';
-        }).join('') + '</div>';
-        L.marker([g.lat, g.lng], { icon: mapaIconoPin(g.items.length) }).addTo(mapaCapaMarcadores).bindPopup(html, { maxWidth: 300 });
-        puntos.push([g.lat, g.lng]);
-    });
-
-    if (puntos.length === 1) mapaEntregas.setView(puntos[0], 16);
-    else if (puntos.length > 1) mapaEntregas.fitBounds(L.latLngBounds(puntos), { padding: [40, 40], maxZoom: 16 });
-
-    estado.innerHTML = '<strong>' + lista.length + '</strong> entregas con dirección · <strong>' + ubicados.length + '</strong> ubicadas en el mapa'
-        + (pendientes.length ? ' · <strong>' + pendientes.length + '</strong> sin ubicación exacta' : '')
-        + (canceladas ? ' · ' + canceladas + ' cancelada(s) omitida(s)' : '');
-
-    if (pendientes.length) {
-        pendientesEl.innerHTML = '<h4>Sin ubicación exacta en el mapa</h4>' + pendientes.map(x =>
-            '<div class="mp-row"><strong>#' + mapaEsc(x.pedido.numero_pedido) + '</strong> ' + mapaEsc(x.pedido.cliente_nombre || '')
-            + ' <span>' + mapaEsc(x.motivo) + '</span> <a href="' + mapaEsc(mapaEnlaceGoogle(x.pedido.direccion_envio)) + '" target="_blank" rel="noopener">Abrir en Google Maps</a></div>').join('');
-        pendientesEl.style.display = 'block';
-    }
-}
-</script>
-</body>
-</html>
