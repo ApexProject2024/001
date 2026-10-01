@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.2" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2.57.2';"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -3634,11 +3634,56 @@ const SUPABASE_URL = "https://okguzqyujdnubhllnamo.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_K6URdRchmZt3TqpWcO5fng_DHNhmOlr";
 
 let supabaseClient = null;
-if (window.supabase && typeof window.supabase.createClient === 'function') {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} else {
-    console.error('No se pudo cargar @supabase/supabase-js.');
+let brooklynSupabaseCarga = null;
+let brooklynAuthListenerBound = false;
+function crearSupabaseClientBrooklyn() {
+    if (supabaseClient) return supabaseClient;
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        return supabaseClient;
+    }
+    return null;
 }
+function cargarScriptBrooklyn(src) {
+    return new Promise((resolve, reject) => {
+        const existente = [...document.scripts].find(s => s.src === src);
+        if (existente) {
+            if (window.supabase) return resolve(true);
+            existente.addEventListener('load', () => resolve(true), { once:true });
+            existente.addEventListener('error', reject, { once:true });
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.onload = () => resolve(true);
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+async function asegurarSupabaseClient() {
+    if (crearSupabaseClientBrooklyn()) return supabaseClient;
+    if (brooklynSupabaseCarga) return brooklynSupabaseCarga;
+    brooklynSupabaseCarga = (async () => {
+        const fuentes = [
+            'https://unpkg.com/@supabase/supabase-js@2.57.2',
+            'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.2'
+        ];
+        for (const src of fuentes) {
+            try {
+                await Promise.race([
+                    cargarScriptBrooklyn(src),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 6500))
+                ]);
+                if (crearSupabaseClientBrooklyn()) break;
+            } catch (e) { console.warn('No se pudo cargar Supabase desde', src, e); }
+        }
+        brooklynSupabaseCarga = null;
+        return supabaseClient;
+    })();
+    return brooklynSupabaseCarga;
+}
+crearSupabaseClientBrooklyn();
 
 const MULTIMEDIA_BUCKET = 'multimedia';
 let multimediaCache = [];
@@ -4146,7 +4191,9 @@ async function eliminarMultimedia(id) {
 
 const PERFILES_CORREOS = { "moyfa1314@gmail.com": { nombreUsuario: "Moisés", alias: "Brooklyn - Búho Electronics" }, "gilder.torrealba@buhoelectronics.com": { nombreUsuario: "Gilder", alias: "Brooklyn - Búho Electronics" } };
 let listaArticulosPedido = [];
-let deliveryCoords = null; // { lat, lng } resueltas al ingresar dirección de delivery let inventarioProductosCache = []; let billeteUSDCliente = 0;
+let deliveryCoords = null; // { lat, lng } resueltas al ingresar dirección de delivery
+let inventarioProductosCache = [];
+let billeteUSDCliente = 0;
 let brooklynPermisosActuales = new Set();
 let brooklynRolesActuales = [];
 const MODULO_PERMISOS = {
@@ -4219,9 +4266,11 @@ function mostrarBrooklynAutenticado(email) {
 }
 
 async function cargarBrooklynPostLogin() {
+    // Ninguna carga secundaria debe impedir que Brooklyn abra después de autenticar.
     try { await cargarPerfilUsuario(); }
     catch (e) { console.warn('No se pudo cargar el perfil después del login:', e); }
     seleccionarModulo('mod-dashboard');
+    try { await obtenerTasa(); } catch(e) { console.warn('No se pudo actualizar la tasa al entrar:', e); }
     try { await cargarDashboardPrincipal(true); } catch(e) { console.warn('No se pudo cargar Dashboard:', e); }
     if (tienePermiso('module.inventory')) { try { await cargarProductosInventario(); } catch(e) { console.warn('No se pudo cargar inventario:', e); } }
     if (tienePermiso('module.analytics')) { try { await cargarAnaliticasPedidos(); } catch(e) { console.warn('No se pudieron cargar analíticas:', e); } }
@@ -4243,9 +4292,14 @@ async function validarAcceso() {
         return;
     }
     if (!supabaseClient) {
-        if (error) error.innerText = 'No se pudo cargar la conexión con Supabase. Recarga la página e inténtalo nuevamente.';
+        if (error) error.innerText = 'Reconectando con Brooklyn…';
+        await asegurarSupabaseClient();
+    }
+    if (!supabaseClient) {
+        if (error) error.innerText = 'No se pudo cargar la conexión con Supabase. Revisa tu conexión y vuelve a intentarlo.';
         return;
     }
+    instalarAuthListenerBrooklyn();
 
     loginEnProceso = true;
     const textoBtn = btn?.innerHTML || 'Iniciar sesión';
@@ -4295,11 +4349,13 @@ else instalarEventosLoginBrooklyn();
 async function comprobarSesion() {
     const loginOverlay = document.getElementById('loginOverlay');
     if (loginOverlay) loginOverlay.setAttribute('data-ready','1');
+    if (!supabaseClient) await asegurarSupabaseClient();
     if (!supabaseClient) {
         const errorEl = document.getElementById('loginError');
-        if (errorEl) errorEl.innerText = 'No se pudo cargar la conexión con Supabase. Recarga la página.';
+        if (errorEl) errorEl.innerText = 'No se pudo cargar la conexión con Supabase. Puedes reintentar desde el botón de acceso.';
         return;
     }
+    instalarAuthListenerBrooklyn();
     try {
         const { data, error } = await supabaseClient.auth.getSession();
         if (error) throw error;
@@ -5239,17 +5295,21 @@ function abrirTrackingPedido() {
     if(url) window.open(url,'_blank','noopener');
 }
 
-comprobarSesion();
-if (supabaseClient) {
+function instalarAuthListenerBrooklyn() {
+    if (brooklynAuthListenerBound || !supabaseClient) return;
+    brooklynAuthListenerBound = true;
     supabaseClient.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session?.user) {
             mostrarBrooklynAutenticado(session.user.email || '');
         } else if (event === 'SIGNED_OUT') {
             const loginOverlay = document.getElementById('loginOverlay');
+            const app = document.querySelector('.app-layout');
+            if (app) app.classList.remove('auth-ready');
             if (loginOverlay) loginOverlay.style.display = 'flex';
         }
     });
 }
+comprobarSesion();
 
 function autocorregirNombrePedido() { const inputElement = document.getElementById('pedidoClienteNombre'); if (!inputElement) return; const raw = inputElement.value; const formatted = raw.trim().split(/\s+/).map(w => w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : '').join(' '); if (inputElement.value !== formatted) { inputElement.value = formatted; } }
 
@@ -6907,9 +6967,102 @@ function generarCamposFechas() {
     for (let i = 1; i <= num; i++) { const label = document.createElement('label'); label.innerText = `Fecha Cuota ${i}:`; const input = document.createElement('input'); input.type = 'date'; input.className = 'fecha-cuota-input'; input.onchange = calcularNota; const fechaSugerida = new Date(hoy); fechaSugerida.setDate(hoy.getDate() + (15 * i)); const yyyy = fechaSugerida.getFullYear(); const mm = String(fechaSugerida.getMonth() + 1).padStart(2, '0'); const dd = String(fechaSugerida.getDate()).padStart(2, '0'); input.value = `${yyyy}-${mm}-${dd}`; container.appendChild(label); container.appendChild(input); }
 }
 function formatearFecha(fechaStr) { if (!fechaStr) return ""; const [year, month, day] = fechaStr.split('-').map(Number); const fecha = new Date(year, month - 1, day); const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' }); const diaNum = String(fecha.getDate()).padStart(2, '0'); const mes = fecha.toLocaleDateString('es-ES', { month: 'long' }); return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)} ${diaNum} ${mes.charAt(0).toUpperCase() + mes.slice(1)}`; }
+function tasaNumero(v) {
+    const n = Number(v);
+    return Number.isFinite(n) && n > 0 ? n : null;
+}
+function tasaBrecha(market, base) {
+    return market && base ? Number((((market - base) / base) * 100).toFixed(2)) : null;
+}
+function aplicarTasasMercado(data) {
+    const bcvUsd = tasaNumero(data?.bcv_usd);
+    if (!bcvUsd) throw new Error('La respuesta no contiene una tasa BCV válida.');
+    const bcvEur = tasaNumero(data?.bcv_eur);
+    const usdt = tasaNumero(data?.usdt_avg);
+    const brechaUsdtRaw = Number(data?.brecha_usdt_usd);
+    const brechaEurRaw = Number(data?.brecha_eur_usd);
+    const brechaUsdt = Number.isFinite(brechaUsdtRaw) ? brechaUsdtRaw : tasaBrecha(usdt, bcvUsd);
+    const brechaEur = Number.isFinite(brechaEurRaw) ? brechaEurRaw : tasaBrecha(bcvEur, bcvUsd);
+
+    const tasaInput = document.getElementById('tasaInput');
+    if (tasaInput) tasaInput.value = bcvUsd.toFixed(2);
+    sincronizarTasa('main');
+
+    const setText = (id, value) => { const el = document.getElementById(id); if (el) el.innerText = value; };
+    setText('mBcvUsd', `Bs. ${bcvUsd.toLocaleString('es-VE', {minimumFractionDigits:2, maximumFractionDigits:2})}`);
+    setText('mBcvEur', bcvEur ? `Bs. ${bcvEur.toLocaleString('es-VE', {minimumFractionDigits:2, maximumFractionDigits:2})}` : 'No disponible');
+    setText('mUsdt', usdt ? `Bs. ${usdt.toLocaleString('es-VE', {minimumFractionDigits:2, maximumFractionDigits:2})}` : 'No disponible');
+    setText('mBrechaUsdt', brechaUsdt !== null ? `${brechaUsdt >= 0 ? '+' : ''}${brechaUsdt.toFixed(2)}%` : '--%');
+    setText('mBrechaEur', brechaEur !== null ? `${brechaEur >= 0 ? '+' : ''}${brechaEur.toFixed(2)}%` : '--%');
+    setText('topStatBcv', `${bcvUsd.toFixed(2)} Bs/$`);
+    setText('topStatUsdt', usdt ? `${usdt.toLocaleString('es-VE', {minimumFractionDigits:2, maximumFractionDigits:2})} Bs/$` : '-- Bs/$');
+    setText('topStatBrecha', brechaUsdt !== null ? `${brechaUsdt >= 0 ? '+' : ''}${brechaUsdt.toFixed(2)}%` : '-- %');
+
+    const ts = data?.timestamp ? new Date(data.timestamp) : new Date();
+    const hora = !isNaN(ts.getTime()) ? ts.toLocaleTimeString('es-VE', {hour:'2-digit', minute:'2-digit'}) : new Date().toLocaleTimeString('es-VE', {hour:'2-digit', minute:'2-digit'});
+    const fuente = data?.source === 'brecha-cambiaria' ? 'Brecha Cambiaria' : data?.source === 'fallback' ? 'fuentes de respaldo' : 'mercado';
+    setText('mTime', `Actualizado a las ${hora} · ${fuente}`);
+    return true;
+}
+async function tasaFetchJson(url, options = {}, timeout = 6500) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+        const res = await fetch(url, { cache:'no-store', ...options, signal:controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } finally { clearTimeout(timer); }
+}
+async function obtenerTasaFallbackNavegador() {
+    // Mantiene operativo Checkout aunque la API histórica cambie o tenga CORS temporal.
+    try {
+        const raw = await tasaFetchJson(`https://www.brecha-cambiaria.com/api/latest?_=${Date.now()}`);
+        if (tasaNumero(raw?.bcv_usd)) return { ...raw, source:'brecha-cambiaria' };
+    } catch (e) { console.warn('Brecha Cambiaria no disponible desde el navegador:', e); }
+
+    const [usdR, eurR, p2pR] = await Promise.allSettled([
+        tasaFetchJson('https://ve.dolarapi.com/v1/dolares/oficial'),
+        tasaFetchJson('https://ve.dolarapi.com/v1/euros/oficial'),
+        tasaFetchJson('https://criptoya.com/api/binancep2p/usdt/ves/5')
+    ]);
+    const usd = usdR.status === 'fulfilled' ? usdR.value : null;
+    const eur = eurR.status === 'fulfilled' ? eurR.value : null;
+    const p2p = p2pR.status === 'fulfilled' ? p2pR.value : null;
+    const bcvUsd = tasaNumero(usd?.promedio) || tasaNumero(usd?.venta) || tasaNumero(usd?.compra);
+    const bcvEur = tasaNumero(eur?.promedio) || tasaNumero(eur?.venta) || tasaNumero(eur?.compra);
+    const ask = tasaNumero(p2p?.ask) || tasaNumero(p2p?.totalAsk);
+    const bid = tasaNumero(p2p?.bid) || tasaNumero(p2p?.totalBid);
+    const usdt = ask && bid ? (ask + bid) / 2 : (ask || bid);
+    if (!bcvUsd) throw new Error('No fue posible obtener la tasa BCV desde las fuentes de respaldo.');
+    return {
+        source:'fallback', bcv_usd:bcvUsd, bcv_eur:bcvEur, usdt_avg:usdt,
+        brecha_usdt_usd:tasaBrecha(usdt, bcvUsd), brecha_eur_usd:tasaBrecha(bcvEur, bcvUsd),
+        timestamp:usd?.fechaActualizacion || eur?.fechaActualizacion || new Date().toISOString()
+    };
+}
 async function obtenerTasa() {
-    const tasaInput = document.getElementById('tasaInput'); tasaInput.placeholder = "Buscando...";
-    try { const res = await fetch(`https://www.brecha-cambiaria.com/api/latest?_=${Date.now()}`, { cache: 'no-store' }); if (res.ok) { const data = await res.json(); if (data && data.bcv_usd) { tasaInput.value = parseFloat(data.bcv_usd).toFixed(2); sincronizarTasa('main'); document.getElementById('mBcvUsd').innerText = `Bs. ${parseFloat(data.bcv_usd).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBcvEur').innerText = `Bs. ${parseFloat(data.bcv_eur).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mUsdt').innerText = `Bs. ${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})}`; document.getElementById('mBrechaUsdt').innerText = `+${data.brecha_usdt_usd}%`; document.getElementById('mBrechaEur').innerText = `+${data.brecha_eur_usd}%`; document.getElementById('topStatBcv').innerText = `${parseFloat(data.bcv_usd).toFixed(2)} Bs/$`; document.getElementById('topStatUsdt').innerText = `${parseFloat(data.usdt_avg).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs/$`; document.getElementById('topStatBrecha').innerText = `+${data.brecha_usdt_usd}%`; if (data.timestamp) { const hora = new Date(data.timestamp).toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }); document.getElementById('mTime').innerText = `Actualizado a las ${hora}`; } return; } } } catch (e) { console.warn("Error obteniendo tasa", e); } tasaInput.placeholder = "Ingresa tasa a mano";
+    const tasaInput = document.getElementById('tasaInput');
+    if (tasaInput) tasaInput.placeholder = 'Buscando...';
+    const timeEl = document.getElementById('mTime');
+    if (timeEl) timeEl.innerText = 'Sincronizando mercado...';
+    try {
+        // Tras autenticar, la consulta sale por Supabase para evitar CORS y tener fallbacks server-side.
+        if (supabaseClient) {
+            const { data:{ session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                const { data, error } = await supabaseClient.functions.invoke('market-rates', { body:{ action:'latest' } });
+                if (!error && data?.ok && tasaNumero(data?.bcv_usd)) return aplicarTasasMercado(data);
+                if (error) console.warn('market-rates no disponible:', error);
+            }
+        }
+        const fallback = await obtenerTasaFallbackNavegador();
+        return aplicarTasasMercado(fallback);
+    } catch (e) {
+        console.warn('Error obteniendo tasa:', e);
+        if (tasaInput) tasaInput.placeholder = 'Ingresa tasa a mano';
+        if (timeEl) timeEl.innerText = 'No se pudo actualizar automáticamente · puedes ingresar la tasa manualmente';
+        return false;
+    }
 }
 function toggleCampos() { const metodo = document.getElementById('paymentMethod').value; document.getElementById('campoDivisas').style.display = metodo === 'divisas' ? 'block' : 'none'; document.getElementById('campoCuotas').style.display = metodo === 'cuotas' ? 'block' : 'none'; if (metodo === 'cuotas') generarCamposFechas(); }
 function calcularNota() {
