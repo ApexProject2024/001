@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Brooklyn revision: TakeApp create_order service.location enabled · 2026-10-02 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brooklyn - Búho Electronics</title>
@@ -1256,6 +1257,7 @@
         .ag-greet-title { font-size:18px; font-weight:700; color:var(--ag-text); margin:0; letter-spacing:-.2px; }
         .ag-greet-sub { font-size:11.5px; color:var(--ag-muted); margin:3px 0 0; }
         .ag-top-actions { display:flex; align-items:center; gap:9px; margin-left:auto; flex-wrap:wrap; justify-content:flex-end; }
+        .ag-filter-select { height:36px; min-width:112px; margin:0; padding:0 28px 0 10px; border-radius:10px; border:1px solid var(--ag-border); background:var(--ag-panel-2); color:var(--ag-text); font:600 11px Inter,sans-serif; }
         .ag-search { width:min(280px,100%); height:36px; display:flex; align-items:center; gap:8px; padding:0 12px; border-radius:10px; background:var(--ag-panel-2); border:1px solid var(--ag-border); color:var(--ag-muted); }
         .ag-search input { width:100%; border:0; outline:0; background:transparent; color:var(--ag-text); font:500 12px Inter,sans-serif; padding:0; margin:0; }
         .ag-search input::placeholder { color:var(--ag-muted); }
@@ -1282,6 +1284,8 @@
         .ag-ev-dots { display:flex; flex-direction:column; gap:3px; margin-top:8px; min-width:0; }
         .ag-ev-dot { font-size:8.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:3px 5px; border-radius:5px; line-height:1.25; border-left:2px solid transparent; }
         .ag-ev-dot.tp-tarea { background:var(--ag-soft); color:var(--badge-text); border-left-color:var(--turquesa-dark); }
+        .ag-ev-dot.tp-publicar { background:rgba(217,119,6,.10); color:#b45309; border-left-color:#d97706; }
+        [data-theme="dark"] .ag-ev-dot.tp-publicar { color:#fbbf24; }
         .ag-ev-dot.tp-event { background:rgba(100,116,139,.10); color:var(--ag-muted); border-left-color:var(--ag-done); text-decoration:line-through; opacity:.78; }
         .ag-more { margin-top:3px; font-size:8.5px; color:var(--turquesa-dark); }
         .ag-sidebar { display:flex; flex-direction:column; overflow:hidden; background:var(--ag-panel-2); }
@@ -1973,7 +1977,11 @@ input:focus,select:focus,textarea:focus{
 .fin-binance-direction{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;}
 .fin-binance-direction.in{color:var(--fin-green);}
 .fin-binance-direction.out{color:var(--fin-red);}
+.fin-binance-service{display:inline-flex;align-items:center;padding:4px 7px;border:1px solid var(--border-color);background:var(--bg-input);color:var(--text-main);border-radius:999px;font-size:9px;font-weight:800;line-height:1;white-space:nowrap;}
 .fin-binance-receipt-btn{border:1px solid var(--border-color);background:var(--bg-input);color:var(--text-main);border-radius:8px;padding:6px 8px;font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+.fin-binance-delete-btn{border:1px solid rgba(220,38,38,.22);background:rgba(220,38,38,.06);color:var(--fin-red);border-radius:8px;padding:6px 8px;font-size:10px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+.fin-binance-delete-btn:hover{background:rgba(220,38,38,.1);}
+.fin-binance-delete-btn:disabled{opacity:.55;cursor:not-allowed;}
 .fin-binance-note{padding:10px 12px;border:1px solid var(--border-color);background:var(--bg-card);border-radius:10px;color:var(--text-muted);font-size:10px;line-height:1.5;margin-top:10px;}
 .fin-binance-receipt-card{background:#fff;color:#101828;border-radius:16px;padding:28px;width:min(520px,88vw);margin:0 auto;}
 .fin-binance-receipt-brand{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid #e5e7eb;}
@@ -1994,6 +2002,10 @@ input:focus,select:focus,textarea:focus{
 @media(max-width:520px){.fin-binance-kpis{grid-template-columns:1fr}.fin-view-tabs{width:100%}.fin-view-tab{flex:1;justify-content:center}.fin-binance-filters{flex-direction:column;align-items:stretch}.fin-binance-filters input,.fin-binance-filters select{width:100%}}
 </style>
 
+
+<style id="b2b-admin-styles">
+.b2b-admin-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 16px}.b2b-admin-tab{border:1px solid var(--border);background:var(--card);color:var(--text-muted);border-radius:9px;padding:8px 11px;font-size:11px;font-weight:750}.b2b-admin-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}.b2b-admin-view{display:none}.b2b-admin-view.active{display:block}.b2b-admin-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.b2b-admin-toolbar .modal-search-input-wrapper{flex:1;min-width:220px}.b2b-admin-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:10px;background:var(--card)}.b2b-admin-table{width:100%;border-collapse:collapse;min-width:930px}.b2b-admin-table th{padding:9px 10px;text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap}.b2b-admin-table td{padding:10px;border-bottom:1px solid var(--border);font-size:11px;vertical-align:middle}.b2b-admin-table tr:last-child td{border-bottom:0}.b2b-admin-table input,.b2b-admin-table select,.b2b-config-grid input,.b2b-config-grid textarea{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;padding:7px 8px;font-size:11px;outline:none}.b2b-admin-table input:focus,.b2b-admin-table select:focus,.b2b-config-grid input:focus,.b2b-config-grid textarea:focus{border-color:var(--accent)}.b2b-price-input{width:88px}.b2b-min-input{width:62px}.b2b-tier-input{width:180px}.b2b-admin-actions{display:flex;gap:6px;align-items:center}.b2b-mini-btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;padding:6px 8px;font-size:10px;font-weight:700;white-space:nowrap}.b2b-mini-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.b2b-mini-btn.danger{color:#b42318;border-color:#fecdca}.b2b-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:10px;margin-bottom:14px}.b2b-kpi{border:1px solid var(--border);border-radius:10px;background:var(--card);padding:13px}.b2b-kpi span{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);font-weight:750}.b2b-kpi strong{display:block;font-size:21px;margin-top:5px}.b2b-config-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.b2b-config-field{display:grid;gap:6px}.b2b-config-field.full{grid-column:1/-1}.b2b-config-field label{font-size:10.5px;font-weight:750;color:var(--text-muted)}.b2b-config-field textarea{min-height:78px;resize:vertical}.b2b-switches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.b2b-switch{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:9px;padding:9px 10px;font-size:11px;background:var(--card)}.b2b-status{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;font-size:9.5px;font-weight:750;background:var(--surface);color:var(--text-muted)}.b2b-status.ok{background:#ecfdf3;color:#027a48}.b2b-status.warn{background:#fffaeb;color:#b54708}.b2b-status.err{background:#fef3f2;color:#b42318}.b2b-inline-note{font-size:10.5px;color:var(--text-muted);line-height:1.55;border:1px solid var(--border);border-radius:9px;padding:10px;background:var(--surface);margin-bottom:12px}.b2b-product-name{font-weight:800;color:var(--text)}.b2b-product-sub{font-size:9.5px;color:var(--text-muted);margin-top:2px}.b2b-order-items{margin-top:6px;font-size:10px;color:var(--text-muted);line-height:1.5}.b2b-admin-feedback{min-height:16px;font-size:10.5px;color:var(--text-muted);margin-top:8px}.b2b-admin-feedback.ok{color:#027a48}.b2b-admin-feedback.err{color:#b42318}@media(max-width:900px){.b2b-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.b2b-config-grid,.b2b-switches{grid-template-columns:1fr}.b2b-config-field.full{grid-column:auto}}
+</style>
 </head>
 <body>
 
@@ -2075,6 +2087,9 @@ input:focus,select:focus,textarea:focus{
             </li>
             <li class="nav-item" data-label="Inventario" aria-label="Inventario" title="Inventario" data-permission="module.inventory" data-module="mod-inventario" onclick="if(seleccionarModulo('mod-inventario')) cargarProductosInventario(true);">
                 <span class="nav-icon"><re-icon icon=archive size=19></re-icon></span>
+            </li>
+            <li class="nav-item" data-label="B2B" aria-label="B2B Mayorista" title="B2B Mayorista" data-permission="module.b2b" data-module="mod-b2b" onclick="if(seleccionarModulo('mod-b2b')) b2bCargarModulo();">
+                <span class="nav-icon"><re-icon icon=store size=19></re-icon></span>
             </li>
             <li class="nav-item" data-label="Multimedia" aria-label="Multimedia" title="Multimedia" data-permission="module.multimedia" data-module="mod-multimedia" onclick="if(seleccionarModulo('mod-multimedia')) cargarMultimedia();">
                 <span class="nav-icon"><re-icon icon=image size=19></re-icon></span>
@@ -2192,6 +2207,7 @@ input:focus,select:focus,textarea:focus{
                                     <div class="dashboard-tool-row" data-permission="module.checkout" data-dashboard-tool="checkout pedido venta" onclick="seleccionarModulo('mod-registrar-pedido')"><div class="dashboard-tool-icon"><re-icon icon=shopping-cart size=14></re-icon></div><div><div class="dashboard-tool-name">Checkout</div><div class="dashboard-tool-desc">Crear y registrar un nuevo pedido.</div></div><div class="dashboard-tool-status"><b>Disponible</b><br>Ventas</div><button type="button" class="dashboard-tool-action">Abrir</button></div>
                                     <div class="dashboard-tool-row" data-permission="module.orders" data-dashboard-tool="pedidos gestion estados" onclick="if(seleccionarModulo('mod-gestion-pedidos')) cargarGestionPedidos();"><div class="dashboard-tool-icon"><re-icon icon=package size=14></re-icon></div><div><div class="dashboard-tool-name">Gestión de pedidos</div><div class="dashboard-tool-desc">Estados, pagos, entrega y seguimiento interno.</div></div><div class="dashboard-tool-status"><b>Disponible</b><br>Operación</div><button type="button" class="dashboard-tool-action">Abrir</button></div>
                                     <div class="dashboard-tool-row" data-permission="module.inventory" data-dashboard-tool="inventario stock productos" onclick="if(seleccionarModulo('mod-inventario')) cargarProductosInventario(true);"><div class="dashboard-tool-icon"><re-icon icon=archive size=14></re-icon></div><div><div class="dashboard-tool-name">Inventario</div><div class="dashboard-tool-desc">Consultar productos, variantes y existencias.</div></div><div class="dashboard-tool-status"><b>Disponible</b><br>Stock</div><button type="button" class="dashboard-tool-action">Abrir</button></div>
+                                    <div class="dashboard-tool-row" data-permission="module.b2b" data-dashboard-tool="b2b mayorista precios pedidos clientes tienda" onclick="if(seleccionarModulo('mod-b2b')) b2bCargarModulo();"><div class="dashboard-tool-icon"><re-icon icon=store size=14></re-icon></div><div><div class="dashboard-tool-name">B2B Mayorista</div><div class="dashboard-tool-desc">Precios, mínimos, pedidos, clientes y configuración de la tienda B2B.</div></div><div class="dashboard-tool-status"><b>Disponible</b><br>Mayoristas</div><button type="button" class="dashboard-tool-action">Abrir</button></div>
                                     <div class="dashboard-tool-row" data-permission="module.multimedia" data-dashboard-tool="multimedia fotos videos albumes" onclick="if(seleccionarModulo('mod-multimedia')) cargarMultimedia();"><div class="dashboard-tool-icon"><re-icon icon=image size=14></re-icon></div><div><div class="dashboard-tool-name">Multimedia</div><div class="dashboard-tool-desc">Fotos, vídeos, WebP y álbumes.</div></div><div class="dashboard-tool-status"><b>Disponible</b><br>Contenido</div><button type="button" class="dashboard-tool-action">Abrir</button></div>
 <div class="dashboard-tool-row" data-permission="module.finance" data-dashboard-tool="finanzas ingresos gastos cuentas" onclick="if(seleccionarModulo('mod-finanzas')) { finMostrarVista('resumen'); finCargarModulo(); }"><div class="dashboard-tool-icon"><re-icon icon=landmark size=14></re-icon></div><div><div class="dashboard-tool-name">Finanzas</div><div class="dashboard-tool-desc">Cuentas, movimientos y presupuestos.</div></div><div class="dashboard-tool-status"><b>Disponible</b><br>Control</div><button type="button" class="dashboard-tool-action">Abrir</button></div>
                                     <div class="dashboard-tool-row" data-permission="module.notes" data-dashboard-tool="notas apuntes importantes equipo" onclick="if(seleccionarModulo('mod-notas-importantes')) notesCargarModulo();"><div class="dashboard-tool-icon"><re-icon icon=file-text size=14></re-icon></div><div><div class="dashboard-tool-name">Notas</div><div class="dashboard-tool-desc">Notas importantes, fijadas y compartidas.</div></div><div class="dashboard-tool-status"><b>Disponible</b><br>Organización</div><button type="button" class="dashboard-tool-action">Abrir</button></div>
@@ -2983,6 +2999,82 @@ input:focus,select:focus,textarea:focus{
                 </div>
             </div>
 
+
+<!-- MÓDULO: B2B MAYORISTA -->
+<div class="module-pane" id="mod-b2b">
+    <div class="card card-wide">
+        <div class="checkout-header">
+            <div>
+                <div class="checkout-top-title">Canal mayorista</div>
+                <h2 class="checkout-main-title"><re-icon icon=store size=16></re-icon> B2B Mayorista</h2>
+                <div style="font-size:11.5px;color:var(--text-muted);margin-top:5px;">Administra precios, cantidades mínimas, clientes y pedidos sobre el mismo inventario operativo de Brooklyn.</div>
+            </div>
+            <div style="display:flex;gap:7px;align-items:center;">
+                <button type="button" class="btn-copy" onclick="window.open('https://b2b.buhoelectronics.com','_blank','noopener')"><re-icon icon=external-link size=13></re-icon> Abrir tienda</button>
+                <button type="button" class="btn-home-icon" title="Actualizar" onclick="b2bCargarModulo(true)"><re-icon icon=refresh-cw size=15></re-icon></button>
+            </div>
+        </div>
+
+        <div class="b2b-admin-tabs">
+            <button type="button" class="b2b-admin-tab active" data-b2b-tab="resumen" onclick="b2bMostrarVista('resumen')">Resumen</button>
+            <button type="button" class="b2b-admin-tab" data-b2b-tab="catalogo" onclick="b2bMostrarVista('catalogo')">Catálogo y precios</button>
+            <button type="button" class="b2b-admin-tab" data-b2b-tab="pedidos" onclick="b2bMostrarVista('pedidos')">Pedidos</button>
+            <button type="button" class="b2b-admin-tab" data-b2b-tab="clientes" onclick="b2bMostrarVista('clientes')">Clientes</button>
+            <button type="button" class="b2b-admin-tab" data-b2b-tab="config" onclick="b2bMostrarVista('config')">Configuración</button>
+        </div>
+
+        <div class="b2b-admin-view active" id="b2bViewResumen">
+            <div class="b2b-kpi-grid">
+                <div class="b2b-kpi"><span>Pedidos B2B</span><strong id="b2bKpiPedidos">0</strong></div>
+                <div class="b2b-kpi"><span>Ventas B2B</span><strong id="b2bKpiVentas">$0.00</strong></div>
+                <div class="b2b-kpi"><span>Clientes activos</span><strong id="b2bKpiClientes">0</strong></div>
+                <div class="b2b-kpi"><span>Precios configurados</span><strong id="b2bKpiPrecios">0</strong></div>
+            </div>
+            <div class="b2b-inline-note" id="b2bResumenEstado">La tienda mayorista usa el mismo catálogo e inventario que Brooklyn. Los precios y mínimos B2B se administran desde este módulo.</div>
+        </div>
+
+        <div class="b2b-admin-view" id="b2bViewCatalogo">
+            <div class="b2b-admin-toolbar">
+                <div class="modal-search-input-wrapper"><span><re-icon icon=search size=15></re-icon></span><input type="text" id="b2bCatalogSearch" class="modal-search-input" placeholder="Buscar producto, variante o SKU..." oninput="b2bRenderCatalogo()"></div>
+                <select id="b2bCatalogFilter" onchange="b2bRenderCatalogo()"><option value="all">Todos</option><option value="configured">Configurados</option><option value="pending">Sin precio B2B</option><option value="hidden">Ocultos</option></select>
+            </div>
+            <div class="b2b-inline-note">El precio B2B vacío usa la regla general configurada en la tienda. Puedes definir un precio exacto, una cantidad mínima y escalas por volumen con el formato <b>3:160, 6:155</b>.</div>
+            <div class="b2b-admin-table-wrap"><table class="b2b-admin-table"><thead><tr><th>Producto</th><th>Stock</th><th>Precio base</th><th>Precio B2B</th><th>Mín.</th><th>Escalas</th><th>Visible</th><th>Acciones</th></tr></thead><tbody id="b2bCatalogBody"><tr><td colspan="8">Cargando…</td></tr></tbody></table></div>
+            <div id="b2bCatalogFeedback" class="b2b-admin-feedback"></div>
+        </div>
+
+        <div class="b2b-admin-view" id="b2bViewPedidos">
+            <div class="b2b-admin-toolbar"><button type="button" class="b2b-mini-btn" onclick="b2bCargarPedidos(true)"><re-icon icon=refresh-cw size=12></re-icon> Actualizar</button></div>
+            <div class="b2b-admin-table-wrap"><table class="b2b-admin-table"><thead><tr><th>Fecha</th><th>Pedido</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Pago</th><th>Entrega</th><th>Artículos</th></tr></thead><tbody id="b2bPedidosBody"><tr><td colspan="8">Cargando…</td></tr></tbody></table></div>
+            <div id="b2bPedidosFeedback" class="b2b-admin-feedback"></div>
+        </div>
+
+        <div class="b2b-admin-view" id="b2bViewClientes">
+            <div class="b2b-admin-toolbar"><button type="button" class="b2b-mini-btn" onclick="b2bCargarClientes(true)"><re-icon icon=refresh-cw size=12></re-icon> Actualizar</button></div>
+            <div class="b2b-admin-table-wrap"><table class="b2b-admin-table"><thead><tr><th>Empresa</th><th>Contacto</th><th>Estado</th><th>Descuento %</th><th>Pedido mínimo</th><th>Pedidos</th><th>Comprado</th><th>Acción</th></tr></thead><tbody id="b2bClientesBody"><tr><td colspan="8">Cargando…</td></tr></tbody></table></div>
+            <div id="b2bClientesFeedback" class="b2b-admin-feedback"></div>
+        </div>
+
+        <div class="b2b-admin-view" id="b2bViewConfig">
+            <div class="b2b-switches">
+                <label class="b2b-switch"><input type="checkbox" id="b2bCfgActiva"> Tienda B2B activa</label>
+                <label class="b2b-switch"><input type="checkbox" id="b2bCfgPublica"> Catálogo público</label>
+                <label class="b2b-switch"><input type="checkbox" id="b2bCfgStock"> Mostrar disponibilidad</label>
+                <label class="b2b-switch"><input type="checkbox" id="b2bCfgRegistro"> Permitir nuevos registros</label>
+                <label class="b2b-switch"><input type="checkbox" id="b2bCfgFallback"> Usar precio base como respaldo</label>
+            </div>
+            <div class="b2b-config-grid" style="margin-top:12px;">
+                <div class="b2b-config-field"><label>Nombre de la tienda</label><input type="text" id="b2bCfgNombre" maxlength="100"></div>
+                <div class="b2b-config-field"><label>Descuento general %</label><input type="number" id="b2bCfgDescuento" min="0" max="100" step="0.01"></div>
+                <div class="b2b-config-field"><label>Pedido mínimo general USD</label><input type="number" id="b2bCfgMinimo" min="0" step="0.01"></div>
+                <div class="b2b-config-field full"><label>Mensaje público del catálogo</label><textarea id="b2bCfgMensaje" maxlength="300"></textarea></div>
+            </div>
+            <div style="margin-top:12px;"><button type="button" class="btn-copy" onclick="b2bGuardarConfig()"><re-icon icon=save size=13></re-icon> Guardar configuración</button></div>
+            <div id="b2bConfigFeedback" class="b2b-admin-feedback"></div>
+        </div>
+    </div>
+</div>
+
 <!-- MÓDULO: MULTIMEDIA -->
             <div class="module-pane" id="mod-multimedia">
                 <div class="card card-wide">
@@ -3237,7 +3329,7 @@ input:focus,select:focus,textarea:focus{
                                 <span class="fin-eyebrow">Historial por correo</span>
                                 <h3>Transacciones de Binance</h3>
                                 <p>Brooklyn revisa tu buzón únicamente cuando abres esta sección o pulsas Actualizar. No hay sincronización automática en segundo plano.</p>
-                                <div class="fin-binance-source"><re-icon icon=mail size=12></re-icon> Fuente: <b id="finBinanceMailbox">gilder.torrealba@buhoelectronics.com</b></div>
+                                <div class="fin-binance-source"><re-icon icon=mail size=12></re-icon> Fuente: <b id="finBinanceMailbox">gilder.torrealba@buhoelectronics.com</b> · Carpetas: <b id="finBinanceFolders">Notification + Inbox</b></div>
                             </div>
                             <button type="button" class="fin-btn fin-btn-soft" id="finBinanceActualizar" onclick="finBinanceSincronizar(true)"><re-icon icon=refresh-cw size=14></re-icon> Actualizar</button>
                         </div>
@@ -3258,6 +3350,7 @@ input:focus,select:focus,textarea:focus{
                             <div class="fin-binance-toolbar">
                                 <div class="fin-binance-filters">
                                     <input type="search" id="finBinanceBuscar" placeholder="Buscar referencia, moneda o asunto…" oninput="finBinanceRender()">
+                                    <select id="finBinanceServicio" onchange="finBinanceRender()" aria-label="Filtrar por servicio de Binance"><option value="">Todos los servicios</option><option value="binance_pay">Binance Pay</option><option value="p2p">P2P</option><option value="deposito">Depósitos</option><option value="retiro">Retiros</option><option value="transferencia">Transferencias</option><option value="otro">Otros</option></select>
                                     <select id="finBinanceDireccion" onchange="finBinanceRender()"><option value="">Todas</option><option value="ingreso">Entradas</option><option value="egreso">Salidas</option><option value="revisar">Por revisar</option></select>
                                     <select id="finBinanceEstado" onchange="finBinanceRender()"><option value="">Cualquier estado</option><option value="confirmada">Confirmadas</option><option value="revisar">Revisar</option></select>
                                 </div>
@@ -3265,11 +3358,11 @@ input:focus,select:focus,textarea:focus{
                             </div>
                             <div class="fin-table-wrap">
                                 <table class="fin-table">
-                                    <thead><tr><th>Fecha</th><th>Tipo</th><th>Detalle</th><th class="fin-num">Monto</th><th>Verificación</th><th class="fin-actions">Recibo</th></tr></thead>
+                                    <thead><tr><th>Fecha</th><th>Tipo</th><th>Detalle</th><th class="fin-num">Monto</th><th>Verificación</th><th class="fin-actions">Acciones</th></tr></thead>
                                     <tbody id="finBinanceBody"><tr><td colspan="6" class="fin-empty-cell">Abre esta sección para buscar transacciones.</td></tr></tbody>
                                 </table>
                             </div>
-                            <div class="fin-binance-note">Brooklyn ignora correos de códigos de verificación, inicio de sesión, contraseñas y seguridad. El recibo generado es un <b>comprobante interno de Brooklyn</b> basado en la notificación recibida por correo; no sustituye un comprobante oficial de Binance.</div>
+                            <div class="fin-binance-note">Brooklyn revisa las carpetas <b>Notification</b> e <b>Inbox</b> de tu buzón personal y organiza las operaciones como <b>Binance Pay, P2P, Depósitos, Retiros y Transferencias</b>. Los códigos de verificación, avisos de seguridad, newsletters y promociones se descartan. El recibo generado es un <b>comprobante interno de Brooklyn</b>. Si eliminas una transacción confirmada, se oculta del historial de Brooklyn y no se elimina el correo original de Zoho/Binance.</div>
                         </section>
                     </section>
                 </div>
@@ -3430,6 +3523,11 @@ input:focus,select:focus,textarea:focus{
                             </div>
                         </div>
                         <div class="ag-top-actions">
+                            <select id="ag-type-filter" class="ag-filter-select" aria-label="Filtrar tareas" onchange="agSetTypeFilter(this.value)">
+                                <option value="all">Todas</option>
+                                <option value="publicar">Publicar</option>
+                                <option value="personal">Personales</option>
+                            </select>
                             <label class="ag-search" aria-label="Buscar tarea">
                                 <re-icon icon=search size=13></re-icon>
                                 <input id="ag-search-input" type="search" placeholder="Buscar en tu agenda" oninput="agSetSearch(this.value)">
@@ -4199,6 +4297,7 @@ let brooklynRolesActuales = [];
 const MODULO_PERMISOS = {
     'mod-registrar-pedido':'module.checkout',
     'mod-inventario':'module.inventory',
+    'mod-b2b':'module.b2b',
     'mod-multimedia':'module.multimedia',
     'mod-gestion-pedidos':'module.orders',
     'mod-delivery-gps':'module.delivery',
@@ -4489,16 +4588,89 @@ function renderTareasPerfil() {
         </div>`).join('');
 }
 
-// Refleja las tareas del perfil como eventos tipo "tarea" en la Agenda, en la fecha
-// que tenga cada una. Se limpian y se vuelven a insertar cada vez, para no duplicar.
+// Refleja las tareas del perfil como eventos de Agenda. Las tareas automáticas de
+// publicación conservan su origen para poder filtrarlas y abrir el producto directamente.
 function sincronizarTareasConAgenda() {
-    Object.keys(agEvents).forEach(fecha => { agEvents[fecha] = agEvents[fecha].filter(e => e.origen !== 'perfil'); });
+    Object.keys(agEvents).forEach(fecha => {
+        agEvents[fecha] = agEvents[fecha].filter(e => e.origen !== 'perfil' && e.origen !== 'inventario_publicar');
+    });
     (perfilUsuarioActual.tareas || []).forEach(t => {
         const fecha = t.fecha || agDateKeyHoy();
         if (!agEvents[fecha]) agEvents[fecha] = [];
-        agEvents[fecha].push({ d: fecha, title: t.texto, type: t.hecha ? 'event' : 'tarea', start: t.hora || '', end: '', note: t.descripcion || (t.hecha ? 'Tarea completada' : 'Tarea pendiente'), origen: 'perfil', tareaId: t.id });
+        agEvents[fecha].push({
+            d: fecha, title: t.texto, type: t.hecha ? 'event' : 'tarea', start: t.hora || '', end: '',
+            note: t.descripcion || (t.hecha ? 'Tarea completada' : 'Tarea pendiente'),
+            origen: t.origen || 'perfil', tareaId: t.id, productoId: t.producto_id || null,
+            canalesPendientes: Array.isArray(t.canales_pendientes) ? t.canales_pendientes : []
+        });
     });
     if (typeof agInited !== 'undefined' && agInited) agRender();
+}
+
+function inventarioCanalesPendientesProducto(p) {
+    return INVENTARIO_CANALES.filter(c => (inventarioGetPublicacion(p.id, c.clave)?.estado || 'no_publicado') !== 'publicado');
+}
+
+async function sincronizarTareasPublicacionInventario(guardar = true) {
+    if (!catalogoCargadoUnaVez || inventarioPublicacionesError || !perfilUsuarioActual?.user_id || !tienePermiso('module.agenda')) return false;
+    if (!Array.isArray(perfilUsuarioActual.tareas)) perfilUsuarioActual.tareas = [];
+
+    const hoy = agDateKeyHoy();
+    const ahora = new Date().toISOString();
+    const productosPorId = new Map(catalogoProductosCache.map(p => [String(p.id), p]));
+    let cambio = false;
+
+    // Un producto agotado o retirado del catálogo no debe generar trabajo de publicación.
+    perfilUsuarioActual.tareas = perfilUsuarioActual.tareas.filter(t => {
+        if (t?.origen !== 'inventario_publicar') return true;
+        const p = productosPorId.get(String(t.producto_id || ''));
+        const mantener = !!p && !inventarioProductoAgotado(p);
+        if (!mantener) cambio = true;
+        return mantener;
+    });
+
+    for (const p of catalogoProductosCache) {
+        if (inventarioProductoAgotado(p)) continue;
+        const productId = String(p.id);
+        const pendientes = inventarioCanalesPendientesProducto(p);
+        let tarea = perfilUsuarioActual.tareas.find(t => t?.origen === 'inventario_publicar' && String(t.producto_id) === productId);
+
+        if (pendientes.length) {
+            const nombres = pendientes.map(c => c.nombre);
+            const descripcion = `Canales pendientes: ${nombres.join(', ')}. Esta tarea se actualiza automáticamente desde Inventario → Canales de publicación.`;
+            if (!tarea) {
+                tarea = {
+                    id: `invpub:${productId}`, texto: `Publicar · ${p.nombre || 'Producto'}`, fecha: hoy, hora: '',
+                    descripcion, hecha: false, creada_at: ahora, origen: 'inventario_publicar', tipo: 'publicar',
+                    producto_id: productId, producto_nombre: p.nombre || 'Producto',
+                    canales_pendientes: pendientes.map(c => c.clave)
+                };
+                perfilUsuarioActual.tareas.push(tarea);
+                cambio = true;
+            } else {
+                const antes = JSON.stringify([tarea.texto,tarea.descripcion,tarea.hecha,tarea.producto_nombre,tarea.canales_pendientes]);
+                tarea.texto = `Publicar · ${p.nombre || 'Producto'}`;
+                tarea.descripcion = descripcion;
+                tarea.producto_nombre = p.nombre || 'Producto';
+                tarea.canales_pendientes = pendientes.map(c => c.clave);
+                if (tarea.hecha) { tarea.hecha = false; tarea.fecha = hoy; tarea.completada_at = null; }
+                const despues = JSON.stringify([tarea.texto,tarea.descripcion,tarea.hecha,tarea.producto_nombre,tarea.canales_pendientes]);
+                if (antes !== despues) cambio = true;
+            }
+        } else if (tarea && !tarea.hecha) {
+            tarea.hecha = true;
+            tarea.canales_pendientes = [];
+            tarea.descripcion = 'Publicado en Marketplace, WhatsApp, Página Web y MercadoLibre.';
+            tarea.completada_at = ahora;
+            cambio = true;
+        }
+    }
+
+    if (!cambio) return false;
+    renderTareasPerfil();
+    sincronizarTareasConAgenda();
+    if (guardar) await guardarPerfilUsuario();
+    return true;
 }
 
 
@@ -6173,6 +6345,7 @@ async function cargarProductosInventario(forzar = false) {
         if (catalogoCargadoUnaVez) {
             renderInventarioModulo();
             renderInventarioCanales();
+            await sincronizarTareasPublicacionInventario();
         }
     }
 }
@@ -6232,7 +6405,7 @@ function renderInventarioCanales() {
                 </div>
             </td>`;
         }).join('');
-        return `<tr class="${alerta ? 'inv-stock-warning' : ''}">
+        return `<tr class="${alerta ? 'inv-stock-warning' : ''}" data-inv-product-row="${pid}">
             <td><input type="checkbox" class="inv-check" data-inv-row="1" data-product-id="${pid}" ${selected?'checked':''} onchange="toggleSeleccionInventario(this.dataset.productId,this.checked)"></td>
             <td class="inv-product-cell">
                 <div class="inv-product-name">${inventarioEsc(p.nombre || 'Producto')}</div>
@@ -6300,6 +6473,7 @@ async function guardarEstadoPublicacion(productId, canal, estado, selectEl) {
         inventarioActualizarCachePublicacion(data);
         inventarioPublicacionesError = '';
         renderInventarioCanales();
+        await sincronizarTareasPublicacionInventario();
     } catch (e) {
         if (selectEl) { selectEl.value = anterior; selectEl.className = `inv-status-select ${inventarioEstadoClase(anterior)}`; }
         alert('No se pudo guardar el estado de publicación: ' + (e.message || e));
@@ -6357,6 +6531,7 @@ async function guardarDetallesInventarioPublicacion() {
         inventarioPublicacionesError = '';
         cerrarModalInventarioPublicacion();
         renderInventarioCanales();
+        await sincronizarTareasPublicacionInventario();
     } catch (e) { errEl.textContent = e.message || String(e); }
 }
 
@@ -6378,6 +6553,7 @@ async function aplicarEstadoMasivoInventario() {
         (data || []).forEach(inventarioActualizarCachePublicacion);
         inventarioPublicacionesError = '';
         renderInventarioCanales();
+        await sincronizarTareasPublicacionInventario();
     } catch (e) { alert('No se pudo aplicar el cambio masivo: ' + (e.message || e)); }
 }
 
@@ -6774,9 +6950,9 @@ async function crearNuevoPedido(esBorrador = false) {
         ? '<span class="checkout-action-icon"><re-icon icon=loader-2 size=18 class=spin-icon></re-icon></span>'
         : '<span class="checkout-action-icon"><re-icon icon=loader-2 size=17 class=spin-icon></re-icon></span><span class="checkout-action-label">Procesando pedido...</span>';
 
-    // 1. Payload con los datos correctamente mapeados para TakeApp
-    // remark = visible al cliente en el recibo → SOLO método de pago
-    // La dirección se sincroniza en customer.address (PASO 3) — campo nativo de TakeApp
+    // 1. Payload con los datos correctamente mapeados para Brooklyn / TakeApp
+    // La dirección y coordenadas se envían en este mismo create_order.
+    // brooklyn-orders las transforma al service.location nativo de TakeApp.
     const metodoPagoEtiqueta = obtenerEtiquetaMetodoPago();
     const remarkCliente = (document.getElementById('pedidoObservacion').value || '').trim();
 
@@ -6832,8 +7008,9 @@ async function crearNuevoPedido(esBorrador = false) {
         }
         const avisosEstadoInicial = Array.isArray(dataEstado?.update_warnings) ? dataEstado.update_warnings.filter(Boolean) : [];
 
-        // La dirección ya viaja en customer.address durante create_order.
-        // No hacemos una segunda llamada a TakeApp para evitar requests redundantes.
+        // La dirección y las coordenadas ya viajaron en el create_order.
+        // brooklyn-orders las envía a TakeApp mediante service.location,
+        // por lo que no hace falta una segunda llamada para sincronizar la dirección.
 
         feedback.style.color = 'var(--turquesa-dark)'; 
         feedback.innerHTML = esBorrador
@@ -7257,7 +7434,7 @@ function olcRecuperarCercano(corto, refLat, refLng) {
 // ============================
 const AG_MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const AG_DAYS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-let agYear, agMonth, agSelectedDate, agEvents = {}, agInited = false, agSearchTerm = '';
+let agYear, agMonth, agSelectedDate, agEvents = {}, agInited = false, agSearchTerm = '', agTypeFilter = 'all';
 
 function agDateKey(y, m, d) {
     const dt = new Date(y, m, d);
@@ -7266,12 +7443,15 @@ function agDateKey(y, m, d) {
 function agEsc(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
 function agEventosFiltrados(fecha) {
     let lista = [...(agEvents[fecha] || [])];
+    if (agTypeFilter === 'publicar') lista = lista.filter(e => e.origen === 'inventario_publicar');
+    else if (agTypeFilter === 'personal') lista = lista.filter(e => e.origen !== 'inventario_publicar');
     if (agSearchTerm) lista = lista.filter(e => String(e.title || '').toLowerCase().includes(agSearchTerm) || String(e.note || '').toLowerCase().includes(agSearchTerm));
     return lista.sort((a,b) => String(a.start || '99:99').localeCompare(String(b.start || '99:99')));
 }
 function agSetSearch(v) { agSearchTerm = String(v || '').trim().toLowerCase(); agRenderGrid(); agRenderSidebar(); }
+function agSetTypeFilter(v) { agTypeFilter = ['publicar','personal'].includes(v) ? v : 'all'; agRenderGrid(); agRenderSidebar(); }
 
-function iniciarAgenda() {
+async function iniciarAgenda() {
     const now = new Date();
     if (!agInited) {
         agYear = now.getFullYear();
@@ -7286,6 +7466,11 @@ function iniciarAgenda() {
     const avatar = document.getElementById('ag-user-avatar');
     if (greet) greet.textContent = `${saludo}, ${nombre}`;
     if (avatar) avatar.textContent = perfilIniciales(nombre);
+    if (!catalogoCargadoUnaVez && tienePermiso('module.inventory')) {
+        await cargarProductosInventario();
+    } else if (catalogoCargadoUnaVez) {
+        await sincronizarTareasPublicacionInventario();
+    }
     sincronizarTareasConAgenda();
     agRender();
 }
@@ -7314,7 +7499,7 @@ function agRenderGrid() {
         const k = agDateKey(c.y, c.m, c.day);
         const evs = agEventosFiltrados(k);
         const cls = 'ag-day-cell' + (!c.cur ? ' ag-other-month' : '') + (k === todayKey ? ' ag-today' : '') + (k === agSelectedDate ? ' ag-selected' : '');
-        const dots = evs.slice(0,2).map(e => `<div class="ag-ev-dot tp-${e.type}">${e.start ? agEsc(e.start)+' · ' : ''}${agEsc(e.title)}</div>`).join('');
+        const dots = evs.slice(0,2).map(e => `<div class="ag-ev-dot tp-${e.origen === 'inventario_publicar' && e.type === 'tarea' ? 'publicar' : e.type}">${e.start ? agEsc(e.start)+' · ' : ''}${agEsc(e.title)}</div>`).join('');
         const more = evs.length > 2 ? `<div class="ag-more">+${evs.length - 2} más</div>` : '';
         return `<div class="${cls}" onclick="agSelectDay('${k}')"><div class="ag-day-num">${c.day}</div><div class="ag-ev-dots">${dots}${more}</div></div>`;
     }).join('');
@@ -7344,19 +7529,40 @@ function agRenderSidebar() {
     }
     list.innerHTML = evs.map(e => {
         const done = e.type === 'event';
+        const autoPublicar = e.origen === 'inventario_publicar';
+        const metaOrigen = autoPublicar
+            ? '<re-icon icon=package size=10></re-icon> Inventario · Publicar'
+            : '<re-icon icon=calendar size=10></re-icon> Tarea personal';
+        const acciones = autoPublicar && e.productoId
+            ? `<div class="ag-task-actions"><button type="button" class="ag-mini-btn" onclick="agAbrirProductoPublicacion('${agEsc(e.productoId)}')"><re-icon icon=external-link size=11></re-icon>Abrir producto</button></div>`
+            : (e.tareaId ? `<div class="ag-task-actions"><button type="button" class="ag-mini-btn" onclick="toggleTareaPerfil('${e.tareaId}')"><re-icon icon=${done?'refresh-cw':'check'} size=11></re-icon>${done?'Reabrir':'Completar'}</button><button type="button" class="ag-mini-btn danger" onclick="agEliminarTareaDesdeAgenda('${e.tareaId}')"><re-icon icon=trash-2 size=11></re-icon>Eliminar</button></div>` : '');
         return `<div class="ag-event-card${done?' done':''}">
             <div class="ag-ev-bar"></div>
             <div style="flex:1;min-width:0">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:7px">
                     <div class="ag-ev-title">${agEsc(e.title)}</div>
-                    <span class="ag-ev-badge">${done?'Completada':'Pendiente'}</span>
+                    <span class="ag-ev-badge">${done?'Completada':(autoPublicar?'Publicar':'Pendiente')}</span>
                 </div>
-                <div class="ag-ev-meta"><re-icon icon=clock size=10></re-icon> ${e.start ? agEsc(e.start) : 'Sin hora'} <span>·</span> <re-icon icon=calendar size=10></re-icon> Tarea personal</div>
+                <div class="ag-ev-meta"><re-icon icon=clock size=10></re-icon> ${e.start ? agEsc(e.start) : 'Sin hora'} <span>·</span> ${metaOrigen}</div>
                 ${e.note ? `<div style="font-size:9.5px;color:var(--ag-muted);margin-top:6px;line-height:1.45;white-space:pre-wrap">${agEsc(e.note)}</div>` : ''}
-                ${e.tareaId ? `<div class="ag-task-actions"><button type="button" class="ag-mini-btn" onclick="toggleTareaPerfil('${e.tareaId}')"><re-icon icon=${done?'refresh-cw':'check'} size=11></re-icon>${done?'Reabrir':'Completar'}</button><button type="button" class="ag-mini-btn danger" onclick="agEliminarTareaDesdeAgenda('${e.tareaId}')"><re-icon icon=trash-2 size=11></re-icon>Eliminar</button></div>` : ''}
+                ${acciones}
             </div>
         </div>`;
     }).join('');
+}
+
+async function agAbrirProductoPublicacion(productId) {
+    if (!seleccionarModulo('mod-inventario')) return;
+    await cargarProductosInventario();
+    cambiarVistaInventario('canales');
+    const p = catalogoProductosCache.find(x => String(x.id) === String(productId));
+    const buscador = document.getElementById('inventarioCanalesBuscador');
+    if (buscador) buscador.value = p?.nombre || p?.sku || String(productId);
+    renderInventarioCanales();
+    setTimeout(() => {
+        const row = [...document.querySelectorAll('#inventarioCanalesBody tr[data-inv-product-row]')].find(el => String(el.dataset.invProductRow) === String(productId));
+        row?.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 80);
 }
 
 function agSelectDay(key) {
@@ -7831,18 +8037,20 @@ async function finEliminarMovimiento(id){const mov=finState.movimientos.find(x=>
 
 
 // ---- FINANZAS · HISTORIAL BINANCE BAJO DEMANDA ----
-const finBinanceState={loaded:false,loading:false,connected:false,mailbox:null,lastSync:null,items:[],stats:{total:0,ingresos:0,egresos:0,revisar:0},selected:null};
+const finBinanceState={loaded:false,loading:false,connected:false,mailbox:null,folders:[],lastSync:null,items:[],stats:{total:0,ingresos:0,egresos:0,revisar:0},selected:null};
 function finBinanceEndpoint(){return `${SUPABASE_URL}/functions/v1/binance-mail`;}
 async function finBinanceInvoke(body){const {data:{session}}=await supabaseClient.auth.getSession();if(!session?.access_token)throw new Error('Tu sesión de Brooklyn expiró. Inicia sesión nuevamente.');const r=await fetch(finBinanceEndpoint(),{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${session.access_token}`},body:JSON.stringify(body||{})});const data=await r.json().catch(()=>null);if(!r.ok||!data?.ok)throw new Error(data?.error||`Binance respondió ${r.status}.`);return data;}
 function finMostrarVista(vista){const binance=vista==='binance';document.getElementById('finVistaResumen').style.display=binance?'none':'block';document.getElementById('finVistaBinance').classList.toggle('active',binance);document.getElementById('finTabResumen').classList.toggle('active',!binance);document.getElementById('finTabBinance').classList.toggle('active',binance);const head=document.getElementById('finResumenHeadActions');if(head)head.style.display=binance?'none':'flex';if(binance&&!finBinanceState.loaded&&!finBinanceState.loading)finBinanceSincronizar(false);}
 function finBinanceFmtDate(v){if(!v)return '—';try{return new Intl.DateTimeFormat('es-VE',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(v));}catch{return '—';}}
 function finBinanceFmtAmount(item){if(item.amount===null||item.amount===undefined)return 'Monto no detectado';const n=Number(item.amount);const digits=Math.abs(n)>=1?Math.min(8,Math.max(2,(String(item.amount).split('.')[1]||'').replace(/0+$/,'').length)):8;return `${Number.isFinite(n)?n.toLocaleString('es-VE',{maximumFractionDigits:digits}):item.amount} ${finEsc(item.currency||'')}`.trim();}
-function finBinanceApply(data){finBinanceState.connected=!!data.connected;finBinanceState.mailbox=data.mailbox||null;finBinanceState.lastSync=data.lastSync||null;finBinanceState.items=Array.isArray(data.transactions)?data.transactions:[];finBinanceState.stats=data.stats||{total:finBinanceState.items.length,ingresos:0,egresos:0,revisar:0};finBinanceState.loaded=true;const mb=document.getElementById('finBinanceMailbox');if(mb&&finBinanceState.mailbox?.email)mb.textContent=finBinanceState.mailbox.email;document.getElementById('finBinanceSetup')?.classList.toggle('show',!finBinanceState.connected);const ids={finBinanceKpiTotal:finBinanceState.stats.total||0,finBinanceKpiIn:finBinanceState.stats.ingresos||0,finBinanceKpiOut:finBinanceState.stats.egresos||0,finBinanceKpiReview:finBinanceState.stats.revisar||0};Object.entries(ids).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=String(val)});const sync=document.getElementById('finBinanceSyncText');if(sync)sync.textContent=finBinanceState.lastSync?`Última revisión: ${finBinanceFmtDate(finBinanceState.lastSync)}`:(finBinanceState.connected?'Listo para revisar el buzón.':'Correo personal pendiente de conectar.');finBinanceRender();}
-async function finBinanceSincronizar(manual=false){if(finBinanceState.loading)return;finBinanceState.loading=true;const btn=document.getElementById('finBinanceActualizar'),body=document.getElementById('finBinanceBody'),sync=document.getElementById('finBinanceSyncText');if(btn){btn.disabled=true;btn.innerHTML='<re-icon icon=refresh-cw size=14></re-icon> Revisando…';}if(sync)sync.textContent='Revisando los correos más recientes de Binance…';if(!finBinanceState.loaded&&body)body.innerHTML='<tr><td colspan="6" class="fin-empty-cell">Buscando nuevas transacciones de Binance…</td></tr>';try{const data=await finBinanceInvoke({action:'sync'});finBinanceApply(data);if(manual&&data.connected&&sync){const extra=Number(data.newTransactions||0);sync.textContent=`${extra?`${extra} correo${extra===1?'':'s'} nuevo${extra===1?'':'s'} procesado${extra===1?'':'s'} · `:''}Última revisión: ${finBinanceFmtDate(data.lastSync)}`;}}catch(e){console.error('Binance Finance:',e);if(sync)sync.textContent='No se pudo revisar el correo.';if(body&&!finBinanceState.loaded)body.innerHTML=`<tr><td colspan="6" class="fin-empty-cell">${finEsc(e.message||e)}</td></tr>`;}finally{finBinanceState.loading=false;if(btn){btn.disabled=false;btn.innerHTML='<re-icon icon=refresh-cw size=14></re-icon> Actualizar';}}}
-function finBinanceFiltradas(){const q=(document.getElementById('finBinanceBuscar')?.value||'').trim().toLowerCase(),dir=document.getElementById('finBinanceDireccion')?.value||'',status=document.getElementById('finBinanceEstado')?.value||'';return finBinanceState.items.filter(x=>{if(dir&&x.direction!==dir)return false;if(status&&x.status!==status)return false;if(q&&!`${x.subject||''} ${x.reference||''} ${x.currency||''} ${x.transaction_type||''} ${x.sender_email||''}`.toLowerCase().includes(q))return false;return true;});}
-function finBinanceRender(){const body=document.getElementById('finBinanceBody');if(!body)return;const rows=finBinanceFiltradas();if(!finBinanceState.connected&&!finBinanceState.items.length){body.innerHTML='<tr><td colspan="6" class="fin-empty-cell">Conecta tu correo personal para comenzar.</td></tr>';return;}if(!rows.length){body.innerHTML='<tr><td colspan="6" class="fin-empty-cell">No hay transacciones para este filtro.</td></tr>';return;}body.innerHTML=rows.map(x=>{const dir=x.direction==='ingreso'?'<span class="fin-binance-direction in">Entrada</span>':x.direction==='egreso'?'<span class="fin-binance-direction out">Salida</span>':'<span class="fin-binance-direction">Revisar</span>';const amount=x.amount!==null&&x.amount!==undefined?finBinanceFmtAmount(x):'—';const verify=x.status==='confirmada'?'<span class="fin-binance-status ok">Confirmada</span>':'<span class="fin-binance-status warn">Revisar</span>';const detail=`<b>${finEsc(x.transaction_type||'Transacción')}</b><br><small style="color:var(--text-muted)">${finEsc(x.reference?`Ref. ${x.reference}`:(x.subject||'Notificación de Binance'))}</small>`;return `<tr><td>${finBinanceFmtDate(x.email_received_at)}</td><td>${dir}</td><td>${detail}</td><td class="fin-num"><b>${amount}</b></td><td>${verify}</td><td class="fin-actions"><button type="button" class="fin-binance-receipt-btn" onclick="finBinanceAbrirRecibo('${x.id}')"><re-icon icon=receipt size=12></re-icon> Ver</button></td></tr>`;}).join('');}
+function finBinanceServicioLabel(v){const m={binance_pay:'Binance Pay',p2p:'P2P',deposito:'Depósito',retiro:'Retiro',transferencia:'Transferencia',otro:'Otros',pago:'Binance Pay','depósito':'Depósito','transacción':'Otros'};return m[String(v||'').toLowerCase()]||'Otros';}
+function finBinanceApply(data){finBinanceState.connected=!!data.connected;finBinanceState.mailbox=data.mailbox||null;if(Array.isArray(data.folders))finBinanceState.folders=data.folders;finBinanceState.lastSync=data.lastSync||null;finBinanceState.items=Array.isArray(data.transactions)?data.transactions:[];finBinanceState.stats=data.stats||{total:finBinanceState.items.length,ingresos:0,egresos:0,revisar:0};finBinanceState.loaded=true;const mb=document.getElementById('finBinanceMailbox');if(mb&&finBinanceState.mailbox?.email)mb.textContent=finBinanceState.mailbox.email;const folders=document.getElementById('finBinanceFolders');if(folders)folders.textContent=finBinanceState.folders.length?finBinanceState.folders.map(x=>x.name||'Carpeta').join(' + '):'Notification + Inbox';document.getElementById('finBinanceSetup')?.classList.toggle('show',!finBinanceState.connected);const ids={finBinanceKpiTotal:finBinanceState.stats.total||0,finBinanceKpiIn:finBinanceState.stats.ingresos||0,finBinanceKpiOut:finBinanceState.stats.egresos||0,finBinanceKpiReview:finBinanceState.stats.revisar||0};Object.entries(ids).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=String(val)});const sync=document.getElementById('finBinanceSyncText');if(sync)sync.textContent=finBinanceState.lastSync?`Última revisión: ${finBinanceFmtDate(finBinanceState.lastSync)}`:(finBinanceState.connected?'Listo para revisar Notification e Inbox.':'Correo personal pendiente de conectar.');finBinanceRender();}
+async function finBinanceSincronizar(manual=false){if(finBinanceState.loading)return;finBinanceState.loading=true;const btn=document.getElementById('finBinanceActualizar'),body=document.getElementById('finBinanceBody'),sync=document.getElementById('finBinanceSyncText');if(btn){btn.disabled=true;btn.innerHTML='<re-icon icon=refresh-cw size=14></re-icon> Revisando…';}if(sync)sync.textContent='Revisando Notification e Inbox para buscar correos de Binance…';if(!finBinanceState.loaded&&body)body.innerHTML='<tr><td colspan="6" class="fin-empty-cell">Buscando nuevas transacciones de Binance…</td></tr>';try{const data=await finBinanceInvoke({action:'sync'});finBinanceApply(data);if(manual&&data.connected&&sync){const extra=Number(data.newTransactions||0);sync.textContent=`${extra?`${extra} correo${extra===1?'':'s'} nuevo${extra===1?'':'s'} procesado${extra===1?'':'s'} · `:''}Última revisión: ${finBinanceFmtDate(data.lastSync)}`;}}catch(e){console.error('Binance Finance:',e);if(sync)sync.textContent='No se pudo revisar el correo.';if(body&&!finBinanceState.loaded)body.innerHTML=`<tr><td colspan="6" class="fin-empty-cell">${finEsc(e.message||e)}</td></tr>`;}finally{finBinanceState.loading=false;if(btn){btn.disabled=false;btn.innerHTML='<re-icon icon=refresh-cw size=14></re-icon> Actualizar';}}}
+function finBinanceFiltradas(){const q=(document.getElementById('finBinanceBuscar')?.value||'').trim().toLowerCase(),service=document.getElementById('finBinanceServicio')?.value||'',dir=document.getElementById('finBinanceDireccion')?.value||'',status=document.getElementById('finBinanceEstado')?.value||'';return finBinanceState.items.filter(x=>{const tx=String(x.transaction_type||'otro').toLowerCase();if(service&&tx!==service&&!(service==='binance_pay'&&tx==='pago'))return false;if(dir&&x.direction!==dir)return false;if(status&&x.status!==status)return false;if(q&&!`${x.subject||''} ${x.reference||''} ${x.currency||''} ${x.transaction_type||''} ${finBinanceServicioLabel(x.transaction_type)} ${x.sender_email||''}`.toLowerCase().includes(q))return false;return true;});}
+function finBinanceRender(){const body=document.getElementById('finBinanceBody');if(!body)return;const rows=finBinanceFiltradas();if(!finBinanceState.connected&&!finBinanceState.items.length){body.innerHTML='<tr><td colspan="6" class="fin-empty-cell">Conecta tu correo personal para comenzar.</td></tr>';return;}if(!rows.length){body.innerHTML='<tr><td colspan="6" class="fin-empty-cell">No hay transacciones para este filtro.</td></tr>';return;}body.innerHTML=rows.map(x=>{const dir=x.direction==='ingreso'?'<span class="fin-binance-direction in">Entrada</span>':x.direction==='egreso'?'<span class="fin-binance-direction out">Salida</span>':'<span class="fin-binance-direction">Revisar</span>';const amount=x.amount!==null&&x.amount!==undefined?finBinanceFmtAmount(x):'—';const verify=x.status==='confirmada'?'<span class="fin-binance-status ok">Confirmada</span>':'<span class="fin-binance-status warn">Revisar</span>';const service=finBinanceServicioLabel(x.transaction_type);const detail=`<span class="fin-binance-service">${finEsc(service)}</span><br><small style="color:var(--text-muted);display:inline-block;margin-top:5px">${finEsc(x.reference?`Ref. ${x.reference}`:(x.subject||'Notificación de Binance'))}</small>`;const borrar=x.status==='confirmada'?`<button type="button" class="fin-binance-delete-btn" onclick="finBinanceEliminar('${x.id}',this)" title="Eliminar del historial de Brooklyn"><re-icon icon=trash-2 size=12></re-icon> Eliminar</button>`:'';return `<tr><td>${finBinanceFmtDate(x.email_received_at)}</td><td>${dir}</td><td>${detail}</td><td class="fin-num"><b>${amount}</b></td><td>${verify}</td><td class="fin-actions"><button type="button" class="fin-binance-receipt-btn" onclick="finBinanceAbrirRecibo('${x.id}')"><re-icon icon=receipt size=12></re-icon> Ver</button>${borrar}</td></tr>`;}).join('');}
+async function finBinanceEliminar(id,btn=null){const x=finBinanceState.items.find(r=>r.id===id);if(!x||x.status!=='confirmada')return;const monto=finBinanceFmtAmount(x);if(!confirm(`¿Eliminar esta transacción confirmada de Brooklyn?\n\n${monto} · ${finBinanceFmtDate(x.email_received_at)}\n\nEl correo original de Binance permanecerá intacto en Zoho. La transacción eliminada no volverá a importarse automáticamente.`))return;const original=btn?.innerHTML;try{if(btn){btn.disabled=true;btn.textContent='Eliminando…';}const data=await finBinanceInvoke({action:'delete',id});finBinanceApply(data);if(finBinanceState.selected?.id===id){finBinanceState.selected=null;finCerrarModal('finBinanceReciboModal');}}catch(e){alert('No se pudo eliminar la transacción: '+(e.message||e));}finally{if(btn&&document.body.contains(btn)){btn.disabled=false;btn.innerHTML=original||'<re-icon icon=trash-2 size=12></re-icon> Eliminar';}}}
 function finBinanceIrCorreo(){if(!seleccionarModulo('mod-mail'))return;mailCargarModulo().then(()=>{const box=mailState.mailboxes.find(x=>String(x.email||'').toLowerCase()==='gilder.torrealba@buhoelectronics.com');if(box)mailSeleccionarBuzon(box.id);}).catch(()=>{});}
-function finBinanceAbrirRecibo(id){const x=finBinanceState.items.find(r=>r.id===id);if(!x)return;finBinanceState.selected=x;const card=document.getElementById('finBinanceReciboCard');const dir=x.direction==='ingreso'?'Entrada':x.direction==='egreso'?'Salida':'Revisión pendiente';const verify=x.status==='confirmada'?'Correo verificado y datos detectados':'Revisión manual recomendada';card.innerHTML=`<div class="fin-binance-receipt-brand"><img src="https://okguzqyujdnubhllnamo.supabase.co/storage/v1/object/public/multimedia/imagenes/2026/09/1790685684012-beec9c2901c9-Logo-Icono.webp" alt="Búho Electronics"><div><small>Brooklyn Finance</small><strong>Comprobante interno</strong></div></div><div class="fin-binance-receipt-amount"><small>${finEsc(dir)}</small><strong>${finEsc(finBinanceFmtAmount(x))}</strong></div><div class="fin-binance-receipt-grid"><div class="fin-binance-receipt-field"><span>Fecha</span><b>${finEsc(finBinanceFmtDate(x.email_received_at))}</b></div><div class="fin-binance-receipt-field"><span>Tipo</span><b>${finEsc(x.transaction_type||'Transacción')}</b></div><div class="fin-binance-receipt-field"><span>Moneda</span><b>${finEsc(x.currency||'No detectada')}</b></div><div class="fin-binance-receipt-field"><span>Estado</span><b>${finEsc(verify)}</b></div><div class="fin-binance-receipt-field wide"><span>Referencia</span><b>${finEsc(x.reference||'No detectada en el correo')}</b></div><div class="fin-binance-receipt-field wide"><span>Fuente</span><b>${finEsc(finBinanceState.mailbox?.email||'Correo personal')} · ${finEsc(x.sender_email||'Binance')}</b></div></div><div class="fin-binance-receipt-foot">Generado por Brooklyn a partir de una notificación recibida por correo. No constituye un comprobante oficial emitido por Binance.</div>`;finAbrirModal('finBinanceReciboModal');}
+function finBinanceAbrirRecibo(id){const x=finBinanceState.items.find(r=>r.id===id);if(!x)return;finBinanceState.selected=x;const card=document.getElementById('finBinanceReciboCard');const dir=x.direction==='ingreso'?'Entrada':x.direction==='egreso'?'Salida':'Revisión pendiente';const verify=x.status==='confirmada'?'Correo verificado y datos detectados':'Revisión manual recomendada';card.innerHTML=`<div class="fin-binance-receipt-brand"><img src="https://okguzqyujdnubhllnamo.supabase.co/storage/v1/object/public/multimedia/imagenes/2026/09/1790685684012-beec9c2901c9-Logo-Icono.webp" alt="Búho Electronics"><div><small>Brooklyn Finance</small><strong>Comprobante interno</strong></div></div><div class="fin-binance-receipt-amount"><small>${finEsc(dir)}</small><strong>${finEsc(finBinanceFmtAmount(x))}</strong></div><div class="fin-binance-receipt-grid"><div class="fin-binance-receipt-field"><span>Fecha</span><b>${finEsc(finBinanceFmtDate(x.email_received_at))}</b></div><div class="fin-binance-receipt-field"><span>Servicio</span><b>${finEsc(finBinanceServicioLabel(x.transaction_type))}</b></div><div class="fin-binance-receipt-field"><span>Moneda</span><b>${finEsc(x.currency||'No detectada')}</b></div><div class="fin-binance-receipt-field"><span>Estado</span><b>${finEsc(verify)}</b></div><div class="fin-binance-receipt-field wide"><span>Referencia</span><b>${finEsc(x.reference||'No detectada en el correo')}</b></div><div class="fin-binance-receipt-field wide"><span>Fuente</span><b>${finEsc(finBinanceState.mailbox?.email||'Correo personal')} · ${finEsc(x.sender_email||'Binance')}</b></div></div><div class="fin-binance-receipt-foot">Generado por Brooklyn a partir de una notificación recibida por correo. No constituye un comprobante oficial emitido por Binance.</div>`;finAbrirModal('finBinanceReciboModal');}
 async function finBinanceCopiarRecibo(){const card=document.getElementById('finBinanceReciboCard'),btn=document.getElementById('finBinanceCopiarBtn');if(!card||!window.html2canvas)return alert('No se pudo preparar el comprobante.');const original=btn?.innerHTML;try{if(btn){btn.disabled=true;btn.textContent='Copiando…';}const canvas=await html2canvas(card,{scale:2,backgroundColor:'#ffffff',useCORS:true});const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw new Error('No se pudo generar la imagen.');if(navigator.clipboard&&window.ClipboardItem){await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);if(btn)btn.innerHTML='<re-icon icon=check-circle size=13></re-icon> Copiado';}else{const a=document.createElement('a');a.download='recibo-binance-brooklyn.png';a.href=canvas.toDataURL('image/png');a.click();if(btn)btn.textContent='Imagen guardada';}}catch(e){alert('No se pudo copiar el comprobante: '+(e.message||e));}finally{setTimeout(()=>{if(btn){btn.disabled=false;btn.innerHTML=original||'<re-icon icon=copy size=13></re-icon> Copiar imagen';}},1800);}}
 function finBinanceImprimirRecibo(){const card=document.getElementById('finBinanceReciboCard');if(!card)return;const w=window.open('','_blank','width=720,height=850');if(!w)return alert('Permite ventanas emergentes para imprimir el comprobante.');w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Comprobante Binance · Brooklyn</title><style>body{margin:0;padding:28px;background:#fff;font-family:Inter,Arial,sans-serif}.fin-binance-receipt-card{max-width:520px;margin:auto;color:#101828}.fin-binance-receipt-brand{display:flex;justify-content:space-between;align-items:center;padding-bottom:18px;border-bottom:1px solid #e5e7eb}.fin-binance-receipt-brand img{width:90px}.fin-binance-receipt-brand div{text-align:right}.fin-binance-receipt-brand small,.fin-binance-receipt-amount small,.fin-binance-receipt-field span{display:block;color:#667085;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}.fin-binance-receipt-amount{text-align:center;padding:25px 0}.fin-binance-receipt-amount strong{font-size:30px}.fin-binance-receipt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.fin-binance-receipt-field{border:1px solid #e5e7eb;border-radius:10px;padding:10px}.fin-binance-receipt-field.wide{grid-column:1/-1}.fin-binance-receipt-field b{font-size:11px}.fin-binance-receipt-foot{margin-top:16px;color:#667085;font-size:9px;text-align:center}</style></head><body>${card.outerHTML}</body></html>`);w.document.close();setTimeout(()=>{w.focus();w.print();},350);}
 
@@ -7863,6 +8071,86 @@ async function notesGuardar(){const titulo=document.getElementById('notesTitulo'
 async function notesTogglePin(id){const n=notesState.items.find(x=>x.id===id);if(!n||n.user_id!==notesState.userId)return;const q=await supabaseClient.from('brooklyn_notas').update({fijada:!n.fijada,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',notesState.userId);if(q.error){alert(q.error.message);return;}notesState.loaded=false;await notesCargarModulo(true);}
 async function notesToggleArchive(id){const n=notesState.items.find(x=>x.id===id);if(!n||n.user_id!==notesState.userId)return;const q=await supabaseClient.from('brooklyn_notas').update({archivada:!n.archivada,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',notesState.userId);if(q.error){alert(q.error.message);return;}notesState.loaded=false;await notesCargarModulo(true);}
 async function notesEliminar(id){const n=notesState.items.find(x=>x.id===id);if(!n||n.user_id!==notesState.userId)return;if(!confirm(`¿Eliminar la nota “${n.titulo}”? Esta acción no se puede deshacer.`))return;const q=await supabaseClient.from('brooklyn_notas').delete().eq('id',id).eq('user_id',notesState.userId);if(q.error){alert(q.error.message);return;}notesState.items=notesState.items.filter(x=>x.id!==id);notesRender();}
+</script>
+
+<script id="b2b-admin-script">
+const b2bAdminState={vista:'resumen',overview:null,productos:[],precios:[],pedidos:[],clientes:[],config:null,cargando:false};
+function b2bEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+function b2bMoney(v){const n=Number(v||0);return '$'+(Number.isFinite(n)?n:0).toFixed(2);}
+function b2bDate(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('es-VE',{dateStyle:'short',timeStyle:'short'});}
+function b2bFeedback(id,msg,type=''){const el=document.getElementById(id);if(!el)return;el.textContent=msg||'';el.className='b2b-admin-feedback'+(type?' '+type:'');}
+async function b2bCall(action,payload={}){
+    if(!supabaseClient)throw new Error('No hay conexión con Brooklyn.');
+    const {data,error}=await supabaseClient.functions.invoke('b2b-portal',{body:{action,...payload}});
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data?.error||'No se pudo completar la operación.');
+    return data;
+}
+async function b2bCargarModulo(forzar=false){
+    if(!tienePermiso('module.b2b'))return;
+    try{await b2bCargarResumen(forzar);await b2bMostrarVista(b2bAdminState.vista,forzar);}catch(e){console.warn('B2B:',e);b2bFeedback('b2bCatalogFeedback',e.message||String(e),'err');}
+}
+async function b2bMostrarVista(vista,forzar=false){
+    b2bAdminState.vista=vista||'resumen';
+    document.querySelectorAll('.b2b-admin-tab').forEach(b=>b.classList.toggle('active',b.dataset.b2bTab===b2bAdminState.vista));
+    ['resumen','catalogo','pedidos','clientes','config'].forEach(v=>{const el=document.getElementById('b2bView'+v.charAt(0).toUpperCase()+v.slice(1));if(el)el.classList.toggle('active',v===b2bAdminState.vista);});
+    if(b2bAdminState.vista==='catalogo'&&(forzar||!b2bAdminState.productos.length))await b2bCargarCatalogo(forzar);
+    if(b2bAdminState.vista==='pedidos'&&(forzar||!b2bAdminState.pedidos.length))await b2bCargarPedidos(forzar);
+    if(b2bAdminState.vista==='clientes'&&(forzar||!b2bAdminState.clientes.length))await b2bCargarClientes(forzar);
+    if(b2bAdminState.vista==='config'&&(forzar||!b2bAdminState.config))await b2bCargarConfig(forzar);
+}
+async function b2bCargarResumen(){
+    const d=await b2bCall('admin_overview');b2bAdminState.overview=d;b2bAdminState.config=d.config||b2bAdminState.config;
+    const k=d.kpis||{};
+    document.getElementById('b2bKpiPedidos').textContent=Number(k.pedidos||0).toLocaleString('es-VE');
+    document.getElementById('b2bKpiVentas').textContent=b2bMoney(k.ventas||0);
+    document.getElementById('b2bKpiClientes').textContent=Number(k.clientes||0).toLocaleString('es-VE');
+    document.getElementById('b2bKpiPrecios').textContent=Number(k.precios||0).toLocaleString('es-VE');
+    const c=d.config||{};const estado=c.tienda_activa&&c.catalogo_publico?'Pública y activa':c.tienda_activa?'Activa · catálogo no público':'Tienda pausada';
+    document.getElementById('b2bResumenEstado').innerHTML=`<b>${b2bEsc(estado)}</b> · Pedido mínimo general ${b2bMoney(c.pedido_minimo_usd||0)} · Descuento general ${Number(c.descuento_default_pct||0).toFixed(2)}%. El inventario es el mismo que se utiliza en Brooklyn.`;
+}
+function b2bPriceKey(pid,vid){return String(pid)+'|'+String(vid||'');}
+function b2bPriceMap(){return new Map((b2bAdminState.precios||[]).map(r=>[b2bPriceKey(r.takeapp_product_id,r.takeapp_variant_id),r]));}
+function b2bTiersText(v){return Array.isArray(v)?v.map(x=>`${Number(x.qty)}:${Number(x.price)}`).join(', '):'';}
+function b2bParseTiers(v){return String(v||'').split(',').map(x=>x.trim()).filter(Boolean).map(x=>{const [q,p]=x.split(':').map(y=>y.trim());return{qty:Math.floor(Number(q)),price:Number(p)}}).filter(x=>Number.isFinite(x.qty)&&x.qty>=1&&Number.isFinite(x.price)&&x.price>=0);}
+async function b2bCargarCatalogo(){
+    const body=document.getElementById('b2bCatalogBody');if(body)body.innerHTML='<tr><td colspan="8">Cargando inventario…</td></tr>';
+    b2bFeedback('b2bCatalogFeedback','');
+    try{const d=await b2bCall('admin_catalog');b2bAdminState.productos=d.productos||[];b2bAdminState.precios=d.precios||[];b2bRenderCatalogo();}
+    catch(e){if(body)body.innerHTML='<tr><td colspan="8">No se pudo cargar el catálogo.</td></tr>';b2bFeedback('b2bCatalogFeedback',e.message||String(e),'err');}
+}
+function b2bCatalogRows(){
+    const map=b2bPriceMap(),rows=[];
+    for(const p of b2bAdminState.productos||[]){
+        if(Array.isArray(p.variantes)&&p.variantes.length){for(const v of p.variantes){const k=b2bPriceKey(p.id,v.id);rows.push({pid:p.id,vid:v.id,nombre:p.nombre,variante:v.nombre,sku:p.sku,stock:v.stock,agotado:v.agotado,base:v.precio_base,price:map.get(k)||null});}}
+        else{const k=b2bPriceKey(p.id,'');rows.push({pid:p.id,vid:'',nombre:p.nombre,variante:'',sku:p.sku,stock:p.stock,agotado:p.agotado,base:p.precio_base,price:map.get(k)||null});}
+    }return rows;
+}
+function b2bRenderCatalogo(){
+    const body=document.getElementById('b2bCatalogBody');if(!body)return;
+    const q=(document.getElementById('b2bCatalogSearch')?.value||'').trim().toLowerCase(),f=document.getElementById('b2bCatalogFilter')?.value||'all';
+    let rows=b2bCatalogRows().filter(r=>!q||[r.nombre,r.variante,r.sku].some(v=>String(v||'').toLowerCase().includes(q)));
+    if(f==='configured')rows=rows.filter(r=>!!r.price);if(f==='pending')rows=rows.filter(r=>!r.price||r.price.precio_usd==null);if(f==='hidden')rows=rows.filter(r=>r.price?.visible===false);
+    if(!rows.length){body.innerHTML='<tr><td colspan="8">No hay productos para este filtro.</td></tr>';return;}
+    body.innerHTML=rows.map((r,i)=>{const pr=r.price||{};const rowid='b2bRow'+i;const stock=r.stock==null?(r.agotado?'Agotado':'Sin control'):r.stock;return `<tr id="${rowid}" data-product-id="${b2bEsc(r.pid)}" data-variant-id="${b2bEsc(r.vid)}"><td><div class="b2b-product-name">${b2bEsc(r.nombre)}</div><div class="b2b-product-sub">${r.variante?b2bEsc(r.variante)+' · ':''}${b2bEsc(r.sku||'Sin SKU')}</div></td><td>${b2bEsc(stock)}</td><td>${b2bMoney(r.base||0)}</td><td><input class="b2b-price-input" data-field="precio" type="number" min="0" step="0.01" value="${pr.precio_usd==null?'':b2bEsc(pr.precio_usd)}" placeholder="Regla general"></td><td><input class="b2b-min-input" data-field="min" type="number" min="1" step="1" value="${Number(pr.min_qty||1)}"></td><td><input class="b2b-tier-input" data-field="tiers" type="text" value="${b2bEsc(b2bTiersText(pr.qty_tiers))}" placeholder="3:160, 6:155"></td><td><input data-field="visible" type="checkbox" ${pr.visible===false?'':'checked'}></td><td><div class="b2b-admin-actions"><button type="button" class="b2b-mini-btn primary" onclick="b2bGuardarPrecio(this)">Guardar</button><button type="button" class="b2b-mini-btn" onclick="b2bResetPrecio(this)">Restablecer</button></div></td></tr>`;}).join('');
+}
+async function b2bGuardarPrecio(btn){
+    const tr=btn.closest('tr');if(!tr)return;btn.disabled=true;b2bFeedback('b2bCatalogFeedback','Guardando…');
+    try{const precio=tr.querySelector('[data-field="precio"]').value;const min=tr.querySelector('[data-field="min"]').value;const tiers=tr.querySelector('[data-field="tiers"]').value;const visible=tr.querySelector('[data-field="visible"]').checked;await b2bCall('admin_save_price',{product_id:tr.dataset.productId,variant_id:tr.dataset.variantId||null,precio_usd:precio,min_qty:min,qty_tiers:b2bParseTiers(tiers),visible});await b2bCargarCatalogo();await b2bCargarResumen();b2bFeedback('b2bCatalogFeedback','Precio y reglas guardadas.','ok');}
+    catch(e){b2bFeedback('b2bCatalogFeedback',e.message||String(e),'err');}finally{btn.disabled=false;}
+}
+async function b2bResetPrecio(btn){const tr=btn.closest('tr');if(!tr)return;if(!confirm('¿Restablecer este producto a la regla general B2B?'))return;btn.disabled=true;try{await b2bCall('admin_reset_price',{product_id:tr.dataset.productId,variant_id:tr.dataset.variantId||null});await b2bCargarCatalogo();await b2bCargarResumen();b2bFeedback('b2bCatalogFeedback','Configuración individual eliminada.','ok');}catch(e){b2bFeedback('b2bCatalogFeedback',e.message||String(e),'err');}finally{btn.disabled=false;}}
+async function b2bCargarPedidos(){
+    const body=document.getElementById('b2bPedidosBody');if(body)body.innerHTML='<tr><td colspan="8">Cargando pedidos…</td></tr>';
+    try{const d=await b2bCall('admin_orders');b2bAdminState.pedidos=d.pedidos||[];b2bRenderPedidos();b2bFeedback('b2bPedidosFeedback','');}catch(e){if(body)body.innerHTML='<tr><td colspan="8">No se pudieron cargar los pedidos.</td></tr>';b2bFeedback('b2bPedidosFeedback',e.message||String(e),'err');}
+}
+function b2bRenderPedidos(){const body=document.getElementById('b2bPedidosBody');if(!body)return;const rows=b2bAdminState.pedidos||[];if(!rows.length){body.innerHTML='<tr><td colspan="8">Aún no hay pedidos B2B.</td></tr>';return;}body.innerHTML=rows.map(o=>{const op=o.operacion||{};const st=o.estado==='enviado'?'ok':o.estado==='error'?'err':'warn';const items=(o.items||[]).map(i=>`${b2bEsc(i.cantidad)} × ${b2bEsc(i.nombre)}${i.variante?' · '+b2bEsc(i.variante):''}`).join('<br>')||'—';return `<tr><td>${b2bEsc(b2bDate(o.created_at))}</td><td><b>${b2bEsc(o.numero||'Procesando')}</b></td><td><div class="b2b-product-name">${b2bEsc(o.empresa?.nombre||'Cliente')}</div><div class="b2b-product-sub">${b2bEsc(o.empresa?.rif||o.empresa?.email||'')}</div></td><td><b>${b2bMoney(o.total)}</b></td><td><span class="b2b-status ${st}">${b2bEsc(o.estado)}</span></td><td>${b2bEsc(op.estado_pago_takeapp||'—')}</td><td>${b2bEsc(op.fulfillment_status_takeapp||'—')}</td><td><div class="b2b-order-items">${items}</div></td></tr>`;}).join('');}
+async function b2bCargarClientes(){const body=document.getElementById('b2bClientesBody');if(body)body.innerHTML='<tr><td colspan="8">Cargando clientes…</td></tr>';try{const d=await b2bCall('admin_customers');b2bAdminState.clientes=d.clientes||[];b2bRenderClientes();b2bFeedback('b2bClientesFeedback','');}catch(e){if(body)body.innerHTML='<tr><td colspan="8">No se pudieron cargar los clientes.</td></tr>';b2bFeedback('b2bClientesFeedback',e.message||String(e),'err');}}
+function b2bRenderClientes(){const body=document.getElementById('b2bClientesBody');if(!body)return;const rows=b2bAdminState.clientes||[];if(!rows.length){body.innerHTML='<tr><td colspan="8">Aún no hay clientes B2B registrados.</td></tr>';return;}body.innerHTML=rows.map((c,i)=>`<tr data-client-id="${b2bEsc(c.id)}"><td><div class="b2b-product-name">${b2bEsc(c.nombre)}</div><div class="b2b-product-sub">${b2bEsc(c.rif||c.email||'')}</div></td><td>${b2bEsc(c.contacto||'—')}<div class="b2b-product-sub">${b2bEsc(c.telefono||c.email||'')}</div></td><td><select data-field="estado"><option value="activa" ${c.estado==='activa'?'selected':''}>Activa</option><option value="suspendida" ${c.estado==='suspendida'?'selected':''}>Suspendida</option></select></td><td><input class="b2b-min-input" data-field="descuento" type="number" min="0" max="100" step="0.01" value="${Number(c.descuento_pct||0)}"></td><td><input class="b2b-price-input" data-field="minimo" type="number" min="0" step="0.01" value="${Number(c.pedido_minimo_usd||0)}"></td><td>${Number(c.pedidos||0)}</td><td>${b2bMoney(c.total_comprado||0)}</td><td><button type="button" class="b2b-mini-btn primary" onclick="b2bGuardarCliente(this)">Guardar</button></td></tr>`).join('');}
+async function b2bGuardarCliente(btn){const tr=btn.closest('tr');if(!tr)return;btn.disabled=true;b2bFeedback('b2bClientesFeedback','Guardando…');try{await b2bCall('admin_update_company',{id:tr.dataset.clientId,estado:tr.querySelector('[data-field="estado"]').value,descuento_pct:tr.querySelector('[data-field="descuento"]').value,pedido_minimo_usd:tr.querySelector('[data-field="minimo"]').value});await b2bCargarClientes();await b2bCargarResumen();b2bFeedback('b2bClientesFeedback','Cliente actualizado.','ok');}catch(e){b2bFeedback('b2bClientesFeedback',e.message||String(e),'err');}finally{btn.disabled=false;}}
+async function b2bCargarConfig(){try{const d=await b2bCall('admin_config');b2bAdminState.config=d.config||{};b2bPintarConfig();b2bFeedback('b2bConfigFeedback','');}catch(e){b2bFeedback('b2bConfigFeedback',e.message||String(e),'err');}}
+function b2bPintarConfig(){const c=b2bAdminState.config||{};document.getElementById('b2bCfgActiva').checked=!!c.tienda_activa;document.getElementById('b2bCfgPublica').checked=!!c.catalogo_publico;document.getElementById('b2bCfgStock').checked=!!c.mostrar_stock;document.getElementById('b2bCfgRegistro').checked=!!c.permitir_registro;document.getElementById('b2bCfgFallback').checked=c.permitir_precio_takeapp_fallback!==false;document.getElementById('b2bCfgNombre').value=c.nombre_tienda||'Búho Electronics B2B';document.getElementById('b2bCfgMensaje').value=c.mensaje_catalogo||'';document.getElementById('b2bCfgDescuento').value=Number(c.descuento_default_pct||0);document.getElementById('b2bCfgMinimo').value=Number(c.pedido_minimo_usd||0);}
+async function b2bGuardarConfig(){b2bFeedback('b2bConfigFeedback','Guardando…');try{const d=await b2bCall('admin_save_config',{tienda_activa:document.getElementById('b2bCfgActiva').checked,catalogo_publico:document.getElementById('b2bCfgPublica').checked,mostrar_stock:document.getElementById('b2bCfgStock').checked,permitir_registro:document.getElementById('b2bCfgRegistro').checked,permitir_precio_base_fallback:document.getElementById('b2bCfgFallback').checked,nombre_tienda:document.getElementById('b2bCfgNombre').value,mensaje_catalogo:document.getElementById('b2bCfgMensaje').value,descuento_default_pct:document.getElementById('b2bCfgDescuento').value,pedido_minimo_usd:document.getElementById('b2bCfgMinimo').value});b2bAdminState.config=d.config||{};b2bPintarConfig();await b2bCargarResumen();b2bFeedback('b2bConfigFeedback','Configuración guardada.','ok');}catch(e){b2bFeedback('b2bConfigFeedback',e.message||String(e),'err');}}
 </script>
 </body>
 </html>
